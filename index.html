@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=bb688b"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=bb688b"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=bb688b">
+<link rel="manifest" href="manifest.json?v=1531e4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=1531e4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=1531e4">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -952,7 +952,7 @@ body.running .mission{opacity:.85}
     <div class="eyebrow">CANVAS LAB · 인턴 육성 시뮬레이션</div>
     <h1 class="wordmark">험쮜 메이커<small>인턴에서 CEO까지</small></h1>
     <p class="hook">면접 87:1 뚫은 인턴 험쮜.<br>겉으론 <b>"넵!"</b> 속으론 <b>"뻥~"</b><br>3년 안에 <b>CEO</b> 될 수 있을까?</p>
-    <div class="tags"><span>🏢 인턴의 하루</span><span>💞 동료 이야기</span><span>💘 사내연애</span><span>👑 엔딩 11종</span></div>
+    <div class="tags"><span>🏢 인턴의 하루</span><span>💞 동료 이야기</span><span>💘 사내연애</span><span>👑 엔딩 12종</span></div>
     <div class="btn-row"><button class="btn" id="btn-new">새로 시작</button><button class="btn ghost" id="btn-cont" hidden>불러오기</button><button class="btn ghost" id="btn-dex" type="button">📖 엔딩 도감</button></div>
     <p class="build-code" id="build-title"></p>
     <p class="disclaimer">등장인물은 실제 동료를 모티프로 한 가상 캐릭터이며, 사건은 모두 허구예요.</p>
@@ -1267,9 +1267,9 @@ const ACTS={
   blind:{cat:'love',name:'소개팅',d:'친구가 주선한 주말 소개팅',cost:6,hp:-3,st:0,g:{comm:1},scene:'sc_cafe',mini:'s_coffee',fx:['🫣','☕','💬','✨']},
   selfdate:{cat:'love',name:'셀프 데이트',d:'혼자 전시회 보고 디저트 먹기',cost:4,hp:2,st:-14,g:{trend:1},scene:'sc_park',mini:'s_eat',fx:['🖼️','🍰','💗','✨']},
   home:{cat:'rest',name:'이불 속 집콕',d:'아무것도 안 하는 날',hp:20,st:-16,scene:'sc_home',mini:'s_sleep',clip:'c_leave',fx:['💤','🍿','🌙','✨'],txt:'이불 속에서 숏폼 3시간, 낮잠 2시간. 완벽한 하루.'},
-  daytrip:{cat:'rest',name:'당일치기 바다',d:'KTX 타고 강릉 바다',cost:12,hp:-2,st:-28,g:{trend:1},scene:'sc_park',mini:'s_walk',clip:'c_trip',fx:['🌊','🚄','📸','✨'],txt:'모래사장에 "퇴사"라고 썼다. 파도가 지워 줬다.\n<span class="t">(…월요일엔 다시 출근.)</span>'},
-  jeju:{cat:'rest',name:'제주 2박 3일',d:'금요일 연차 붙여서',leave:1,cost:45,hp:12,st:-45,g:{trend:2},scene:'sc_park',mini:'s_walk',clip:'c_trip',fx:['🍊','✈️','🌋','💗'],txt:'귤밭에서 귤 따고, 오름에 올랐다. 회사 메신저는 비행기 모드.'},
-  abroad:{cat:'rest',name:'해외여행 · 도쿄',d:'드럭스토어 시장 조사도 겸사겸사',leave:3,cost:120,hp:10,st:-60,g:{trend:3,know:2},scene:'sc_park',mini:'s_walk',clip:'c_trip',fx:['🗼','🛍️','🍣','✨'],txt:'도쿄 드럭스토어 화장품 코너에서 두 시간.\n<span class="t">(여행인지 출장인지 모르겠다. 근데 행복하다.)</span>'},
+  daytrip:{cat:'rest',name:'당일치기 바다',d:'KTX 타고 강릉 바다',cost:12,hp:-2,st:-28,g:{trend:1},scene:'sc_park',mini:'s_walk',clip:'c_daytrip',fx:['🌊','🚄','📸','✨'],txt:'모래사장에 "퇴사"라고 썼다. 파도가 지워 줬다.\n<span class="t">(…월요일엔 다시 출근.)</span>'},
+  jeju:{cat:'rest',name:'제주 2박 3일',d:'금요일 연차 붙여서',leave:1,cost:45,hp:12,st:-45,g:{trend:2},scene:'sc_park',mini:'s_walk',clip:'c_jeju',fx:['🍊','✈️','🌋','💗'],txt:'귤밭에서 귤 따고, 오름에 올랐다. 회사 메신저는 비행기 모드.'},
+  abroad:{cat:'rest',name:'해외여행 · 도쿄',d:'드럭스토어 시장 조사도 겸사겸사',leave:3,cost:120,hp:10,st:-60,g:{trend:3,know:2},scene:'sc_park',mini:'s_walk',clip:'c_tokyo',fx:['🗼','🛍️','🍣','✨'],txt:'도쿄 드럭스토어 화장품 코너에서 두 시간.\n<span class="t">(여행인지 출장인지 모르겠다. 근데 행복하다.)</span>'},
 };
 // 알바도 횟수가 쌓이면 승급: 3·6·10회째에 직함과 시급이 오른다
 const JOB_RANK={cafe:['알바생','바리스타','매니저','점장'],store:['진열 알바','뷰티 어드바이저','매장 매니저','점장'],shoot:['촬영 보조','세컨드 어시','촬영 실장','포토 디렉터'],blog:['초보 블로거','이웃 1천 블로거','인기 블로거','뷰티 인플루언서']};
@@ -1293,6 +1293,7 @@ const ENDINGS=[
   {id:'fox',hint:'트렌드 감각이 뛰어나면 연락이 와요',g:'★',t:'여우네로 이직',img:'sc_rain',sub:'경쟁사 스카우트를 받아들인 험쮜. 배신인가, 성장인가.'},
   {id:'quit',hint:'입사 1년 즈음, 마음이 흔들릴 때',g:'★',t:'퇴사 후 세계여행',img:'sc_park',sub:'사직서를 내고 배낭을 멨다. 속이 뻥 뚫렸다.'},
   {id:'bankrupt',hint:'부도 위기를 넘지 못하면',g:'…',t:'회사가 사라졌다',img:'sc_rain',sub:'부도 위기를 넘지 못한 캔버스랩. 험쮜는 이력서를 다시 쓴다.'},
+  {id:'vday',hint:'마지막 해 2월 14일, ♥70 넘는 동료가 있다면',g:'♥',t:'2월 14일의 초콜릿',img:'ev_present',sub:'3년 동안 가장 가까웠던 동료가 마음을 전했다.'},
   {id:'burnout',hint:'스트레스를 너무 쌓아 두면',g:'…',t:'잠시 쉬어가는 쥐',img:'sc_home',sub:'몸과 마음이 한계에 닿았다. 험쮜는 휴직을 냈다.'},
 ];
 
@@ -2007,7 +2008,8 @@ function computeEnding(){
   if((S.flags.crisis||(S.co&&S.co.cash<0))&&sc<40)return 'bankrupt';
   if(S.flags.bearYes&&sc<50)return 'cafe';
   if(S.flags.foxYes&&S.rep<60)return 'fox';
-  if(S.flags.dating&&S.love>=80&&sc<65)return 'love';
+  if(S.flags.vday==='daram'||S.flags.dating&&S.love>=80&&sc<65)return 'love';
+  if(S.flags.vday&&S.rank<6)return 'vday';
   if(S.rank>=6)return 'gold';
   if(glOpen()>=2&&sc>=65)return 'na';
   if(sc>=50)return 'hit';
@@ -2032,6 +2034,7 @@ function finish(){
     love:`론칭보다 먼저 꽃핀 건 사랑이었다.\n영업팀 한다람 주임과의 비밀연애는 회식 자리에서 들통났고,\n팀 전체의 축하(와 놀림)를 받았다.`,
     cafe:`곰 사장님은 은퇴하며 가게를 험쮜에게 맡겼다.\n카운터 옆엔 ${p} 샘플이 놓여 있다. "이거, 제가 만든 거예요."`,
     fox:`험쮜는 폭스뷰티로 자리를 옮겼다.\n가끔 STAGE:ZERO 광고를 보면 마음 한구석이 찡하다.`,
+    vday:S.flags.vday&&VDAY[S.flags.vday]?`입사 3년째의 2월 14일, ${tagName(S.flags.vday)}에게서 초콜릿을 받았다.\n${VDAY[S.flags.vday][1]}\n험쮜는 ${RANKS[S.rank]}로서 오늘도 캔버스랩에 출근한다.\n\n<span class="t">(…회사에서 제일 큰 수확은, 사람이었다.)</span>`:'',
     quit:`험쮜는 사직서를 냈다.\n배낭 하나 메고 떠난 여행에서, 험쮜는 다시 숨을 쉬었다.\n언젠가 자기 브랜드를 만들겠다는 꿈을 메모장에 적었다.`,
     bankrupt:`부도 위기를 넘지 못한 캔버스랩은 문을 닫았다.\n마지막 날, 모두 함께 돈가스를 먹었다.\n"우리, 또 같이 일해요." 그 약속은 진심이었다.`,
     burnout:`험쮜는 휴직계를 냈다.\n한 달 동안 늦잠을 자고, 돈가스를 먹고, 한강을 걸었다.\n"일보다 내가 먼저야." 험쮜는 조금 더 단단해졌다.`}[id];
@@ -2066,15 +2069,89 @@ const SMALL={
   daram:['오늘 매장 다섯 곳 돌았어요! 다리 아파요ㅠ','험쮜 씨, 점심 뭐 먹었어요?','현장은 발로 뛰면 길이 보여요!'],
   any:['오늘도 수고 많아요.','날씨 좋네요.']};
 // 휴일 데이트 메뉴의 「주말 약속」 (♥30부터): [어디서, 무슨 일, 장면]
-const MEETUP={
-  sangho:['동네 산 등산','정상에서 사업부장님이 보온병 커피를 따라 줬다. "높이 올라오면 판이 보여요."','sc_park'],
-  hyunsu:['보드게임 카페','"퍼즐 게임은 제가 좀 합니다." 기획부장님이 내리 세 판을 이겼다.','sc_cafe'],
-  seohwi:['성수동 브런치','"회사 밖에선 편하게 불러요." 사수님이 팬케이크를 반 갈라 줬다.','sc_cafe'],
-  eunbin:['팝업 스토어 투어','팝업 세 곳을 돌며 사진 200장. "이거 콘텐츠로 쓰면 재밌겠다!"','sc_store'],
-  sumin:['조용한 북카페','각자 책을 읽다가 가끔 눈이 마주쳤다. 말없이도 편한 시간.','sc_cafe'],
-  jiyoung:['미술관 전시','"이 파란색, 우리 다음 용기 색 같지 않아요?" 둘이 한참 그림 앞에 서 있었다.','sc_park'],
-  jaemin:['시장 장보기','"가격표만 봐도 물가 흐름이 보여요." 재민 님의 가계부 비법을 전수받았다.','sc_store'],
-  hanmin:['한강 자전거','"페이스 유지가 제일 중요합니다." 과장님 뒤를 따라 20km를 달렸다.','sc_park']};
+// 주말 약속 장소 (초연의 데이트 장소처럼). 사람마다 좋아하는 곳 2곳·별로인 곳 1곳이 있다
+const SPOTS={
+  cafe:{n:'성수 카페거리',img:'sc_cafe',cost:4},
+  park:{n:'한강 피크닉',img:'sc_park',cost:3},
+  exhibit:{n:'미술관 전시',img:'c_selfdate',cost:6},
+  board:{n:'보드게임 카페',img:'c_friends',cost:5},
+  hike:{n:'동네 산 등산',img:'c_walk',cost:2},
+  market:{n:'시장 맛집 투어',img:'lunch',cost:5},
+  popup:{n:'팝업스토어 투어',img:'c_shop_hb',cost:6},
+  bike:{n:'한강 자전거',img:'c_run',cost:3},
+};
+// love: [좋아하는 곳, 그곳에서의 장면] ×2 · hate: 별로인 곳 · snack: 좋아하는 간식
+const LIKE={
+  sangho:{love:[['hike','정상에서 사업부장님이 보온병 커피를 따라 줬다. "높이 올라오면 판이 보여요."'],['exhibit','사업부장님은 옛 지도 그림 앞에 한참 서 있었다. "옛날 사람들도 방향부터 잡았네요."']],hate:'popup',snack:'다크초콜릿'},
+  hyunsu:{love:[['board','"퍼즐 게임은 제가 좀 합니다." 기획부장님이 내리 세 판을 이겼다.'],['market','"이 집 순대가 이 시장의 마지막 조각이에요." 부장님 맛집 지도가 완성됐다.']],hate:'bike',snack:'견과류 에너지바'},
+  seohwi:{love:[['cafe','"회사 밖에선 편하게 불러요." 사수님이 팬케이크를 반 갈라 줬다.'],['popup','"이 팝업 카피, 우리가 썼으면 더 잘 썼겠다." 둘이 같이 웃었다.']],hate:'hike',snack:'마카롱'},
+  eunbin:{love:[['popup','팝업 세 곳을 돌며 사진 200장. "이거 콘텐츠로 쓰면 재밌겠다!"'],['park','돗자리에 누워 숏폼 아이디어를 열 개 뽑았다. "근데 이거 다 재밌지 않아요?"']],hate:'exhibit',snack:'신상 젤리'},
+  sumin:{love:[['exhibit','조용한 전시장. 수민 님은 작품 옆 숫자 설명을 유독 오래 읽었다.'],['cafe','각자 책을 읽다가 가끔 눈이 마주쳤다. 말없이도 편한 시간.']],hate:'board',snack:'시럽 반 라떼'},
+  jiyoung:{love:[['exhibit','"이 파란색, 우리 다음 용기 색 같지 않아요?" 둘이 한참 그림 앞에 서 있었다.'],['park','노을 사진을 백 장 찍었다. "오늘 색은 꼭 기억해 둬요."']],hate:'market',snack:'딸기 케이크'},
+  jaemin:{love:[['market','"가격표만 봐도 물가 흐름이 보여요." 재민 님의 가계부 비법을 전수받았다.'],['board','재민 님은 모든 게임의 규칙서를 먼저 정독했다. 그리고 다 이겼다.']],hate:'popup',snack:'편의점 1+1 커피'},
+  hanmin:{love:[['bike','"페이스 유지가 제일 중요합니다." 과장님 뒤를 따라 20km를 달렸다.'],['hike','정상에서 과장님이 컵라면 두 개를 꺼냈다. "준비는 끝까지 하는 겁니다."']],hate:'cafe',snack:'자판기 캔커피'},
+};
+const loveOf=k=>LIKE[k]?LIKE[k].love.map(x=>x[0]):[];
+const knows=k=>!!(S.intel&&S.intel[k]);
+// 마지막 해 2월 14일: ♥70 넘은 동료가 3년의 마음을 전한다 [편지, 엔딩 에필로그]
+const VDAY={
+  seohwi:['"험쮜 님, 3년 전에 제가 사수라서 다행이었어요. 이제는 제가 험쮜 님한테 배워요."\n포장지엔 빨간펜으로 "합격"이라고 적혀 있었다.','박서휘 대리는 그날 받은 쪽지를 아직도 모니터 옆에 붙여 두었다.\n"내 첫 후배이자, 제일 자랑스러운 동료."'],
+  eunbin:['"험쮜 님이랑 일한 3년, 제 인생에서 제일 재밌는 콘텐츠였어요!"\n수제 초콜릿 위에 험쮜 얼굴이 그려져 있다.','은빈 님의 비밀 계정에 영상 하나가 올라왔다. 제목은 「내 최애 동료」.\n조회수는 100만을 넘겼다.'],
+  sumin:['수민 님이 조용히 초콜릿을 내밀었다.\n"데이터로 보면요… 험쮜 님이랑 있을 때 제가 웃는 횟수가 3배예요."','수민 님의 대시보드에 지표가 하나 늘었다. 이름은 「험쮜와 일한 날」.'],
+  jiyoung:['"이 초콜릿 상자, 제가 디자인했어요. 색은 그 새벽 바다 색이에요."\n김지영 대리 귀가 빨개졌다.','다음 시즌 STAGE:ZERO 용기는 새벽 바다색이었다.\n디자인 노트 첫 장에는 "with 험쮜"라고 적혀 있다.'],
+  hyunsu:['김현수 기획부장이 퍼즐 상자를 건넸다. 마지막 한 조각에 "험쮜"라고 적혀 있다.\n"이 조각이 없으면 그림이 안 맞아요."','기획부장실 액자에 완성된 퍼즐이 걸렸다. 가운데 한 조각만 색이 조금 다르다.'],
+  sangho:['이상호 사업부장이 나침반을 내려놓았다.\n"약속했죠. 이건 이제 험쮜 님 거예요. 방향은 충분히 잡혔으니까."','험쮜의 책상 위엔 낡은 나침반이 놓여 있다.\n언젠가 이걸 물려줄 후배를 떠올리면 벌써 설렌다.'],
+  jaemin:['"영수증 없는 선물이에요. 정산 안 해도 돼요."\n차재민 사원이 웃으며 초콜릿을 건넸다.','재민 님 체크리스트 맨 아래 칸: "☑ 험쮜 님한테 고맙다고 말하기."'],
+  hanmin:['이한민 과장이 손편지를 내밀었다.\n"말로는 잘 못 해서요. …3년 동안 든든했습니다."','물류 창고 게시판에 손편지 한 장이 붙어 있다. 맨 아래 서명은 "험쮜 & 이한민".'],
+};
+const faceOf=k=>imgOf(k).replace('a_','f_');
+
+/* ----- 은빈의 사내 소식통 (초연의 신문부 프로필처럼): 커피 한 잔에 동료 정보 ----- */
+async function buyIntel(){const ks=TEAM.filter(k=>LIKE[k]&&!knows(k));
+  if(!ks.length){await result({aff_eunbin:2,st:-4},'은빈: "이제 험쮜 님이 저보다 더 잘 알아요! 헤헤."','📰 사내 소식','eunbin');return}
+  if(S.money<3){toast('통장에 3만원도 없어요…');await result({st:-3},'은빈: "커피는 다음에 사요! 대신 수다나 떨어요."','📰 사내 소식','eunbin');return}
+  const c=await ask({who:'eunbin',title:'📰 은빈의 사내 소식통',text:'"커피 한 잔이면 누구든 알려 드리죠~ 누가 궁금해요?"',choices:ks.map(k=>({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${S.aff[k]||0}`,img:faceOf(k),face:1}))});
+  const k=ks[c],L=LIKE[k];(S.intel=S.intel||{})[k]=1;
+  const d=(S.story&&S.story[k])||0,nx=d<STORY_AT.length?`♥${STORY_AT[d]}이 되면 이야기가 열려요`:'이야기는 다 들었어요';
+  await say({who:'eunbin',title:`📰 ${tagName(k)} 프로필`,text:`💗 좋아하는 곳: ${L.love.map(x=>SPOTS[x[0]].n).join(' · ')}\n💦 별로인 곳: ${SPOTS[L.hate].n}\n🍬 좋아하는 간식: ${L.snack}\n📍 평소 자리: ${HOME[k].map(q=>`${PLACES[q].f} ${PLACES[q].n}`).join(' · ')}\n💞 ${nx}\n<span class="t">(「관계도」에서도 다시 볼 수 있어요.)</span>`,chips:applyFx({money:-3,aff_eunbin:2})})}
+
+/* ----- 책상에 쪽지 (초연의 신발장 편지처럼): 자리에 없어도 남길 수 있다 ----- */
+async function leaveNote(p){const ks=TEAM.filter(k=>LIKE[k]&&HOME[k].includes(p)&&!(S.day.noted||{})[k]);
+  const c=await ask({who:'me',title:'📝 누구 책상에 남길까?',text:`${PLACES[p].n}의 책상들.`,choices:ks.map(k=>({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${S.aff[k]||0}`,img:faceOf(k),face:1}))});
+  const k=ks[c],L=LIKE[k],kn=knows(k);
+  const ch=[{l:'고마움 쪽지',s:'무료 · ♥+4',img:'s_desk'},{l:'응원 쪽지 + 간식',s:'3만원 · ♥+6',img:'c_snack'}];
+  if(kn)ch.push({l:`${L.snack} + 쪽지`,s:'4만원 · 좋아하는 간식! ♥+10',img:'c_shop_hb',tag:'💗 취향 저격'});
+  const t=await ask({who:'me',title:`📝 ${given(k)} 님께`,text:kn?'좋아하는 간식을 알고 있다…!':'무엇을 같이 둘까?',choices:ch});
+  if(t>=1&&S.money<(t===1?3:4)){toast('통장 잔고가 부족해서 쪽지만 남겼어요')}
+  const tt=t>=1&&S.money<(t===1?3:4)?0:t;
+  (S.day.noted=S.day.noted||{})[k]=1;
+  const fx=[{['aff_'+k]:4},{['aff_'+k]:6,money:-3},{['aff_'+k]:10,money:-4,st:-3}][tt];
+  const reply=[`다음 날, 책상에 답장이 와 있었다.\n${given(k)}: "쪽지 고마워요. 오늘 힘이 나네요."`,`다음 날, ${given(k)} 님이 빈 간식 봉지를 흔들었다. "잘 먹었어요!"`,`다음 날, ${given(k)} 님이 달려왔다.\n"${L.snack} 제가 좋아하는 거 어떻게 알았어요?!"`][tt];
+  await result(fx,reply,'📝 쪽지',k)}
+
+/* ----- 발렌타인데이 (2월 14일) ----- */
+async function valentine(){setPlace('sc_office');
+  if(S.m>=TOTAL-1)return finalValentine();
+  const ks=[...TEAM.filter(k=>LIKE[k])];if(S.flags.crush||S.flags.dating)ks.push('daram');
+  const ch=ks.map(k=>({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${S.aff[k]||0}${k==='daram'?' · 💘':knows(k)?` · 🍬 ${LIKE[k].snack}`:''}`,img:faceOf(k),face:1}));
+  ch.push({l:'팀 전체에 의리 초콜릿',s:'8만원 · 모두 ♥+2',img:'c_snack'});
+  const c=await ask({who:'me',title:'🍫 2월 14일 · 발렌타인데이',text:'편의점 초콜릿 코너 앞에서 10분째. 이번엔 누구에게 줄까?',choices:ch});
+  if(c===ks.length){await result({...Object.fromEntries(TEAM.map(k=>['aff_'+k,2])),money:-8},'탕비실에 초콜릿 바구니를 놓았다. "험쮜 님 센스 뭐야~" 사무실이 달달해졌다.','🍫 의리 초콜릿');return}
+  const k=ks[c];
+  if(k==='daram'){await result({love:8,aff_daram:4,money:-3},'영업팀 책상에 초콜릿을 몰래 두고 왔다.\n오후에 메신저가 왔다. 다람: "…이거 험쮜 씨죠? 🍫"','🍫 몰래 둔 초콜릿','daram');return}
+  const kn=knows(k);
+  await result({['aff_'+k]:kn?10:6,money:-3},kn?`${LIKE[k].snack}! ${given(k)} 님 눈이 동그래졌다. "제 취향을 어떻게…!"`:`${given(k)}: "어머, 저 주는 거예요? 고마워요!"`,'🍫 발렌타인데이',k)}
+async function finalValentine(){
+  if(S.flags.dating&&S.love>=60){S.flags.vday='daram';
+    await showCG({img:dimg('picnic'),kick:'2월 14일',title:'다람의 초콜릿',sub:'"3년 전 그 커피, 기억나요?\n…그때부터 계속 좋아했어요."',fx:'petal'});
+    await result({love:10,st:-20},'다람 주임이 초콜릿 상자를 두 손으로 내밀었다.\n험쮜는 대답 대신 꼭 안아 주었다.','💘 2월 14일','daram');return}
+  const top=TEAM.filter(k=>VDAY[k]&&(S.aff[k]||0)>=70).sort((a,b)=>S.aff[b]-S.aff[a])[0];
+  if(!top){await result({st:-5},'마지막 해의 2월 14일. 책상 위엔 아무것도 없었다.\n퇴근길 편의점에서 나에게 주는 초콜릿을 샀다.\n<span class="t">(…3년 동안 수고했어, 험쮜.)</span>','🍫 2월 14일');return}
+  S.flags.vday=top;
+  await showCG({img:'ev_present',kick:'2월 14일',title:`${given(top)} 님의 초콜릿`,sub:'입사 3년째의 발렌타인데이.\n책상 위에 리본 묶인 상자가 하나 놓여 있었다.',fx:'petal'});
+  const c=await ask({who:top,title:`🍫 ${tagName(top)}`,text:VDAY[top][0],choices:[{l:'"저야말로… 정말 고마웠어요"',s:'꼭 안아 준다'},{l:'준비해 둔 초콜릿을 내민다',s:'"사실 저도요!"'}]});
+  await result({['aff_'+top]:6,st:-20},c===0?`${given(top)} 님이 웃으며 등을 토닥였다.\n"우리, 앞으로도 같이 일해요."`:`둘이 동시에 웃음이 터졌다.\n"…우리 같은 생각 했네요."`,'💞 2월 14일',top)}
+
 /* ================= 인턴의 하루 =================
    한 달 = 평일 하루 + 휴일 하루. 3년(36개월).
    평일: 캔버스랩 빌딩에서 층마다 갈 곳 3곳을 골라 차례로 들른다. 그날 그 자리에 있는 사람과 대화하거나, 그곳 업무를 돕는다.
@@ -2146,6 +2223,8 @@ async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('who
   ps.forEach(k=>{const v=S.aff[k]||0;ch.push({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${v} ${relLv(v)[1]}${hasTalk(k)?'':' · 수다'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💬 말 걸기'});ops.push(['talk',k])});
   if(ps.includes('daram')&&(S.flags.crush||S.flags.dating)){ch.push({l:'다람 주임에게 커피',s:'💘 설렘↑ · 1만원',img:dimg('coffeegive'),tag:'☕ 몰래'});ops.push(['act','coffee'])}
   placeActs(p).forEach(id=>{const a=ACTS[id],m=a.mate&&ps.includes(a.mate);ch.push({l:a.name,s:`${Object.keys(a.g).map(k=>STATS[k]).join('·')}↑${m?` · ${given(a.mate)}${wa(given(a.mate))} ♥↑`:''}`,img:clipOf(id)||a.scene,tag:'💼 업무'});ops.push(['work',id])});
+  if(ps.includes('eunbin')){ch.push({l:'은빈의 사내 소식',s:'커피 3만원 · 동료 취향 듣기',img:'c_coffee',tag:'📰 소식통'});ops.push(['intel'])}
+  if(TEAM.some(k=>LIKE[k]&&HOME[k].includes(p)&&!(S.day.noted||{})[k])){ch.push({l:'책상에 쪽지 남기기',s:'자리에 없어도 OK · ♥↑',img:'s_desk',tag:'📝 쪽지'});ops.push(['note'])}
   if(P.brk||!ch.length){ch.push({l:'잠깐 쉬어 가기',s:'스트레스↓ 체력↑',img:p==='cafe'?'c_half':'c_walk',tag:'☕ 휴식'});ops.push(['rest'])}
   const pr=ask({who:'me',speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ${P.ic} ${P.n}`,text:ps.length?`${ps.map(k=>tagName(k)).join(', ')}${ga(tagName(ps[ps.length-1]))} 있다.`:'아무도 없다. 조용하다.',choices:ch});
   if(ps.length)showGroup(ps);
@@ -2153,6 +2232,8 @@ async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('who
   const hi=ps.filter(k=>k!==arg&&!(op==='work'&&ACTS[arg].mate===k));if(hi.length)applyFx(Object.fromEntries(hi.map(k=>['aff_'+k,1])));
   if(op==='talk')await talkTo(arg);
   else if(op==='work'||op==='act')await runAct(arg,i,ps);
+  else if(op==='intel')await buyIntel();
+  else if(op==='note')await leaveNote(p);
   else await result({st:-12,hp:6},pick(['창밖을 멍하니 봤다. 구름이 크림 같다.','따뜻한 라떼 한 잔. 오늘 처음으로 숨을 쉬었다.','벤치에 앉아 눈을 감았다. 5분이 꿀 같았다.']),'잠깐 휴식');
   hideActor();render()}
 // 대화: 그 사람이 지금 고민하는 질문에 답한다. 다 들은 사람과는 가벼운 수다
@@ -2193,16 +2274,25 @@ async function weekend(){busy=true;document.body.classList.add('running');playBg
     const c=await ask({who:'me',speaker:`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 휴일`,title:'이번 휴일엔 뭘 할까?',text:`체력 ${S.hp} · 스트레스 ${S.st} · 통장 ${S.money}만원 · 연차 ${S.leave}일`,choices:ks.map(k=>({l:WKND[k].n,s:WKND[k].d,img:WKND[k].img}))});
     const K=WKND[ks[c]],ids=K.ids.filter(id=>!(id==='date'&&!S.flags.dating));
     const ch=ids.map(id=>({l:ACTS[id].name,s:actSub(id),img:clipOf(id)||ACTS[id].scene,tag:actSub(id).startsWith('🔒')?'🔒':''})),ops=ids.map(id=>['act',id]);
-    if(ks[c]==='love')TEAM.filter(k=>k!=='daram'&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).slice(0,3).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${MEETUP[k][0]} · ♥↑ · 5만원`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💞 ♥'+(S.aff[k]||0)});ops.push(['meet',k])});
+    if(ks[c]==='love')TEAM.filter(k=>k!=='daram'&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).slice(0,3).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${knows(k)?'💗 '+LIKE[k].love.map(x=>SPOTS[x[0]].n).join('·'):'어디를 좋아할까?'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💞 ♥'+(S.aff[k]||0)});ops.push(['meet',k])});
     ch.push({l:'← 다른 걸 할래',s:''});ops.push(['back']);
     const j=await ask({who:'me',speaker:`${monthOf(S.m)}월 · 휴일`,title:K.n,text:K.d,choices:ch,cls:'wk'});
     const [op,id]=ops[j];if(op==='back')continue;
-    if(op==='meet'){await meetup(id);break}
+    if(op==='meet'){if(await meetup(id))break;continue}
     const lk=lockReason(id)||(ACTS[id].cost&&S.money<ACTS[id].cost&&'통장 잔고가 부족해요');if(lk){toast('🔒 '+lk);continue}
     await runAct(id,0);break}
   hideActor()}
-async function meetup(k){const [place,line,sc]=MEETUP[k];setPlace(sc);
-  await result({['aff_'+k]:6,st:-14,money:-5,...(MATES[k]?{[MATES[k].g[0]]:1}:{})},`${place}. ${line}`,`${given(k)}${wa(given(k))} 주말 약속`,k)}
+async function meetup(k){const ids=Object.keys(SPOTS),kn=knows(k),L=LIKE[k];
+  const ch=ids.map(q=>({l:SPOTS[q].n,s:`${SPOTS[q].cost}만원`,img:SPOTS[q].img,tag:kn?(loveOf(k).includes(q)?'💗 좋아함':L.hate===q?'💦 별로':''):''}));
+  ch.push({l:'← 다른 걸 할래',s:''});
+  const c=await ask({who:k,title:`${given(k)}${wa(given(k))} 어디 갈까?`,text:kn?'은빈한테 들은 취향이 떠오른다…':`${given(k)} 님은 어디를 좋아할까? (은빈의 사내 소식으로 알아볼 수 있어요)`,choices:ch});
+  if(c===ids.length)return false;
+  const q=ids[c],P=SPOTS[q];if(S.money<P.cost){toast('통장 잔고가 부족해요');return false}
+  setPlace(P.img);
+  const lv=L.love.find(x=>x[0]===q),hate=L.hate===q;
+  const fx={['aff_'+k]:lv?10:hate?1:5,st:lv?-16:hate?-4:-12,money:-P.cost,...(lv&&MATES[k]?{[MATES[k].g[0]]:1}:{})};
+  const text=lv?lv[1]+'\n<span class="t">(…여기 정말 좋아하는구나!)</span>':hate?pick([`${given(k)} 님이 내내 시계를 봤다.\n<span class="t">(…여긴 취향이 아닌가 보다.)</span>`,`"…저 사실 이런 데 잘 안 와요." 어색한 웃음.`]):pick([`이야기가 끊이지 않았다. "오늘 즐거웠어요!"`,`"다음에 또 와요." ${given(k)} 님이 손을 흔들었다.`,'회사 밖에서 보니 또 다른 얼굴이었다.']);
+  await result(fx,`${P.n}. ${text}`,`${given(k)}${wa(given(k))} 주말 약속`,k);return true}
 
 /* ----- 하루 끝 → 휴일 → 월말 ----- */
 const runMonth=()=>monthIntro(); // 예전 버튼 호환
@@ -2224,6 +2314,7 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
   }
   if(monthOf(S.m)===S.prof.bm&&S.m>0){setPlace('sc_office');
     await result({st:-15,hp:5,...Object.fromEntries(Object.keys(MATES).map(k=>['aff_'+k,2]))},`${S.prof.bm}월 ${S.prof.bd}일. 출근하자마자 불이 꺼지고 케이크가 들어왔다.\n"험쮜 님, 생일 축하해요!"\n<span class="t">(${S.prof.mbti[2]==='F'?'…이런 거에 약하다. 울컥.':'…티 안 내려 했는데 입꼬리가 올라간다.'})</span>`,'🎂 생일 축하해요!','seohwi')}
+  if(monthOf(S.m)===2&&!S.ending)await valentine();
   const fx=FIXED[S.m],ev=EVAL_AT[S.m];let extra=false;
   if(fx){await fx();extra=true}
   else if(R()<.55){const pool=RANDOM_EV.filter(e=>e.w()&&!(e.id&&S.flags['ev_'+e.id]));if(pool.length){const e=pick(pool);if(e.id)S.flags['ev_'+e.id]=1;await e.run();extra=true}}
@@ -2747,7 +2838,7 @@ function relCard(k){const M=who(k),v=S?S.aff[k]||0:0,[,lb,col]=relLv(v),isM=!!MA
   const ph=M.noImg?`background-image:url(${IMG('f_'+k)});background-size:cover;background-position:50% 35%`:`background-image:url(${IMG(imgOf(k))})`;
   const next=[...REL_LV].reverse().find(([n])=>n>v);
   return `<div class="mate"><div class="ph" style="--el:${isM?EL[M.el]+'33':'#ffe3ec'};${ph}"></div><div><div class="mrow"><b>${JOB_TAG[k]?`<span class="jt">${JOB_TAG[k]}</span>`:''}${M.name}</b><span class="rtag">${REL_TAG[k]}</span><span class="relnum" style="--rc:${col}">♥${v}</span></div>
-  <div class="role">${M.role} · <span style="color:${col}">${lb}</span>${next?` · ${next[1]}까지 ${next[0]-v}`:''}</div><q>${M.q}</q>
+  <div class="role">${M.role} · <span style="color:${col}">${lb}</span>${next?` · ${next[1]}까지 ${next[0]-v}`:''}</div><q>${M.q}</q>${S&&knows(k)&&LIKE[k]?`<div class="role">💗 ${LIKE[k].love.map(x=>SPOTS[x[0]].n).join('·')} · 💦 ${SPOTS[LIKE[k].hate].n} · 🍬 ${LIKE[k].snack}</div>`:''}
   <div class="tr">${isM?`${M.tr}<br>${S&&S.perk&&S.perk[k]?`♥ 단짝 — ${PERK[k].txt}`:`이야기 ${st}/${STORY_AT.length} · 다음 이야기는 ♥${STORY_AT[Math.min(STORY_AT.length-1,st)]}`}`:k==='ceo'?'비서실 일을 함께하면 가까워져요. 상사 평가에 들어가요.':'영업팀 일을 함께하면 가까워져요.'}</div>
   <div class="affbar"><i style="width:${v}%;background:${col}"></i></div></div></div>`}
 const dexImg=e=>e.id==='love'?dimg('picnic'):e.img;
@@ -3403,7 +3494,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-bb688b';
+const BUILD='2026.10.09-1531e4';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
