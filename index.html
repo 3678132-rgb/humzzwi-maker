@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=e88866"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=e88866"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=e88866">
+<link rel="manifest" href="manifest.json?v=950b1d"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=950b1d"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=950b1d">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -354,7 +354,11 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .title .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
 .title .tags span{font-size:12.5px;color:#fff;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.5);border-radius:99px;padding:3px 10px;backdrop-filter:blur(3px)}
 /* 엔딩 도감은 타이틀 위에서도 열리고, 그림 크게 보기는 그 위에 */
-#sheet-dex,#sheet-slots{z-index:11}
+#sheet-dex,#sheet-slots,#sheet-share,#sheet-friend{z-index:11}
+.share-btn{width:100%;margin:2px 0 10px}
+.share-img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;border-radius:14px;background:#f3e6dd;margin-bottom:12px;-webkit-touch-callout:default}
+.dx span.th{display:block}
+.fnew,.fboth{font-style:normal;font-family:var(--body);font-size:11px;border-radius:99px;padding:1px 7px;margin-left:4px;vertical-align:2px}.fnew{background:var(--pink);color:#fff}.fboth{background:#e3f4e6;color:#2f7a3d}
 .slots4{display:grid;gap:10px}
 .slotc{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;border:2.5px solid var(--line);background:#fff;border-radius:16px;padding:10px 12px;text-align:left;font:inherit;color:var(--ink);cursor:pointer;width:100%}
 .slotc .no{font-family:var(--display);font-size:22px;color:var(--pink-d);text-align:center}
@@ -928,7 +932,20 @@ body.running .mission{opacity:.85}
   </div></div>
   <div class="sheet" id="sheet-dex" hidden><div class="sheet-card">
     <div class="sheet-head"><b>엔딩 도감</b><button class="sheet-x" data-close aria-label="닫기">×</button></div>
+    <button class="btn share-btn" id="btn-share-dex" type="button">📤 내 도감 공유하기</button>
     <div class="dex" id="dex"></div>
+  </div></div>
+  <div class="sheet" id="sheet-share" hidden><div class="sheet-card">
+    <div class="sheet-head"><b>📤 도감 공유</b><button class="sheet-x" data-close aria-label="닫기">×</button></div>
+    <p class="sheet-sub">카드 그림과 링크를 같이 보내요. 링크를 연 친구는 내 도감을 보고 자기 도감과 비교할 수 있어요. 그림을 길게 누르면 사진으로 저장돼요.</p>
+    <img class="share-img" id="share-img" alt="">
+    <div class="btn-row"><button class="btn" id="share-go" type="button">공유하기</button><button class="btn ghost" id="share-link" type="button">🔗 링크 복사</button></div>
+  </div></div>
+  <div class="sheet" id="sheet-friend" hidden><div class="sheet-card">
+    <div class="sheet-head"><b>💌 친구의 엔딩 도감</b><button class="sheet-x" data-close aria-label="닫기">×</button></div>
+    <p class="sheet-sub" id="friend-sub"></p>
+    <div class="dex" id="friend"></div>
+    <div class="btn-row" style="margin-top:10px"><button class="btn" id="friend-go" type="button">나도 도전하기 ▶</button></div>
   </div></div>
   <div class="sheet" id="sheet-slots" hidden><div class="sheet-card">
     <div class="sheet-head"><b id="slots-title">저장 슬롯</b><button class="sheet-x" data-close aria-label="닫기">×</button></div>
@@ -2045,10 +2062,11 @@ function finish(){
   <div class="report"><div><small>최종 직급</small><b>${RANKS[S.rank]}</b></div><div><small>론칭 완성도</small><b>${S.score??'-'} (${bpPct()}%)</b></div><div><small>브랜드 점수</small><b>${brandScore()}</b></div><div><small>월 최고 매출</small><b>${fmtW(S.salesBest||0)}</b></div><div><small>누적 매출</small><b>${fmtW(S.salesSum||0)}</b></div><div><small>해외 진출</small><b>${glOpen()}개국</b></div><div><small>누적 이익</small><b>${S.co?(S.co.profitSum<0?'−':'')+fmtW(Math.abs(S.co.profitSum)):'-'}</b></div><div><small>회사 자금</small><b>${S.co?(S.co.cash<0?'−':'')+fmtW(Math.abs(S.co.cash)):'-'}</b></div>
   <div><small>제품력</small><b>${S.bq}</b></div><div><small>화제성</small><b>${S.buzz}</b></div><div><small>평판</small><b>${S.rep}</b></div>
   <div><small>능력치 합계</small><b>${sumStat()}</b></div><div><small>부업 / 야근</small><b>${S.jobs} / ${S.ot}</b></div><div><small>AI 스킬</small><b>Lv.${S.ai}</b></div><div><small>상사 평가</small><b>${bossAff()}</b></div><div><small>동료 평균 ♥</small><b>${avgAff()}</b></div><div><small>면접 등급</small><b>${S.ivGrade||'-'}</b></div><div><small>미션 성공</small><b>${S.missionWins||0}/${S.missionTotal||0}</b></div></div>
-  <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btn-again">다시 하기</button><button class="btn ghost" id="btn-dex2">엔딩 도감</button></div></div>`;
+  <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btn-again">다시 하기</button><button class="btn ghost" id="btn-dex2">엔딩 도감</button><button class="btn ghost" id="btn-share-end">📤 공유</button></div></div>`;
   el.hidden=false;el.scrollTop=0;
   $('#btn-again').onclick=()=>{el.hidden=true;openSetup()};
   $('#btn-dex2').onclick=()=>{el.hidden=true;showTitle();openSheet('dex')};
+  $('#btn-share-end').onclick=()=>openShare(id);
   busy=false;document.body.classList.remove('running');hideActor();
 }
 
@@ -3499,7 +3517,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-e88866';
+const BUILD='2026.10.09-950b1d';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
@@ -3514,6 +3532,61 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
 }
 showTitle();
+/* ================= 엔딩 도감 공유 =================
+   도감을 한 장짜리 카드 그림(1080×1350)으로 만들어 카톡·인스타 등으로 보낸다.
+   같이 보내는 링크(#dex=…)를 열면 친구의 도감을 보고 내 도감과 비교할 수 있다 */
+if(!CanvasRenderingContext2D.prototype.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath()};
+const SHARE_URL=()=>location.origin+location.pathname;
+const dexCode=dex=>ENDINGS.reduce((n,e,i)=>dex[e.id]?n+2**i:n,0).toString(36);
+const dexFrom=code=>{const n=parseInt(code,36)||0;return Object.fromEntries(ENDINGS.filter((e,i)=>Math.floor(n/2**i)%2).map(e=>[e.id,true]))};
+const loadImg=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src});
+async function dexCard(dex,hi){
+  try{await Promise.all([document.fonts.load('40px "Jua"'),document.fonts.load('24px "Gowun Dodum"')])}catch(e){}
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#ffe3ec');bg.addColorStop(1,'#fff6e9');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  const got=ENDINGS.filter(e=>dex[e.id]).length,J='"Jua","Apple SD Gothic Neo",sans-serif',G='"Gowun Dodum","Apple SD Gothic Neo",sans-serif';
+  const me=await loadImg(IMG('f_hz'));if(me){g.save();g.beginPath();g.arc(118,118,62,0,7);g.clip();g.drawImage(me,56,56,124,124);g.restore();g.lineWidth=6;g.strokeStyle='#fff';g.beginPath();g.arc(118,118,62,0,7);g.stroke()}
+  g.fillStyle='#2a1f33';g.font=`64px ${J}`;g.fillText('험쮜 메이커',204,108);
+  g.fillStyle='#e0527f';g.font=`36px ${J}`;g.fillText('엔딩 도감',208,158);
+  g.textAlign='right';g.fillStyle='#2a1f33';g.font=`92px ${J}`;g.fillText(`${got}`,W-150,140);g.fillStyle='#a08a80';g.font=`44px ${J}`;g.fillText(`/ ${ENDINGS.length}`,W-56,140);g.textAlign='left';
+  // 진행 바
+  g.fillStyle='#f3d9cf';g.beginPath();g.roundRect(56,200,W-112,18,9);g.fill();g.fillStyle='#ff6f98';g.beginPath();g.roundRect(56,200,Math.max(18,(W-112)*got/ENDINGS.length),18,9);g.fill();
+  const cols=4,gap=20,cw=(W-112-gap*(cols-1))/cols,ch=cw*1.15,top=250;
+  const imgs=await Promise.all(ENDINGS.map(e=>dex[e.id]?loadImg(IMG(dexImg(e))):null));
+  ENDINGS.forEach((e,i)=>{const x=56+(i%cols)*(cw+gap),y=top+Math.floor(i/cols)*(ch+62),on=dex[e.id],im=imgs[i];
+    g.save();g.beginPath();g.roundRect(x,y,cw,ch,22);g.clip();
+    if(on&&im){const s=Math.max(cw/im.width,ch/im.height),w=im.width*s,h=im.height*s;g.drawImage(im,x+(cw-w)/2,y+(ch-h)*.35,w,h)}
+    else{g.fillStyle='#d9c9c0';g.fillRect(x,y,cw,ch);g.fillStyle='#bfa99e';g.font=`120px ${J}`;g.textAlign='center';g.fillText('?',x+cw/2,y+ch/2+42);g.textAlign='left'}
+    g.restore();
+    g.lineWidth=e.id===hi?10:6;g.strokeStyle=e.id===hi?'#ff4f86':'#fff';g.beginPath();g.roundRect(x,y,cw,ch,22);g.stroke();
+    // 등급 뱃지
+    g.fillStyle=on?'#ff6f98':'#a08a80';g.beginPath();g.arc(x+34,y+34,24,0,7);g.fill();g.fillStyle='#fff';g.font=`26px ${J}`;g.textAlign='center';g.fillText(on?e.g:'?',x+34,y+43);
+    if(e.id===hi){g.fillStyle='#ff4f86';g.beginPath();g.roundRect(x+cw-92,y+12,80,38,19);g.fill();g.fillStyle='#fff';g.font=`26px ${J}`;g.fillText('NEW',x+cw-52,y+40)}
+    g.fillStyle=on?'#2a1f33':'#a08a80';g.font=`28px ${J}`;let t=on?e.t:'???';while(g.measureText(t).width>cw-8&&t.length>2)t=t.slice(0,-2)+'…';g.fillText(t,x+cw/2,y+ch+40);g.textAlign='left'});
+  g.fillStyle='#8a7a70';g.font=`28px ${G}`;g.textAlign='center';g.fillText(got>=ENDINGS.length?'모든 엔딩을 모았어요! 👑':'인턴 험쮜의 3년, 당신은 어떤 엔딩?',W/2,H-80);
+  g.fillStyle='#b9a49a';g.font=`24px ${G}`;g.fillText(SHARE_URL().replace(/^https?:\/\//,''),W/2,H-40);g.textAlign='left';
+  return new Promise(r=>c.toBlob(b=>r(b),'image/png'))}
+let shareBlob=null;
+async function openShare(hi){const dex=ls.get(DEXKEY)||{},got=ENDINGS.filter(e=>dex[e.id]).length;
+  const url=SHARE_URL()+'#dex='+dexCode(dex),text=`험쮜 메이커 엔딩 도감 ${got}/${ENDINGS.length} 모았어요! 내 도감 보기 👉`;
+  const s=$('#sheet-share');s.hidden=false;$('#share-img').removeAttribute('src');$('#share-img').alt='도감 카드 만드는 중…';
+  shareBlob=await dexCard(dex,hi);if(!shareBlob){toast('카드를 만들지 못했어요');return}
+  $('#share-img').src=URL.createObjectURL(shareBlob);$('#share-img').alt=`엔딩 도감 ${got}/${ENDINGS.length}`;
+  $('#share-go').onclick=async()=>{const file=new File([shareBlob],'humzzwi-dex.png',{type:'image/png'});
+    try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'험쮜 메이커 엔딩 도감',text:text+' '+url});return}
+      if(navigator.share){await navigator.share({title:'험쮜 메이커 엔딩 도감',text,url});return}}catch(e){if(e&&e.name==='AbortError')return}
+    copyText(text+' '+url)};
+  $('#share-link').onclick=()=>copyText(text+' '+url)}
+function copyText(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('링크를 복사했어요 📋'),()=>{prompt('이 링크를 복사해 보내 주세요',t)})}
+// 친구가 보낸 링크(#dex=…)로 들어오면 친구 도감을 보여 준다
+function friendDex(){const m=location.hash.match(/dex=([0-9a-z]+)/);if(!m)return;const fd=dexFrom(m[1]),my=ls.get(DEXKEY)||{},n=ENDINGS.filter(e=>fd[e.id]).length;
+  history.replaceState(null,'',location.pathname);
+  $('#friend-sub').textContent=`친구는 ${n}/${ENDINGS.length}개, 나는 ${ENDINGS.filter(e=>my[e.id]).length}개 모았어요.`;
+  $('#friend').innerHTML=ENDINGS.map(e=>`<div class="dx ${fd[e.id]?'':'lock'}"><span class="th" style="background-image:url(${IMG(dexImg(e))})"></span><div><b>${fd[e.id]?e.t:'???'}${fd[e.id]&&!my[e.id]?' <i class="fnew">나는 아직!</i>':''}${fd[e.id]&&my[e.id]?' <i class="fboth">✓ 나도</i>':''}</b><small class="${fd[e.id]?'':'hint'}">${fd[e.id]?e.sub:'친구도 아직 못 본 엔딩'}</small></div></div>`).join('');
+  $('#sheet-friend').hidden=false}
+$('#btn-share-dex').onclick=()=>openShare();
+$('#friend-go').onclick=()=>{$('#sheet-friend').hidden=true};
+friendDex();addEventListener('hashchange',friendDex);
 </script>
 </body>
 </html>
