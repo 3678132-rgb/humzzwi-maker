@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=8cf2c5"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8cf2c5"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8cf2c5">
+<link rel="manifest" href="manifest.json?v=b2a93e"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=b2a93e"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=b2a93e">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -138,7 +138,7 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 /* ---------- 등장인물 스탠딩 ---------- */
 .actor{position:absolute;right:0;bottom:calc(var(--dlg-bottom) + var(--sb) + 40px);z-index:4;height:min(42%,380px);aspect-ratio:2/3;pointer-events:none;transform-origin:50% 100%;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
 body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
-.actor img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
+.actor img{position:absolute;left:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
 .actor-name{position:absolute;left:50%;top:0;transform:translateX(-50%) rotate(-4deg);white-space:nowrap;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:13px;padding:1px 10px;border-radius:99px;border:2px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .group-actors{position:absolute;left:0;right:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;pointer-events:none}
 .group-actors figure{margin:0 -6px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
@@ -2063,19 +2063,20 @@ function showScene(key,label){
 }
 const setPlace=k=>showScene(k,null);
 function relChip(k){if(!S||!isRel(k))return '';const v=S.aff[k]||0,[,lb,col]=relLv(v);return `<span class="rel" style="--rc:${col}">♥${v} ${lb}</span>`}
-function showActor(k){hideGroup();const n=who(k);if(!n)return;if(n.noImg){hideActor();return}const el=$('#actor');$('#actor-img').src=IMG(imgOf(k));$('#actor-name').textContent=tagName(k)+(S&&isRel(k)?` ♥${S.aff[k]||0}`:'');el.classList.toggle('rival',!!n.rival);
+function showActor(k){hideGroup();const n=who(k);if(!n)return;if(n.noImg){hideActor();return}const el=$('#actor');$('#actor-img').src=IMG(sprOf(k));$('#actor-img').style.height=(bodyT(k)/T_MAX*100)+'%';$('#actor-name').textContent=tagName(k)+(S&&isRel(k)?` ♥${S.aff[k]||0}`:'');el.classList.toggle('rival',!!n.rival);
   if(!el.hidden&&el.dataset.k===k){placeActor();return}el.dataset.k=k;el.hidden=false;el.style.animation='none';el.offsetWidth;el.style.animation='';placeActor()}
 // 여러 명을 한 번에 소개할 때: 대화창 위에 나란히 세운다
 function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');g.id='group';g.className='group-actors';$('#phone').appendChild(g)}
   // 그림마다 캐릭터 크기가 달라서, 사무실 자리와 같은 비율(CROP: 얼굴 폭 맞춤)로 키를 맞춘다. r = 얼굴 폭을 같게 했을 때의 그림 높이
-  g.innerHTML=ks.map((k,i)=>{const kk=imgOf(k).slice(2),r=(CROP[kk]||[70])[0]*640/(SPR_W[kk]||250)*(MALE.includes(kk)?1.3:1);
-    return `<figure style="animation-delay:${i*.08}s" data-r="${r}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(imgOf(k))}" alt="${esc(who(k).name)}"></figure>`}).join('');g.hidden=false;placeGroup()}
-const MALE=['sangho','hanmin','jaemin','daram']; // 남자 캐릭터는 키를 키운다 (다람 여성판 daram_f 제외)
-const SPR_W={sangho:247,hyunsu:259,hanmin:258,seohwi:281,jiyoung:253,daram:257,daram_f:264,eunbin:332,sumin:216,jaemin:247}; // 원본 그림 폭 (높이는 모두 640)
+  g.innerHTML=ks.map((k,i)=>`<figure style="animation-delay:${i*.08}s" data-t="${bodyT(k)}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(sprOf(k))}" alt="${esc(who(k).name)}"></figure>`).join('');g.hidden=false;placeGroup()}
+// 같은 세상 비율 그림 b_*: 얼굴 크기는 그대로 두고 몸 길이만 늘이거나 줄여 머리:몸 비율을 맞춘 그림 (tools에서 만든 것)
+// BODY_T = 얼굴 폭을 같게 했을 때의 키 (여자 185 · 남자 205). 모두 같은 자로 재서 그린다
+const BODY_T={sangho:205,hanmin:205,jaemin:205,daram:205,hyunsu:185,seohwi:185,jiyoung:185,eunbin:185,sumin:185,daram_f:185},T_MAX=205;
+const sprOf=k=>{const kk=imgOf(k).slice(2);return BODY_T[kk]?'b_'+kk:imgOf(k)};
+const bodyT=k=>BODY_T[imgOf(k).slice(2)]||T_MAX;
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
   const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px';
-  const fs=[...g.querySelectorAll('figure')],rmax=Math.max(...fs.map(f=>+f.dataset.r));
-  fs.forEach(f=>{f.querySelector('img').style.height=((h-26)*(+f.dataset.r)/rmax)+'px'})}
+  g.querySelectorAll('figure').forEach(f=>{f.querySelector('img').style.height=((h-26)*(+f.dataset.t)/T_MAX)+'px'})}
 function hideGroup(){const g=$('#group');if(g){g.hidden=true;g.innerHTML=''}}
 function hideActor(){hideGroup();const el=$('#actor');el.hidden=true;el.dataset.k=''}
 function faceStyle(w){
@@ -2791,10 +2792,10 @@ function makeOrders(){if(S.orders&&S.orders.m===S.m)return S.orders.list;const A
     if(room('cat'))pk.push('cat');const mm=missionMs();if(mm&&room(mm)&&!pk.includes(mm))pk.push(mm);
     Object.keys(MS).filter(k=>room(k)&&!pk.includes(k)).sort((a,b)=>S.ms[a]/MS[a].need-S.ms[b]/MS[b].need).forEach(k=>pk.push(k));
     while(pk.length<3)pk.push(null);
-    pk.slice(0,3).forEach(k=>{const p=k?PART_ORD[k]:['📦','론칭 재고 생산','SCM'];list.push({k,ic:p[0],t:p[1],from:p[2],fill:k==='form'?fav:fill(),label:!(k==='log'||k==='pr'&&R()<.5),q:8})})}
+    pk.slice(0,3).forEach(k=>{const p=k?PART_ORD[k]:['📦','론칭 재고 생산','SCM'];list.push({k,ic:p[0],t:p[1],from:p[2],fill:k==='form'?fav:fill(),label:!(k==='log'||k==='pr'&&R()<.5),q:6})})}
   else{const dom=[...DOM_ORD].sort(()=>R()-.5),nGl=A===3?(R()<.5?2:1):0;
-    for(let i=0;i<3;i++){if(i<nGl){const g=glList()[Math.min(glOpen(),2)-(i?1:0)]||glList()[0];list.push({gl:1,ic:g.n.split(' ')[0],t:g.n.split(' ').slice(1).join(' ')+' 주문',from:'해외 바이어',fill:fill(),label:true,q:10})}
-      else{const d=dom.pop(),nl=d[1].includes('리필')||R()<.15;list.push({ic:d[0],t:d[1]+(nl&&!d[1].includes('리필')?' (샘플·라벨 없이)':''),from:'국내 채널',fill:fill(),label:!nl,q:A===2?9:10})}}}
+    for(let i=0;i<3;i++){if(i<nGl){const g=glList()[Math.min(glOpen(),2)-(i?1:0)]||glList()[0];list.push({gl:1,ic:g.n.split(' ')[0],t:g.n.split(' ').slice(1).join(' ')+' 주문',from:'해외 바이어',fill:fill(),label:true,q:7})}
+      else{const d=dom.pop(),nl=d[1].includes('리필')||R()<.15;list.push({ic:d[0],t:d[1]+(nl&&!d[1].includes('리필')?' (샘플·라벨 없이)':''),from:'국내 채널',fill:fill(),label:!nl,q:A===2?7:7})}}}
   list.forEach((o,i)=>o.col=ORD_COL[i]);S.orders={m:S.m,list};return list}
 const recipeHTML=o=>`<span>${FILL[o.fill][0]}${FILL[o.fill][1]}</span><span>⭕</span><span>${o.label?'🏷️':'🚫🏷️'}</span>`;
 function lineTop(){const M=S.mission,A=actOf(S.m),dl=LAUNCH_M-S.m,last=(S.salesLog||[]).slice(-1)[0];
@@ -2829,7 +2830,7 @@ function shiftGame(orders,help){return new Promise(done=>{
   bot.innerHTML=`<button class="lbtn lb-cream" data-lact="fill-cream">💛 크림<small>1</small></button><button class="lbtn lb-gel" data-lact="fill-gel">💙 젤<small>2</small></button><button class="lbtn lb-cap" data-lact="cap">⭕ 뚜껑<small>3</small></button><button class="lbtn lb-label" data-lact="label">🏷️ 라벨<small>4</small></button>`;
   const fl=$('#ln-floor'),W=fl.clientWidth,Z={fill:W*.24,cap:W*.5,label:W*.76},HW=W*.09,PF=W*.032*(help==='sumin'?1.7:1);
   Object.entries(Z).forEach(([z,x])=>{$('#m-'+z).style.left=x+'px';const zo=$('#z-'+z);zo.style.left=x+'px';zo.style.width=HW*2+'px'});
-  const v=W*(A===1?.16:A===2?.19:.22)*(1+Math.min(.12,(S.m%6)*.02))*(help==='hanmin'?.85:1),gap=A===1?1.55:A===2?1.35:1.2;
+  const v=W*(A===1?.105:A===2?.12:.135)*(1+Math.min(.08,(S.m%6)*.015))*(help==='hanmin'?.85:1),gap=A===1?2.3:A===2?2.05:1.85;
   const queue=[];orders.forEach((o,i)=>{for(let n=0;n<o.q+(help==='eunbin'?2:0);n++)queue.push(i)});
   if(A>1)for(let i=queue.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[queue[i],queue[j]]=[queue[j],queue[i]]} // 론칭 후엔 주문이 섞여 들어온다
   const items=[],st={good:0,bad:0,perfect:0,combo:0,max:0,miss:0,saved:0,per:orders.map(()=>0),total:queue.length};
@@ -2868,12 +2869,12 @@ function shiftGame(orders,help){return new Promise(done=>{
   const cd=setInterval(()=>{c--;if(c>0){cnt.textContent=c;sfx('tap')}else{clearInterval(cd);cnt.textContent='시작!';sfx('great');setTimeout(()=>{cnt.remove();const hb=$('#ln-hb');if(hb)setTimeout(()=>hb.remove(),2500)},500);running=true;last=performance.now();requestAnimationFrame(tick)}},650)})}
 function shiftApply(r,orders,help){const chips=[],lines=[],p0=S.push||0;
   orders.forEach((o,i)=>{const g=r.per[i]||0,q=o.q+(help==='eunbin'?2:0);lines.push(`${o.ic} ${o.t} · ${g}/${q}개`);
-    if(!S.launched){if(o.k)addMs(o.k,Math.round(g*.5),chips)}
-    else if(o.gl){addGl(Math.round(g*.3),chips);S.push=(S.push||0)+Math.round(g*.3)}
-    else S.push=(S.push||0)+Math.round(g*1.1*(help==='daram'?1.15:help==='sangho'?1.05:1))});
+    if(!S.launched){if(o.k)addMs(o.k,Math.round(g*.67),chips)}
+    else if(o.gl){addGl(Math.round(g*.4),chips);S.push=(S.push||0)+Math.round(g*.4)}
+    else S.push=(S.push||0)+Math.round(g*1.45*(help==='daram'?1.15:help==='sangho'?1.05:1))});
   if(S.push>p0)chips.push({l:'📈 매출 기여',d:S.push-p0});
-  bump(chips,'bq',Math.min(4,Math.round(r.perfect/(S.launched?10:7))));
-  bump(chips,'buzz',Math.round(r.max/4*(help==='seohwi'?2:1)));
+  bump(chips,'bq',Math.min(4,Math.round(r.perfect/(S.launched?8:5.5))));
+  bump(chips,'buzz',Math.round(r.max/3*(help==='seohwi'?2:1)));
   bump(chips,'rep',(r.acc>=.9?2:r.acc>=.8?1:r.acc<.5?-2:0)+(help==='sangho'?2:0));
   bump(chips,'exec',1);if(r.perfect>=10)bump(chips,'know',1);if(r.max>=10)bump(chips,'trend',1);
   if(help)bump(chips,'aff_'+help,3);
@@ -3152,7 +3153,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-8cf2c5';
+const BUILD='2026.10.09-b2a93e';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
