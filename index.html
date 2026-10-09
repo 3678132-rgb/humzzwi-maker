@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=56e525"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=56e525"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=56e525">
+<link rel="manifest" href="manifest.json?v=bc930c"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=bc930c"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=bc930c">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -138,6 +138,10 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .actor img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
 .actor-name{position:absolute;left:50%;top:0;transform:translateX(-50%) rotate(-4deg);white-space:nowrap;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:13px;padding:1px 10px;border-radius:99px;border:2px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.group-actors{position:absolute;left:0;right:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;pointer-events:none}
+.group-actors figure{margin:0 -8px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
+.group-actors img{height:calc(100% - 26px);width:auto;max-width:150px;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
+.group-actors figcaption{background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:12.5px;padding:1px 9px;border-radius:99px;white-space:nowrap;margin-bottom:4px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 .actor.rival .actor-name{background:linear-gradient(180deg,#d8607a,#8f1f3b)}
 @keyframes actor-in{from{transform:translateX(60%) scale(.92);opacity:0}to{transform:none;opacity:1}}
 @keyframes idle{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-1.4%) rotate(.6deg)}}
@@ -1000,7 +1004,7 @@ const REL_LV=[[70,'단짝','#ff4f86'],[40,'믿는 사이','#f07aa0'],[20,'아는
 const relLv=v=>REL_LV.find(([n])=>v>=n);
 const isRel=k=>REL_KEYS.includes(k);
 // 이름 앞에 담당 업무 (예: PR · 박서휘 대리)
-const tagName=k=>{const n=who(k);return n&&JOB_TAG[k]?`${JOB_TAG[k]} · ${n.name}`:n?n.name:''};
+const tagName=k=>{const n=who(k);return n&&JOB_TAG[k]&&!n.name.includes(JOB_TAG[k])?`${JOB_TAG[k]} · ${n.name}`:n?n.name:''};
 const given=k=>who(k).name.split(' ')[0].slice(1);
 const BOSS=['sangho','hyunsu'];
 
@@ -2057,9 +2061,15 @@ function showScene(key,label){
 }
 const setPlace=k=>showScene(k,null);
 function relChip(k){if(!S||!isRel(k))return '';const v=S.aff[k]||0,[,lb,col]=relLv(v);return `<span class="rel" style="--rc:${col}">♥${v} ${lb}</span>`}
-function showActor(k){const n=who(k);if(!n)return;if(n.noImg){hideActor();return}const el=$('#actor');$('#actor-img').src=IMG(imgOf(k));$('#actor-name').textContent=tagName(k)+(S&&isRel(k)?` ♥${S.aff[k]||0}`:'');el.classList.toggle('rival',!!n.rival);
+function showActor(k){hideGroup();const n=who(k);if(!n)return;if(n.noImg){hideActor();return}const el=$('#actor');$('#actor-img').src=IMG(imgOf(k));$('#actor-name').textContent=tagName(k)+(S&&isRel(k)?` ♥${S.aff[k]||0}`:'');el.classList.toggle('rival',!!n.rival);
   if(!el.hidden&&el.dataset.k===k){placeActor();return}el.dataset.k=k;el.hidden=false;el.style.animation='none';el.offsetWidth;el.style.animation='';placeActor()}
-function hideActor(){const el=$('#actor');el.hidden=true;el.dataset.k=''}
+// 여러 명을 한 번에 소개할 때: 대화창 위에 나란히 세운다
+function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');g.id='group';g.className='group-actors';$('#phone').appendChild(g)}
+  g.innerHTML=ks.map((k,i)=>`<figure style="animation-delay:${i*.08}s"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(imgOf(k))}" alt="${esc(who(k).name)}"></figure>`).join('');g.hidden=false;placeGroup()}
+function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
+  const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px'}
+function hideGroup(){const g=$('#group');if(g){g.hidden=true;g.innerHTML=''}}
+function hideActor(){hideGroup();const el=$('#actor');el.hidden=true;el.dataset.k=''}
 function faceStyle(w){
   return `background-image:url(${IMG('f_'+(!w||w==='me'?'hz':w)+(w==='daram'&&daramF()?'_f':''))});background-size:cover;background-position:50% 50%;background-color:#fff3e6`;
 }
@@ -2072,7 +2082,7 @@ function layoutScene(){
   const bottom=Math.min(...lim);img.style.height=Math.max(240,bottom-top+18)+'px';
 }
 window.addEventListener('resize',layoutScene);
-function placeActor(){layoutScene();const el=$('#actor');if(el.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight;const top=d.hidden?ph-210:d.offsetTop;
+function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight;const top=d.hidden?ph-210:d.offsetTop;
   const room=top-118;el.style.visibility=room<170?'hidden':'visible';const h=Math.max(150,Math.min(ph*.42,380,room));el.style.height=h+'px';el.style.bottom=Math.max(0,ph-top-26)+'px'}
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
@@ -2088,9 +2098,9 @@ function dialogHTML(o,inner){
 function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
 function say(o){
   return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall');d.classList.toggle('haspic',!!(o.pic||PIC));
-    if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
+    if(o.group){hideActor();}else if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
     d.innerHTML=dialogHTML(o,`<div class="next"><button class="next-btn">다음 ▶</button></div>`);d.hidden=false;d.scrollTop=0;
-    placeActor();d.querySelector('.next-btn').onclick=e=>{e.stopPropagation();res()};});
+    if(o.group)showGroup(o.group);placeActor();d.querySelector('.next-btn').onclick=e=>{e.stopPropagation();res()};});
 }
 function ask(o){
   return new Promise(res=>{const d=$('#dialog');d.classList.toggle('tall',o.choices.length>4);d.classList.toggle('haspic',!!(o.pic||PIC));
@@ -3119,7 +3129,7 @@ $('#btn-start').onclick=async()=>{
   await showCG({img:'sc_office',chapter:true,kick:`${monthOf(0)}월 · 입사 첫 달`,title:'오리엔테이션',sub:'캔버스랩을 소개합니다.\n부서와 사람들을 만나 보고,\n어디서부터 일할지 골라 보세요.'});
   for(const [k,D] of Object.entries(DEPTS)){setPlace(D.scene);
     const gs=[...new Set(Object.values(ACTS).filter(a=>a.dept===k).flatMap(a=>Object.keys(a.g)))].slice(0,3);
-    await say({who:D.lead,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">◎ 잘 맞는 일: ${D.ppl.map(p=>`${JOB_TAG[p]} — ${APT[p][0].split(' ').map(st=>(ST1_N[st]||ST2[st].n)).join('·')}`).join(' / ')}</span>`})}
+    await say({who:D.lead,group:D.ppl,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">◎ 잘 맞는 일: ${D.ppl.map(p=>`${JOB_TAG[p]} — ${APT[p][0].split(' ').map(st=>(ST1_N[st]||ST2[st].n)).join('·')}`).join(' / ')}</span>`})}
   setPlace('sc_office');hideActor();
   await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO 1라인을 맡아 줘요."',text:'"우리 브랜드는 성수동 자체 라인 하나로 시작해요. 매달 주문서가 내려오면, 라인에서 만들어 내는 게 막내 일이에요.\n론칭 전엔 시제품, 론칭 후엔 진짜 주문, 나중엔 해외 주문까지."\n<span class="t">(마케팅팀 인턴인데… 라인이요?)</span>'});
   await say({who:'seohwi',title:'🏭 라인 쓰는 법',text:'벨트로 빈 병이 흘러와요. 병 위 색 꼬리표 = 주문서 번호예요.\n주문서대로 💛크림이나 💙젤을 채우고 → ⭕뚜껑 → 🏷️라벨. (🚫🏷️ 라벨 없는 주문엔 붙이면 불량!)\n병이 기계 아래 칸에 들어왔을 때 버튼을 눌러요. 노란 선에 가까울수록 PERFECT, 콤보가 이어지면 화제성이 올라요.\n근무 전에 동료 한 명을 도우미로 부를 수 있어요. 사람마다 도와주는 게 달라요.'});
@@ -3130,7 +3140,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-56e525';
+const BUILD='2026.10.09-bc930c';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
