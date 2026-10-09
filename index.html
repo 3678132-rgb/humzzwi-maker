@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=aa23bd"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=aa23bd"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=aa23bd">
+<link rel="manifest" href="manifest.json?v=fe6403"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=fe6403"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=fe6403">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2261,7 +2261,8 @@ async function runAct(id,i,ps){const a=ACTS[id];let perf=null;
 /* ----- 휴일 ----- */
 const WKND={
   job:{img:'c_cafe',n:'💰 부업',d:'통장 채우기 · 횟수가 쌓이면 승급',ids:['cafe','store','shoot','blog']},
-  love:{img:'c_date',n:'💘 데이트',d:'설렘·♥ · 친한 동료(♥20↑)와 주말 약속',ids:['date','blind','selfdate']},
+  love:{img:'c_date',n:'💘 데이트',d:'설렘 · 사내연애·소개팅·셀프 데이트',ids:['date','blind','selfdate']},
+  mate:{img:'c_friends',n:'🤝 동료와 주말',d:'♥20 넘은 동료와 주말 약속 · ♥↑',ids:[]},
   rest:{img:'c_leave',n:'🌴 휴식',d:'체력·스트레스 회복',ids:['home','walk','run','gym','pilates','pt','snack','friends']},
   trip:{img:'c_trip',n:'✈️ 여행',d:'크게 회복 · 연차·돈이 들어요',ids:['daytrip','trip','jeju','abroad']},
   shop:{img:'c_shop_mall',n:'🛍️ 쇼핑',d:'스트레스↓ · 트렌드 감각',ids:['shop_hb','shop_online','shop_mall']},
@@ -2274,7 +2275,8 @@ async function weekend(){busy=true;document.body.classList.add('running');playBg
     const c=await ask({who:'me',speaker:`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 휴일`,title:'이번 휴일엔 뭘 할까?',text:`체력 ${S.hp} · 스트레스 ${S.st} · 통장 ${S.money}만원 · 연차 ${S.leave}일`,choices:ks.map(k=>({l:WKND[k].n,s:WKND[k].d,img:WKND[k].img}))});
     const K=WKND[ks[c]],ids=K.ids.filter(id=>!(id==='date'&&!S.flags.dating));
     const ch=ids.map(id=>({l:ACTS[id].name,s:actSub(id),img:clipOf(id)||ACTS[id].scene,tag:actSub(id).startsWith('🔒')?'🔒':''})),ops=ids.map(id=>['act',id]);
-    if(ks[c]==='love')TEAM.filter(k=>k!=='daram'&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).slice(0,3).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${knows(k)?'💗 '+LIKE[k].love.map(x=>SPOTS[x[0]].n).join('·'):'어디를 좋아할까?'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💞 ♥'+(S.aff[k]||0)});ops.push(['meet',k])});
+    if(ks[c]==='mate')TEAM.filter(k=>k!=='daram'&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${knows(k)?'💗 '+LIKE[k].love.map(x=>SPOTS[x[0]].n).join('·'):'어디를 좋아할까?'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💞 ♥'+(S.aff[k]||0)});ops.push(['meet',k])});
+    if(ks[c]==='mate'&&!ops.length){toast('아직 ♥20 넘은 동료가 없어요. 평일에 자주 만나 봐요!');continue}
     ch.push({l:'← 다른 걸 할래',s:''});ops.push(['back']);
     const j=await ask({who:'me',speaker:`${monthOf(S.m)}월 · 휴일`,title:K.n,text:K.d,choices:ch,cls:'wk'});
     const [op,id]=ops[j];if(op==='back')continue;
@@ -3494,7 +3496,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-aa23bd';
+const BUILD='2026.10.09-fe6403';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
