@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=d718e7"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=d718e7"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=d718e7">
+<link rel="manifest" href="manifest.json?v=e88866"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=e88866"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=e88866">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -136,7 +136,7 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 @keyframes fx{from{transform:translateY(0) scale(.6);opacity:0}25%{opacity:1}to{transform:translateY(-70px) scale(1.1);opacity:0}}
 
 /* ---------- 등장인물 스탠딩 ---------- */
-.actor{position:absolute;right:0;bottom:calc(var(--dlg-bottom) + var(--sb) + 40px);z-index:4;height:min(42%,380px);aspect-ratio:2/3;pointer-events:none;transform-origin:50% 100%;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
+.actor{position:absolute;left:0;right:0;bottom:calc(var(--dlg-bottom) + var(--sb) + 40px);z-index:3;height:min(42%,380px);pointer-events:none;transform-origin:50% 100%;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
 body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .actor img{position:absolute;left:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
 .actor-name{position:absolute;left:50%;top:0;transform:translateX(-50%) rotate(-4deg);white-space:nowrap;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:13px;padding:1px 10px;border-radius:99px;border:2px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
@@ -2384,8 +2384,11 @@ function layoutScene(){
   const bottom=Math.min(...lim);img.style.height=Math.max(240,bottom-top+18)+'px';
 }
 window.addEventListener('resize',layoutScene);
+// 동료는 대화창 뒤에 선다(발끝은 대화창에 가려도 됨). ♥가 높을수록 점점 가까이 다가온다
+const nearOf=k=>{if(!S||!isRel(k))return 1;return 1+.8*Math.min(80,Math.max(0,S.aff[k]||0))/80};
 function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight;const top=d.hidden?ph-210:d.offsetTop;
-  const room=top-118;el.style.visibility=room<170?'hidden':'visible';const h=Math.max(150,Math.min(ph*.42,380,room));el.style.height=h+'px';el.style.bottom=Math.max(0,ph-top-26)+'px'}
+  const head=112,room=top-head;el.style.visibility=room<110?'hidden':'visible';
+  const z=nearOf(el.dataset.k),h=Math.max(260,room*1.12)*z;el.style.height=h+'px';el.style.bottom=(ph-head-h)+'px';const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,head+h-db)}px -40px)`;el.dataset.near=z>=1.6?'3':z>=1.35?'2':z>=1.15?'1':'0'}
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
 function chipsHTML(chips){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-chipRank(b));if(!chips.length)return '';
@@ -3496,7 +3499,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-d718e7';
+const BUILD='2026.10.09-e88866';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
