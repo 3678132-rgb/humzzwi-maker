@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=acd603"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=acd603"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=acd603">
+<link rel="manifest" href="manifest.json?v=bc07cf"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=bc07cf"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=bc07cf">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -453,6 +453,42 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .fc small{display:block;color:var(--mute);font-size:11px}
 
 /* ===== 론칭 후 사무실: 조직도 자리배치 + 말주머니 대화 ===== */
+/* ===== 인턴의 하루: 캔버스랩 빌딩 ===== */
+.bld{position:absolute;inset:0;z-index:7;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:linear-gradient(180deg,#bfe0ff 0%,#e6f3ff 26%,#fbefe0 100%);padding-top:var(--st);padding-bottom:var(--sb)}
+.bl-top{display:grid;gap:4px;padding:10px 12px 8px;background:linear-gradient(180deg,#22324a,#1c2a3f);color:#fff}
+.bl-top .r1{display:flex;align-items:center;gap:6px;font-size:13px}
+.bl-top .r1 b{font-family:var(--display);font-weight:400;font-size:17px;white-space:nowrap}
+.bl-top .sp{flex:1}
+.bl-top .pill{background:rgba(255,255,255,.14);border-radius:99px;padding:2px 8px;font-size:12px;white-space:nowrap}
+.bl-top .pill.hot{background:#e0525a}
+.bl-top .r2{font-size:12.5px;color:#cfe0f5;line-height:1.35}.bl-top .r2 b{color:#ffd86b;font-weight:400;font-family:var(--display)}.bl-top .r2 .hot{color:#ff9cc0}
+.bl-floors{overflow:auto;padding:8px 10px 6px;display:flex;flex-direction:column}
+.fl{flex:1 0 auto;display:grid;grid-template-columns:36px minmax(0,1fr);gap:6px;padding:5px 6px;background:#f8eddf;border:solid #c9a27c;border-width:0 4px 2px;border-bottom-color:#e2c9ab}
+.fl-RF{background:linear-gradient(180deg,#d6f0c4,#eef8e6);border-top-width:4px;border-radius:16px 16px 0 0}
+.fl-1F{background:#fff6ea}
+.fl-B1{background:#e6ddd0;border-bottom:4px solid #c9a27c;border-radius:0 0 10px 10px}
+.fl-l{display:grid;place-content:center;text-align:center;background:#2a374c;color:#fff;border-radius:9px;line-height:1.1;padding:2px 0}
+.fl-l b{font-family:var(--display);font-weight:400;font-size:15px}.fl-l small{font-size:9px;opacity:.75;letter-spacing:-.02em}
+.fl-ps{display:grid;gap:6px;grid-template-columns:1fr 1fr;min-width:0}.fl-ps.n1{grid-template-columns:1fr}
+.fl-ps.n1 .bp{grid-template-columns:auto minmax(0,1fr);column-gap:8px;align-items:center}.fl-ps.n1 .bp-h{grid-column:1/-1}.fl-ps.n1 .bp small{white-space:normal}
+.bp{position:relative;display:grid;gap:2px;align-content:start;text-align:left;background:#fff;border:2px solid #e6d3bd;border-radius:12px;padding:4px 7px 5px;min-width:0;box-shadow:0 2px 0 #e2c9ab;font:inherit;color:var(--ink);cursor:pointer}
+.bp.brk{background:#fffaf1}
+.bp.on{border-color:var(--pink);background:var(--pink-s);box-shadow:0 2px 0 var(--pink-d)}
+.bp-n{position:absolute;top:-8px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--pink);color:#fff;font-family:var(--display);font-size:15px;display:grid;place-items:center;border:2px solid #fff;transform:scale(0);transition:transform .15s}
+.bp.on .bp-n{transform:scale(1)}
+.bp-h{display:flex;align-items:center;gap:4px;min-width:0}.bp-h i{font-style:normal}.bp-h b{font-family:var(--display);font-weight:400;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-f{display:flex;gap:3px;min-height:27px;align-items:center;flex-wrap:wrap}
+.bf{position:relative;width:27px;height:27px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #dcc3a5}
+.bf.ev{box-shadow:0 0 0 2.5px var(--pink);animation:evpulse 1.1s ease-in-out infinite}
+.bf i{position:absolute;right:-6px;top:-7px;font-style:normal;font-size:10px;color:#fff;background:var(--pink);border-radius:50%;width:17px;height:17px;display:grid;place-items:center;line-height:1;border:1.5px solid #fff}
+@keyframes evpulse{50%{transform:scale(1.1)}}
+.bp-f .none{font-size:11.5px;color:var(--mute)}
+.bp small{font-size:10.5px;line-height:1.2;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bl-bot{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:6px;align-items:center;padding:8px 10px;background:#22324a}
+.bl-bot .mini{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:12px;padding:8px 8px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.bl-bot .cta{width:100%;font-size:19px;padding:9px 6px}
+.in-bld .dialog{z-index:8}
+.choices.wk small{display:block}
 .office{position:absolute;inset:0;z-index:7;display:grid;grid-template-rows:auto minmax(0,1fr) auto 68px;background:#f6ead9;padding-top:var(--st);padding-bottom:var(--sb)}
 .of-top{display:grid;gap:4px;padding:10px 12px 8px;background:linear-gradient(180deg,#fff8ee,#fbeedd);border-bottom:2px solid #ead6bd}
 .of-top .r1{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
@@ -826,13 +862,18 @@ body.running .mission{opacity:.85}
     <div class="ln-body" id="ln-body"></div>
     <div class="ln-bot" id="ln-bot"></div>
   </section>
+  <section class="bld" id="bld" hidden aria-label="캔버스랩 빌딩">
+    <div class="bl-top" id="bl-top"></div>
+    <div class="bl-floors" id="bl-floors"></div>
+    <div class="bl-bot" id="bl-bot"><button class="mini" data-bsheet="status" type="button">🐭 능력치</button><button class="mini" data-bsheet="mates" type="button">💞 관계도</button><button class="mini" id="bl-leave" type="button">🌴 연차</button><button class="cta" id="bl-go" type="button">출근 ▶</button></div>
+  </section>
   <button class="fab c-orange btn-office" id="btn-office" hidden><span class="ic">🏢</span><span class="lb">사무실</span></button>
 
-  <div class="bottom-area">
+  <div class="bottom-area" hidden>
     <div class="slots3" id="slots"></div>
     <button class="cta" id="btn-go">스케줄 짜기</button>
   </div>
-  <nav class="tabbar" aria-label="스케줄 분류">
+  <nav class="tabbar" aria-label="스케줄 분류" hidden>
     <button class="tb t-work" data-cat="work"><span class="ic">💼</span>업무</button>
     <button class="tb t-self" data-cat="self"><span class="ic">📚</span>교육</button>
     <button class="tb t-job" data-cat="job"><span class="ic">💰</span>부업</button>
@@ -864,7 +905,7 @@ body.running .mission{opacity:.85}
   </div></div>
   <div class="sheet" id="sheet-mates" hidden><div class="sheet-card">
     <div class="sheet-head"><b>관계도 · 캔버스랩 사람들</b><button class="sheet-x" data-close aria-label="닫기">×</button></div>
-    <div class="sheet-sub">함께 일할수록 ♥가 올라요. ♥20 아는 사이 · 40 믿는 사이 · 70 단짝. 동료는 ♥20·40·70에서 이야기가 열리고, 70이면 단짝 보너스가 생겨요.</div>
+    <div class="sheet-sub">평일에 찾아가 대화하고 함께 일할수록 ♥가 올라요. ♥15·30·45·60이 되면 그 사람의 이야기가 열려요(빌딩에서 ♥ 표시). ♥70이면 단짝 보너스.</div>
     <div class="mates" id="mates"></div>
   </div></div>
   <div class="sheet" id="sheet-dex" hidden><div class="sheet-card">
@@ -890,10 +931,10 @@ body.running .mission{opacity:.85}
 
   <section class="screen title" id="scr-title">
     <button class="snd snd-title" type="button" aria-pressed="true">🔊 소리 켜짐</button>
-    <div class="eyebrow">CANVAS LAB · 뷰티 회사 육성 시뮬</div>
+    <div class="eyebrow">CANVAS LAB · 인턴 육성 시뮬레이션</div>
     <h1 class="wordmark">험쮜 메이커<small>인턴에서 CEO까지</small></h1>
-    <p class="hook">면접 87:1 뚫은 인턴 험쮜.<br>겉으론 <b>"넵!"</b> 속으론 <b>"뻥~"</b><br>2년 안에 <b>CEO</b> 될 수 있을까?</p>
-    <div class="tags"><span>🎮 미니게임 업무</span><span>💘 사내연애</span><span>👑 엔딩 11종</span></div>
+    <p class="hook">면접 87:1 뚫은 인턴 험쮜.<br>겉으론 <b>"넵!"</b> 속으론 <b>"뻥~"</b><br>3년 안에 <b>CEO</b> 될 수 있을까?</p>
+    <div class="tags"><span>🏢 인턴의 하루</span><span>💞 동료 이야기</span><span>💘 사내연애</span><span>👑 엔딩 11종</span></div>
     <div class="btn-row"><button class="btn" id="btn-new">새로 시작</button><button class="btn ghost" id="btn-cont" hidden>불러오기</button><button class="btn ghost" id="btn-dex" type="button">📖 엔딩 도감</button></div>
     <p class="build-code" id="build-title"></p>
     <p class="disclaimer">등장인물은 실제 동료를 모티프로 한 가상 캐릭터이며, 사건은 모두 허구예요.</p>
@@ -943,20 +984,20 @@ const MBTI_B={E:{comm:4},I:{data:4},S:{exec:4},N:{trend:4},T:{plan:4},F:{aff:5},
 const MBTI_DESC={ISFJ:'부탁을 거절 못 하는 성실한 막내. 겉으론 "네!", 속으론 "뻥~"',ISTJ:'체크리스트가 인생인 원칙주의 막내',INFP:'속마음이 우주만큼 많은 몽상가 막내',INFJ:'조용히 다 꿰뚫어 보는 막내',INTJ:'혼자 3년 치 계획을 세워 둔 막내',INTP:'"근데 왜요?"가 입버릇인 막내',ISFP:'감성 충만, 칼퇴 사랑 막내',ISTP:'말없이 문제부터 고치는 막내',ENFP:'아이디어가 폭죽처럼 터지는 막내',ENFJ:'팀 분위기 메이커 막내',ENTP:'회의에서 반대 의견부터 내는 막내',ENTJ:'인턴인데 이미 팀장 같은 막내',ESFJ:'회식 총무를 자처하는 막내',ESFP:'점심 메뉴 결정권자 막내',ESTJ:'일정표를 지배하는 막내',ESTP:'일단 저지르고 보는 막내'};
 const profLine=p=>[['성별',p.gender],['MBTI',`${p.mbti} — ${MBTI_DESC[p.mbti]}`],['생일',`${p.bm}월 ${p.bd}일`],['전공',`${p.major} — ${MAJORS.find(x=>x.n===p.major).d}`]];
 /* ================= 시간·직급 ================= */
-const TOTAL=24, LAUNCH_M=5, GLOBAL_M=18;        // 1막 론칭 준비(1년차 3~8월) → 2막 매출(9월~이듬해 8월) → 3막 해외 진출(2년차 9월~)
+const TOTAL=36, LAUNCH_M=7, GLOBAL_M=24;        // 3년. 1막 론칭 준비(1년차 3~10월) → 2막 매출(11월~2년차 2월) → 3막 해외 진출(3년차)
 const actOf=m=>m<=LAUNCH_M?1:m<GLOBAL_M?2:3;
 const ACT_NAME=['','1막 · 론칭 준비','2막 · 매출 만들기','3막 · 해외 진출'];
 const SLOT=['상순','중순','하순'];
 // C안: 1막은 막내로서 스케줄 3칸, 론칭 후(2·3막)엔 회사 일은 사무실에서 동료 배치로, 험쮜는 「퇴근 후」 1칸만
 const AFTER=()=>!!(S&&S.launched&&S.m>LAUNCH_M);
 const planSize=()=>AFTER()?1:3;
-const slotName=i=>AFTER()?'퇴근 후':SLOT[i];
-const monthOf=m=>((m+2)%12)+1, yearOf=m=>m<10?1:m<22?2:3;
+const slotName=i=>`${i+1}번째`;
+const monthOf=m=>((m+2)%12)+1, yearOf=m=>Math.floor(m/12)+1; // 입사 연차 (3월 입사)
 const RANKS=['인턴','사원','주임','대리','팀장','이사','CEO'];
-const PAY=[180,250,290,340,420,560,800];
+const PAY=[180,230,260,300,360,450,600];
 const LOAN=30;
 const rentOf=()=>S.m>=10?108:95;            // 2년차 재계약 때 월세 인상
-const livingOf=()=>65+Math.min(S.rank,4)*12+Math.max(0,S.rank-4)*25;              // 직급이 오를수록 씀씀이도 커진다
+const livingOf=()=>70+S.rank*22;              // 직급이 오를수록 씀씀이도 커진다
 const LEAVE_PER_YEAR=15;
 const STATS={plan:'기획력',trend:'트렌드',comm:'소통력',know:'뷰티지식',data:'데이터',exec:'실행력'};
 const STAT_IC={plan:'📋',trend:'✨',comm:'💬',know:'🧪',data:'📊',exec:'⚙️'};
@@ -1142,9 +1183,9 @@ function monthPL(push,M){M=M||meet();const A=assignFx(),roas=adROAS(M)*(1+A.roas
   const cogs=cap*.3*(1-A.cogs),fee=rev*.1,fixed=25+5*glOpen(),stock=Math.max(0,cap-sold)*.08;
   const r=x=>Math.round(x);
   return {demand:r(demand),cap:r(cap),rev:r(rev),cogs:r(cogs),fee:r(fee),ad:M.ad,fixed,stock:r(stock),profit:r(rev-cogs-fee-M.ad-fixed-stock),soldOut:demand>cap+.5,roas}}
-const salesNow=()=>S.launched&&S.m>LAUNCH_M?monthPL((S.push||0)+teamPush()).rev:0;
+const salesNow=()=>S.launched&&S.m>LAUNCH_M?salesCalc(S.push||0):0;
 // 브랜드 점수: 론칭 완성도 30% + 월 최고 매출 30% + 해외 진출 20% + 누적 이익 20%
-const brandScore=()=>Math.round(.3*(S.score||0)+.3*Math.min(100,(S.salesBest||0)/2.5)+.2*Math.min(100,(S.gl||0)/GL_TOT*100)+.2*Math.min(100,Math.max(0,(S.co&&S.co.profitSum)||0)/6));
+const brandScore=()=>Math.round(.3*(S.score||0)+.3*Math.min(100,(S.salesBest||0)/2.5)+.2*Math.min(100,(S.gl||0)/GL_TOT*100)+.2*Math.min(100,(S.salesSum||0)/40));
 // 체크리스트 항목 = STAGE:ZERO 제품의 부품. 진척이 오를수록 제품이 눈앞에서 조립된다
 const PART={cat:'콘셉트 라벨',form:'크림',pkg:'유리 용기',log:'택배 박스',erp:'바코드',ecom:'구매 버튼',msg:'카피 한 줄',pr:'반짝이(PR)'};
 const MS_HALF={cat:'시장 리포트 셋이 같은 단어를 가리킨다: "장벽"!',form:'연구소 2차 샘플 도착! 손등 테스트 반응: "쫀쫀한데 산뜻해요."',pkg:'용기 시안 3종 중 2종 탈락. 투명 유리 시안이 살아남았다.',
@@ -1160,7 +1201,7 @@ const focusMs=()=>{if(S.launched)return null;const ks=Object.keys(MS).filter(k=>
 /* ================= 스케줄 ================= */
 const CATS={work:'업무',self:'교육',job:'부업',rest:'휴식',love:'연애'};
 const CAT_SUB={work:'사수가 이번 달 할 일을 골라 줘요. 「담기」만 누르면 돼요. 직접 하면 미니게임, 맡기면 능력치·♥로 판정돼요.',self:'돈과 시간을 들여 나를 키워요.',job:'월급만으론 빠듯해요. 퇴근 후·주말 부업으로 통장을 채워요. 단, 회사 일보다 부업이 많으면 인사팀에서 연락이 와요.',rest:'연차·산책·운동·쇼핑·야식으로 체력과 멘탈을 회복해요. 연차는 1년에 15일.',love:'일만 하다 보면 마음이 메말라요. 설렘도 스케줄이에요.'};
-const W=(o)=>Object.assign({cat:'work',hp:-8,st:8,rep:1},o);
+const W=(o)=>Object.assign({cat:'work',hp:-6,st:6,rep:1},o);
 const ACTS={
   content:W({dept:'mkt',mate:'eunbin',name:'숏폼 해시태그',d:'숏폼 올리고 뜨는 해시태그 고르기',game:'tag',g:{trend:3,exec:1},ms:{pr:4},buzz:4,scene:'sc_studio',mini:'m_phone',fx:['📱','🎬','🔥','💖']}),
   keymsg:W({dept:'mkt',mate:'seohwi',name:'카피·광고심의',d:'상세페이지 카피, 심의에 걸릴까?',game:'copy',g:{comm:3,know:1},ms:{msg:4,pr:2},scene:'sc_meeting',mini:'s_coffee',fx:['💬','🌿','✨','📝']}),
@@ -1207,6 +1248,10 @@ const ACTS={
   date:{cat:'love',name:'퇴근 후 비밀 데이트',d:'한다람 주임과 한강 편의점 라면',cost:5,hp:-2,st:-20,eff:{love:10},needDating:1,scene:'sc_park',mini:'s_walk',fx:['💘','🍜','🌙','✨']},
   blind:{cat:'love',name:'소개팅',d:'친구가 주선한 주말 소개팅',cost:6,hp:-3,st:0,g:{comm:1},scene:'sc_cafe',mini:'s_coffee',fx:['🫣','☕','💬','✨']},
   selfdate:{cat:'love',name:'셀프 데이트',d:'혼자 전시회 보고 디저트 먹기',cost:4,hp:2,st:-14,g:{trend:1},scene:'sc_park',mini:'s_eat',fx:['🖼️','🍰','💗','✨']},
+  home:{cat:'rest',name:'이불 속 집콕',d:'아무것도 안 하는 날',hp:20,st:-16,scene:'sc_home',mini:'s_sleep',clip:'c_leave',fx:['💤','🍿','🌙','✨'],txt:'이불 속에서 숏폼 3시간, 낮잠 2시간. 완벽한 하루.'},
+  daytrip:{cat:'rest',name:'당일치기 바다',d:'KTX 타고 강릉 바다',cost:12,hp:-2,st:-28,g:{trend:1},scene:'sc_park',mini:'s_walk',clip:'c_trip',fx:['🌊','🚄','📸','✨'],txt:'모래사장에 "퇴사"라고 썼다. 파도가 지워 줬다.\n<span class="t">(…월요일엔 다시 출근.)</span>'},
+  jeju:{cat:'rest',name:'제주 2박 3일',d:'금요일 연차 붙여서',leave:1,cost:45,hp:12,st:-45,g:{trend:2},scene:'sc_park',mini:'s_walk',clip:'c_trip',fx:['🍊','✈️','🌋','💗'],txt:'귤밭에서 귤 따고, 오름에 올랐다. 회사 메신저는 비행기 모드.'},
+  abroad:{cat:'rest',name:'해외여행 · 도쿄',d:'드럭스토어 시장 조사도 겸사겸사',leave:3,cost:120,hp:10,st:-60,g:{trend:3,know:2},scene:'sc_park',mini:'s_walk',clip:'c_trip',fx:['🗼','🛍️','🍣','✨'],txt:'도쿄 드럭스토어 화장품 코너에서 두 시간.\n<span class="t">(여행인지 출장인지 모르겠다. 근데 행복하다.)</span>'},
 };
 // 알바도 횟수가 쌓이면 승급: 3·6·10회째에 직함과 시급이 오른다
 const JOB_RANK={cafe:['알바생','바리스타','매니저','점장'],store:['진열 알바','뷰티 어드바이저','매장 매니저','점장'],shoot:['촬영 보조','세컨드 어시','촬영 실장','포토 디렉터'],blog:['초보 블로거','이웃 1천 블로거','인기 블로거','뷰티 인플루언서']};
@@ -1356,7 +1401,7 @@ function doAction(id,perf){
     snack:pick(['새벽 1시, 치킨 한 마리 반반. 양념은 내 마음을 안다.\n<span class="t">(…내일 아침 얼굴은 내일의 내가 책임진다.)</span>','떡볶이에 치즈 추가, 주먹밥까지. 매운맛에 스트레스가 다 녹았다.','배달 앱을 30분 고민하다 결국 또 치킨.\n<span class="t">(이게 다 사회생활 때문이야.)</span>']),
     run:'한강 바람 맞으며 5km. 머리가 맑아졌다.',gym:'러닝머신 30분. 회원권 본전에 한 걸음.',coffee:S.flags.dating?pick(['다람 주임: "또 왔어요? …오늘은 제가 초콜릿 준비했는데."\n험쮜: "헉, 저 주려고요?"\n다람 주임: "쉿, 은빈 씨 본다."','다람 주임: "아아에 샷 추가, 시럽 반. 제 취향 어떻게 알았어요?"\n험쮜: "…영업팀 분석했죠."\n<span class="t">(MD 미팅보다 떨린다.)</span>']):pick(['험쮜: "주임님, 이거… 하나 남아서요."\n다람 주임: "어… 저 주시는 거예요?"\n<span class="t">(다람 주임의 귀가 빨개졌다.)</span>','다람 주임: "요즘 영업팀 앞 자주 지나가네요?"\n험쮜: "아, 그, 출고 서류 때문에요!"\n<span class="t">(출고 서류는 SCM팀에 있다.)</span>']),date:pick(['다람 주임: "오늘 MD 미팅 어땠어요?"\n험쮜: "주임님이 알려 준 장표 순서대로 했더니 통과했어요!"\n다람 주임: "역시. 계란은 축하 기념으로 두 개."','험쮜: "한강 바람 시원하다…"\n다람 주임: "험쮜 씨 볼이 더 빨개요. 라면 때문이에요, 저 때문이에요?"\n<span class="t">(…둘 다.)</span>']),selfdate:'혼자 본 전시가 의외로 좋았다. 나랑 노는 것도 재밌네.',shop_hb:'신상 앰플, 세일하는 클렌저, 샘플까지 한가득. "이것도 시장조사야."',shop_mall:'쇼핑백을 양손 가득. 통장은 가벼워졌지만 마음은 더 가벼워졌다.',shop_online:'새벽 2시, 장바구니 결제 완료.\n<span class="t">(…내일의 나에게 택배가 간다.)</span>',
     ai:`AI로 리포트 초안을 10분 만에! ${S.ai>=2?'이제 팀에서 "AI는 험쮜한테 물어봐"가 됐다.':'신세계다.'}`,excel:'피벗 테이블과 친구가 됐다.',pilates:'코어가 깨어났다.',
-    leave:'이불 속에서 숏폼 3시간. 행복했다.',half:'바삭한 돈가스 한 입. 세상이 다시 아름다워졌다.',trip:'바다를 보고 왔다. 회사 메신저는 꺼뒀다.',walk:'한강 노을에 머리가 맑아졌다.',friends:'회사 얘기로 3시간 수다. 속이 뻥!'}[id]||a.name;
+    leave:'이불 속에서 숏폼 3시간. 행복했다.',half:'바삭한 돈가스 한 입. 세상이 다시 아름다워졌다.',trip:'바다를 보고 왔다. 회사 메신저는 꺼뒀다.',walk:'한강 노을에 머리가 맑아졌다.',friends:'회사 얘기로 3시간 수다. 속이 뻥!'}[id]||a.txt||a.name;
   if(id==='coffee'){const t=coffeeTier(),C=COFFEE[t];text=pick(C.lines)+`\n<span class="t">💘 ${C.name} 단계 · 설렘 ${S.love}</span>`;return {title:`${a.name} · ${C.name}`,text,chips,scene:a.scene,pic:dimg(C.pic)}}
   return {title:a.name,text,chips,scene:a.scene,pic:id==='date'?dimg('ramen'):null};
 }
@@ -1440,31 +1485,31 @@ const FIXED={
     const c=await ask({who:'sumin',title:'AI 도입 TF',text:'"회사에서 AI 도입 TF를 만든대요. 데이터 정리랑 리포트 자동화부터요. 같이 할래요?"\n옆에서 이은빈 사원: "AI로 콘텐츠 뽑으면 더 재밌지 않아요?"',choices:[{l:'"저 할게요!"',s:'AI 스킬↑ 데이터↑ 스트레스↑'},{l:'"이번엔 지켜볼게요"',s:'평화'}]});
     if(c===0){S.ai+=1;await result({data:3,exec:1,st:6,aff_sumin:4,aff_eunbin:3,rep:2},'프롬프트로 주간 리포트 초안을 뽑는 데 성공! 팀에서 "AI 막내"로 불리기 시작했다.')}
     else await result({st:-3},'TF는 다른 사람이 맡았다. 조금 아쉽다.');},
-  4:async()=>{setPlace('sc_studio');
+  5:async()=>{setPlace('sc_studio');
     const c=await ask({who:'seohwi',title:'인플루언서 마케팅 이벤트',text:'"론칭 전 시딩, 어떤 인플루언서랑 할까요?"\n이은빈 사원: "우리 직원 브이로그도 해보면 재밌지 않아요?"',choices:[{l:'메가 인플루언서 1명',s:'트렌드 판정 · 큰 한 방'},{l:'마이크로 인플루언서 10명',s:'소통력 판정 · 진정성'},{l:'험쮜 출근 브이로그',s:'이은빈 아이디어 · 대박 or 쪽박'}]});
     if(c===0)await result(S.stat.trend>=35?{buzz:12,rep:3}:{buzz:3,st:8},S.stat.trend>=35?'조회수 50만! 댓글이 "이 브랜드 뭐예요?"로 도배됐다.':'광고 티가 너무 났다. 반응이 애매하다.','결과','seohwi');
     else if(c===1)await result(S.stat.comm>=32?{buzz:9,rep:4,aff_seohwi:5}:{buzz:4,st:5},S.stat.comm>=32?'진짜 후기가 쌓였다. "사람과 메시지가 연결됐네요." 사수님이 뿌듯해했다.':'섭외 메일 답장이 절반도 안 왔다…','결과','seohwi');
     else if(R()<.55)await result({buzz:15,aff_eunbin:6,rep:3},'"험쮜 출근룩" 영상이 터졌다! 이은빈 사원: "거봐요, 재밌잖아요!"','대박','eunbin');
     else await result({buzz:2,st:10,aff_eunbin:3},'조회수 312회. 그중 200회는 엄마였다.','쪽박','eunbin');},
-  5:async()=>{setPlace('sc_meeting');
+  6:async()=>{setPlace('sc_meeting');
     const c=await ask({who:'seohwi',title:'광고 심의 이슈',text:'"론칭 D-30인데 큰일이에요. 상세페이지 \'피부 재생\' 문구가 심의에서 걸렸어요. 론칭 소재 전부 수정해야 할 수도…"',choices:[{l:'성분 근거로 문구 전면 수정',s:'뷰티지식 판정'},{l:'박서휘 대리와 대체 카피 만들기',s:'소통력 판정'},{l:'일단 그대로 간다',s:'위험한 선택'}]});
     if(c===0)await result(S.stat.know>=40?{bq:4,rep:5}:{st:10,ms_pr:-2},S.stat.know>=40?'"장벽 강화 도움" 등 허용 표현으로 깔끔하게 정리!':'수정은 했지만 일정이 밀렸다.');
     else if(c===1)await result(S.stat.comm>=38?{buzz:5,aff_seohwi:5,rep:3}:{st:8},S.stat.comm>=38?`"「${S.choice.msg||'긁힌 하루를, 투명하게.'}」는 심의 걱정 없죠!" 오히려 카피가 좋아졌다.`:'대체 카피가 밋밋해졌다.','결과','seohwi');
     else{S.flags.adRisk=true;await result({st:-2},'그대로 밀고 갔다.\n<span class="t">(…괜찮겠지?)</span>')}},
-  6:duo(async()=>{setPlace('sc_office');
+  4:duo(async()=>{setPlace('sc_office');
     const c=await ask({who:'daram',title:'영업팀 한다람 주임',text:'"험쮜 씨… 요즘 야근 많죠? 이거, 아아 두 잔 샀는데 하나 남아서요."\n귀가 빨개진 영업팀 주임이 커피를 내민다.',choices:[{l:'"앗… 감사해요!" (설렘)',s:'사내연애 루트'},{l:'"감사합니다, 잘 마실게요." (정중)',s:'일에 집중'}]});
     if(c===0){S.flags.crush=true;await result({love:15,st:-8,aff_daram:3},'커피 한 잔에 하루가 핑크빛이 됐다.\n<span class="t">(…영업팀 앞을 지나갈 일이 갑자기 많아졌다.)</span>\n💘 연애 탭의 「영업팀에 커피 사 가기」로 마음을 전할 수 있어요.','두근','daram')}else await result({st:-3},'커피는 맛있었다. 그게 다였다.','결과','daram');},'coffeeget'),
-  7:async()=>{if(S.launched){setPlace('sc_office');
+  8:async()=>{if(S.launched){setPlace('sc_office');
     await result(S.flags.risky?{rep:-6,bq:-5,st:12}:S.flags.adRisk?{rep:-5,st:10}:{rep:3,data:2,aff_sumin:3},S.flags.risky?'론칭 후 펌프 불량 리뷰가 올라왔다. 용기 준비가 덜 된 대가…':S.flags.adRisk?'심의 문구로 경고 조치를 받았다. 소재를 급히 내렸다.':'"재구매율 데이터 나왔어요. 첫 달치고 좋아요." 이수민 사원이 웃었다.','론칭 후 첫 달',S.flags.risky||S.flags.adRisk?'sangho':'sumin')}
     await shortform()},
-  8:async()=>{setPlace('sc_office');
+  11:async()=>{setPlace('sc_office');
     const c=await ask({who:'me',title:'악성 클레임',text:'"바르고 얼굴이 뒤집어졌어요! 환불이랑 병원비 50만원 안 주면 커뮤니티에 다 올릴 거예요!!!"\nCS 전화가 인턴 험쮜에게 넘어왔다.',choices:[{l:'공감하되 원칙대로 응대',s:'소통력 판정'},{l:'이수민 사원과 구매 데이터 확인',s:'데이터 판정'},{l:'일단 원하는 대로 보상',s:'평판↓ 빠른 종결'}]});
     if(c===0)await result(S.stat.comm>=30?{rep:5,comm:2}:{st:14,rep:-2},S.stat.comm>=30?'끝까지 차분하게 들었다. 고객이 오히려 "응대 고마워요"라며 진정했다.':'목소리가 떨렸다. 통화가 40분 이어졌다…','결과');
     else if(c===1)await result(S.stat.data>=28?{rep:6,data:2,aff_sumin:5}:{st:10},S.stat.data>=28?'구매 이력이 없는 계정이었다. 블랙컨슈머 확정! "데이터로 읽으면 보여요."':'데이터를 뒤졌지만 확인이 안 됐다.','결과','sumin');
     else await result({money:0,rep:-4,st:-4,aff_jaemin:-3},'빠르게 끝났지만, 차재민 사원이 "기준이 무너지면 다음에도 와요"라고 했다.','결과','jaemin');},
   9:async()=>{await yearEnd(1)},
   10:async()=>{S.leave=LEAVE_PER_YEAR;setPlace('sc_park');await result({st:-5},'새해! 연차가 15일로 다시 채워졌다.\n그런데 집주인 문자: "재계약 때 월세 13만원 올릴게요~"\n<span class="t">(…올해는 진짜 론칭한다. 그리고 부업도 한다.)</span>','2년차 시작')},
-  12:async()=>{
+  15:async()=>{
     setPlace('sc_rain');
     await say({who:'sangho',title:'부도 위기',text:'사업부장님이 전 직원을 모았다.\n"…솔직하게 말할게요. 투자 유치가 무산됐어요. 지금 자금으로는 석 달입니다."\n회의실이 얼어붙었다.'});
     // 세 길 모두 살 길이 있다: 지금 능력치·매출이 기준을 넘으면 극복, 75% 이상이면 버팀, 그 아래만 위기 지속
@@ -1477,34 +1522,35 @@ const FIXED={
     if(tier===2)await result({rep:8,aff_sangho:6,aff_hyunsu:5,[mate]:6},['"구멍을 찾았습니다." 고정비 18% 절감안이 통과됐다. 석 달이 여섯 달이 됐다.','IR 자료가 투자자 마음을 움직였다! 브릿지 투자 확정.',`"월 매출 ${fmtW(last)}. 이 숫자면 됩니다." 은행이 한도를 늘려 줬다.\n매출이 회사를 살렸다.`][c],'위기 극복','sangho');
     else if(tier===1)await result({rep:3,st:6,[mate]:3},['절감안 절반이 통과됐다. 석 달이 넉 달이 됐다. 아슬아슬하게 버틴다.','투자자가 "다음 분기 숫자를 보자"고 했다. 일단 시간은 벌었다.','매출이 기준엔 조금 못 미쳤지만, 오르는 그래프에 은행이 한 달을 더 줬다.'][c]+'\n<span class="t">(…버텼다. 일단은.)</span>','간신히 버팀','sangho');
     else{S.flags.crisis=true;await result({st:15,rep:-2},'버티고는 있지만, 회사 분위기가 무겁다. 매출이 안 오르면… 끝일지도.\n<span class="t">(브랜드 점수가 낮으면 부도 엔딩으로 이어질 수 있어요)</span>','위기 지속','sangho')}},
-  13:async()=>{setPlace('sc_rain');
+  12:async()=>{setPlace('sc_rain');
     const c=await ask({who:'me',title:'퇴사 각?',text:`입사 1년. 통장 ${S.money}만원, 스트레스 ${S.st}.\n퇴근길, 휴대폰 메모장에 "사직서"라고 적었다 지웠다를 반복한다.`,choices:[{l:'사직서를 낸다',s:'퇴사 엔딩'},{l:'박서휘 대리에게 털어놓는다',s:'친밀도 판정'},{l:'꾹 참는다',s:'스트레스↑'}]});
     if(c===0){const c2=await ask({who:'me',title:'정말 사직서를 낼까요?',text:'사직서를 내면 험쮜의 캔버스랩 생활(게임)이 여기서 끝나요.',choices:[{l:'한 번만 더 생각해 본다',s:'계속하기'},{l:'사직서를 낸다',s:'퇴사 엔딩'}]});
       if(c2===1){S.ending='quit';return}
       await result({st:5},'사직서를 다시 서랍 깊숙이 넣었다.\n<span class="t">(…일단 이번 달까지만 버텨 보자.)</span>','보류');return}
     if(c===1)await result(S.aff.seohwi>=30?{st:-30,aff_seohwi:6}:{st:-8,aff_seohwi:3},S.aff.seohwi>=30?'"험쮜 님, 그동안 혼자 너무 애썼어요." 사수님 앞에서 펑펑 울었다. 속이 뻥 뚫렸다.':'"힘들죠…" 사수님이 커피를 사줬다.','결과','seohwi');
     else await result({st:10},'오늘도 출근했다.\n<span class="t">(…속으로만 뻥.)</span>');},
-  15:async()=>{setPlace('sc_factory');
+  17:async()=>{setPlace('sc_factory');
     const c=await ask({who:'hanmin',title:'용기 불량 사태',text:'"2차 생산분 공장에서 연락 왔습니다. 펌프 2만 개 중 일부가 안 눌린답니다."',choices:[{l:'전량 재생산',s:'비용↑ 제품력·평판↑'},{l:'선별 출고',s:'빠르지만 위험'}]});
     if(c===0)await result({bq:6,rep:4,aff_hanmin:5,st:8},'"끝까지 돌아가게 하겠습니다." 이한민 과장이 공장에 상주했다.','결과','hanmin');
     else{await result({aff_hanmin:-2,rep:-4,bq:-3},'일단 선별 출고로 품절은 막았다.\n…한 달 뒤, "펌프가 안 눌려요" 리뷰가 올라왔다.\n<span class="t">(…괜찮겠지?)</span>','결과','hanmin')}},
-  16:async()=>{setPlace('sc_rain');
+  19:async()=>{setPlace('sc_rain');
     const c=await ask({who:'fox',title:'경쟁사의 선수',text:`"어머, 캔버스랩 ${S.choice.cat||'장벽 크림'} 잘 팔린다면서요? 우리도 똑같은 거 다음 주에 내요~ 반값에."`,choices:[{l:'이은빈 사원과 차별화 콘텐츠',s:'트렌드 판정'},{l:'이수민 사원과 데이터로 포지셔닝',s:'데이터 판정'},{l:'우리 페이스대로',s:'멘탈 관리'}]});
     if(c===0)await result(S.stat.trend>=50?{buzz:14,aff_eunbin:5}:{buzz:3,st:10},S.stat.trend>=50?'"원조는 다르다" 콘텐츠가 터졌다! 매출이 오히려 올랐다.':'콘텐츠는 냈지만 반응이 애매했다.','결과','eunbin');
     else if(c===1)await result(S.stat.data>=50?{buzz:8,bq:3,aff_sumin:5}:{st:8},S.stat.data>=50?'"재구매 의향 2배" 데이터로 정면 돌파!':'데이터가 아직 부족했다.','결과','sumin');
     else await result({st:-6},'흔들리지 않기로 했다.\n<span class="t">(…속으론 이를 갈고 있음.)</span>');},
-  18:async()=>{setPlace('sc_meeting');
+  24:async()=>{setPlace('sc_meeting');
     const c=await ask({who:'sangho',title:'3막 · 첫 해외 시장은?',text:'"국내 1년, 버텼고 키웠어요. 이제 바다 건너예요. 첫 나라는 험쮜 님이 골라요."',choices:[{l:'🇺🇸 미국 아마존',s:'가장 큰 시장 · 영어 미팅'},{l:'🇯🇵 일본 큐텐',s:'K-뷰티 최대 수입국'},{l:'🇸🇬 동남아 쇼피',s:'틱톡샵 바이럴'}]});
     S.choice.gl=['us','jp','sea'][c];
     await result([{comm:2,aff_sangho:4},{know:2,aff_jiyoung:3},{trend:2,aff_eunbin:4}][c],`첫 목표는 「${GL.find(g=>g.k===S.choice.gl).n}」.\n"이제 어떤 회사일이든 해외 진출 진척으로도 이어져요. 영업팀 해외 바이어 미팅이 제일 빨라요."\n<span class="t">🌍 해외 진척 ${GL[0].at} → 첫 나라, ${GL[1].at} → 두 번째, ${GL[2].at} → 세 번째 오픈</span>`,'🌍 해외 진출 선언','sangho')},
-  20:async()=>{setPlace('sc_meeting');
+  28:async()=>{setPlace('sc_meeting');
     const c=await ask({who:'sangho',title:'라스베이거스 뷰티 박람회',text:'"세계 바이어가 다 모이는 박람회예요. 부스 3분 피칭, 험쮜 님이 해 볼래요?"',choices:[{l:'영어로 직접 피칭',s:'소통력 판정'},{l:'성분 데이터로 승부',s:'뷰티지식 판정'},{l:'숏폼 시연 영상 틀기',s:'트렌드 판정'}]});
     const ok=[S.stat.comm,S.stat.know,S.stat.trend][c]>=55;const ch=[];addGl(ok?6:2,ch);
     await say({who:'sangho',title:ok?'박람회 대성공':'박람회 아쉬움',text:ok?'"Stage Zero… the glass that heals?" 바이어가 명함을 내밀었다.\n부스 앞에 줄이 섰다.':'바이어들이 고개를 끄덕였지만, 연락은 많지 않았다.\n<span class="t">(…다음엔 더 준비해 오자.)</span>',chips:applyFx(ok?{rep:4,aff_sangho:4}:{st:6},ch)});await afterMs()},
   21:async()=>{await yearEnd(2)},
-  22:async()=>{setPlace('sc_meeting');const n=glOpen();
+  32:async()=>{setPlace('sc_meeting');const n=glOpen();
     if(n>=2)S.flags.naWin=true;
     await result(n>=2?{rep:10,buzz:8,aff_sangho:5}:n===1?{rep:4,aff_sangho:3}:{st:6},n>=2?`"${glList().filter(g=>(S.gl||0)>=g.at).map(g=>g.n).join(', ')}. STAGE:ZERO는 이제 글로벌 브랜드입니다."\n험쮜의 피칭에 이사회가 박수를 쳤다.`:n===1?`"첫 나라 「${glList()[0].n}」은 열었어요. 두 번째는 다음 판에서."`:'"해외는 아직 문턱을 못 넘었네요. 국내부터 다시 다져요."','🌍 해외 성과 보고','sangho')},
+  22:async()=>{S.leave=LEAVE_PER_YEAR;setPlace('sc_park');await result({st:-6,hp:4},'입사 3년차의 새해. 연차가 15일로 다시 채워졌다.\n사원증 사진 속 인턴 험쮜가 낯설다.\n<span class="t">(…마지막 1년, 후회 없이.)</span>','3년차 새해')}
 };
 // 매출이 꺾이자 마케터가 직접 숏폼을 찍는다 (2프레임 움짤)
 async function shortform(){setPlace('sc_meeting');
@@ -1568,7 +1614,7 @@ async function yearEnd2(){
   await result([{rep:5,...all(3)},{buzz:10,rep:5},{st:-15,rep:3,buzz:4}][s2],['이름이 하나씩 불릴 때마다 팀 테이블이 들썩였다. 서휘 대리가 몰래 눈물을 닦았다.','소감 영상이 숏폼으로 퍼졌다. "이 브랜드 뭐예요?" 자사몰 유입이 폭증했다.','객석이 빵 터졌다. 사업부장님도 웃었다. "그 말이 제일 진심 같네요."'][s2],'수상 소감','sangho');
 }
 // 친밀도 20·40·70에서 열리는 동료 스토리 (실존 인물 모티프라 모두 긍정적인 이야기로만)
-const STORY_AT=[20,40,70];
+const STORY_AT=[15,30,45,60,70];
 const ST=(k,i,place,title,text,choices,fxs,res)=>async()=>{setPlace(place);
   if(!choices){await result(fxs,text,title,k);return}
   const c=await ask({who:k,title,text,choices});await result(fxs[c],res[c],title,k)};
@@ -1600,6 +1646,26 @@ const STORIES={
           ST('hanmin',1,'sc_factory','납기 비상','"내일 입고분이 하루 밀렸습니다. 같이 해결해 볼래요?"',[{l:'현장에 같이 간다',s:'실행력·물류↑ 체력↓'},{l:'사무실에서 서류를 지원한다',s:'기획력·실행력↑'}],[{exec:3,hp:-10,ms_log:2},{plan:2,exec:1}],['새벽 출고를 같이 지켜봤다. "끝까지 돌아갔네요."','"서류가 빨리 와서 현장이 살았습니다."']),
           PERK_EV('hanmin')],
 };
+// ♥45·60 이야기 (STORIES[k][2], [3])
+const STORY2={
+  seohwi:[ST('seohwi',2,'sc_meeting','사수의 첫 보도자료','박서휘 대리가 낡은 클리어파일을 꺼냈다. 빨간펜으로 가득한 종이.\n"제 첫 보도자료예요. 저도 이랬어요."',[{l:'"지금은 완전 프로잖아요!"',s:'소통력↑'},{l:'"저도 언젠가 누군가의 사수가 될 수 있을까요?"',s:'기획력↑ 스트레스↓'}],[{comm:2,aff_seohwi:3},{plan:1,st:-8,aff_seohwi:4}],['"프로는 무슨요. 아직도 매일 고쳐요." 사수님 귀가 빨개졌다.','"될 거예요. 그때 이 파일 물려줄게요."\n<span class="t">(…괜히 눈물 날 뻔했다.)</span>']),
+          ST('seohwi',3,'ev_dinner','야근 끝 포장마차','야근 끝, 사수님이 포장마차로 끌고 갔다.\n"사실 저, 작년에 이직 제안 받았었어요. 근데… 험쮜 님 보니까 남길 잘한 것 같아요."',[{l:'"…저도 사수님 덕분에 버텼어요"',s:'스트레스↓↓'},{l:'"그 회사 어디예요?! (궁금)"',s:'소통력↑'}],[{st:-15,aff_seohwi:5},{comm:1,aff_seohwi:3}],['우동 국물이 유난히 따뜻했다.\n"우리, 오래 같이 일해요."','"비밀이에요~" 사수님이 웃으며 오뎅을 하나 더 건넸다.'])],
+  eunbin:[ST('eunbin',2,'sc_studio','조회수 87회','야심 차게 찍은 숏폼 조회수 87회. 이은빈 사원이 휴대폰만 보고 있다.\n"저 감 잃었나 봐요…"',[{l:'같이 댓글을 하나하나 읽어 본다',s:'데이터↑'},{l:'"또 해 봐요! 은빈 님 실험은 늘 재밌어요"',s:'트렌드·화제성↑'}],[{data:2,aff_eunbin:4},{trend:2,buzz:3,aff_eunbin:4}],['"…처음 3초가 지루했구나." 은빈 님 눈이 다시 반짝였다.','"그쵸? 다음 건 진짜 재밌을 거예요!" 벌써 콘티를 그리고 있다.']),
+          ST('eunbin',3,'sc_cafe','은빈의 비밀 계정','"험쮜 님한테만 말하는 건데요…" 은빈 님의 개인 뷰티 계정, 팔로워 5만.\n"회사엔 비밀이에요!"',[{l:'비밀을 지켜 준다',s:'♥↑↑ 스트레스↓'},{l:'"우리 브랜드랑 콜라보해요!"',s:'화제성↑'}],[{aff_eunbin:5,st:-5},{buzz:5,trend:1,aff_eunbin:3}],['"역시 험쮜 님은 믿을 수 있어요." 새끼손가락을 걸었다.','"…그거 재밌겠다! 부장님한테는 험쮜 님이 말해 줘요."'])],
+  sumin:[ST('sumin',2,'sc_office','1원이 안 맞는 밤','밤 9시. 이수민 사원이 대시보드 앞에서 꼼짝도 안 한다.\n"합계가 1원 안 맞아요. 이거 찾기 전엔 못 가요."',[{l:'같이 남아서 찾아 준다',s:'데이터↑ 체력↓'},{l:'야식을 사다 준다',s:'스트레스↓'}],[{data:3,hp:-8,aff_sumin:5},{money:-2,st:-5,aff_sumin:4}],['밤 11시, 반올림 하나를 찾았다. 수민 님이 처음으로 소리 내 웃었다.','"…떡볶이엔 데이터가 필요 없죠." 수민 님이 젓가락을 들었다.']),
+         ST('sumin',3,'sc_park','수민의 꿈','퇴근길, 수민 님이 조용히 말했다.\n"저, 언젠가 데이터로 피부 고민을 맞춰 주는 서비스를 만들고 싶어요."',[{l:'"그 서비스 첫 고객 할게요"',s:'♥↑↑'},{l:'"우리 브랜드에서 먼저 해 봐요"',s:'데이터·기획력↑'}],[{aff_sumin:5,st:-4},{data:2,plan:2,aff_sumin:3}],['"…약속했어요." 수민 님이 휴대폰 메모에 적었다.','"그럼 기획서는 험쮜 님이 써요." 둘의 첫 사이드 프로젝트가 시작됐다.'])],
+  jiyoung:[ST('jiyoung',2,'sc_package','반려된 시안','김지영 대리의 유리 용기 시안이 원가 때문에 반려됐다.\n"…예쁘기만 하면 뭐 해요."',[{l:'"원가 안 넘는 버전, 같이 찾아봐요"',s:'뷰티지식·제품력↑'},{l:'"그 시안, 제 폰 배경화면 할래요"',s:'스트레스↓ ♥↑↑'}],[{know:2,bq:2,aff_jiyoung:4},{st:-6,aff_jiyoung:5}],['유리 두께를 0.5mm 줄인 버전이 통과됐다. "험쮜 님 덕이에요."','"…진짜로 했네." 지영 대리가 피식 웃었다.']),
+           ST('jiyoung',3,'sc_park','새벽 바다 사진','휴일 아침, 지영 대리에게서 사진 한 장이 왔다. 새벽 바다.\n"이 색 기억해 둬요. 우리 다음 제품 색이에요."',[{l:'바로 무드보드에 붙인다',s:'트렌드↑'},{l:'"다음엔 같이 찍으러 가요"',s:'스트레스↓ ♥↑↑'}],[{trend:3,aff_jiyoung:4},{st:-8,aff_jiyoung:5}],['월요일, 지영 대리 무드보드 한가운데에 그 사진이 있었다.','"…새벽 5시 출발이에요. 괜찮아요?" 답장이 1초 만에 왔다.'])],
+  hyunsu:[ST('hyunsu',2,'sc_meeting','마지막 조각','마케팅팀과 영업팀이 일정 때문에 날이 섰다.\n김현수 기획부장: "험쮜 님이 양쪽 얘기를 들어 줄래요? 막내 말은 다들 들어요."',[{l:'양쪽을 다 만나 듣고 정리한다',s:'소통력↑'},{l:'숫자로 정리해서 가져간다',s:'데이터·기획력↑'}],[{comm:3,plan:1,aff_hyunsu:4},{data:2,plan:2,aff_hyunsu:3}],['"…이렇게 엮으니까 다 맞네요." 부장님이 퍼즐 조각을 하나 더 줬다.','"숫자 앞에선 다들 조용해지죠." 회의가 10분 만에 끝났다.']),
+          ST('hyunsu',3,'ev_dinner','부장님의 첫 실패','회식 2차. 김현수 기획부장이 잔을 내려놨다.\n"제 첫 기획은 완전히 망했어요. 그래서 지금 이 일을 해요. 같은 실수 안 하게."',[{l:'"그 얘기 더 듣고 싶어요"',s:'기획력↑'},{l:'"부장님도 실패하셨다니 위로돼요"',s:'스트레스↓'}],[{plan:2,aff_hyunsu:5},{st:-10,aff_hyunsu:4}],['그날 밤, 험쮜의 노트 한 장이 부장님의 실패담으로 가득 찼다.','"그럼요. 실패 안 한 사람은 기획 못 해요."'])],
+  sangho:[ST('sangho',2,'sc_meeting','대표 미팅 배석','"오늘 대표님 미팅, 같이 들어가요. 말 안 해도 돼요. 보기만 해요."\n이상호 사업부장이 서류를 건넸다.',[{l:'한 마디도 안 놓치고 메모한다',s:'기획력·데이터↑'},{l:'용기 내서 질문 하나를 던진다',s:'소통력·평판↑'}],[{plan:2,data:1,rep:2,aff_sangho:3},{comm:2,rep:3,aff_sangho:4}],['"메모 보니까 판을 읽기 시작했네요." 사업부장님이 끄덕였다.','대표님이 험쮜 쪽을 봤다. "좋은 질문이에요." 사업부장님 입꼬리가 올라갔다.']),
+          ST('sangho',3,'sc_park','나침반의 주인','"이 나침반, 첫 직장 사수한테 받았어요. 언젠가 험쮜 님도 누군가에게 줄 거예요."',[{l:'"그때까지 열심히 배울게요"',s:'기획력↑'},{l:'"제가 받으면 안 될까요? (농담)"',s:'스트레스↓'}],[{plan:2,aff_sangho:5},{st:-6,aff_sangho:4}],['"배우는 사람한테 방향은 저절로 와요."','"…CEO 되면 줄게요." 진짜인지 농담인지 모르겠다.'])],
+  jaemin:[ST('jaemin',2,'sc_office','감사 전날','내일 회계 감사. 차재민 사원 책상에 서류가 300장.\n"오늘 다 맞춰야 해요. …도와줄 수 있어요?"',[{l:'밤새 같이 대조한다',s:'실행력↑ 체력↓'},{l:'엑셀로 자동 대조표를 만든다',s:'데이터↑'}],[{exec:3,hp:-10,aff_jaemin:5},{data:2,aff_jaemin:4}],['새벽 2시, 마지막 영수증이 맞았다. "험쮜 님, 이 은혜 안 잊어요."','"…이게 3분 만에 돼요?" 재민 님이 표를 다섯 번 확인했다.']),
+          ST('jaemin',3,'sc_cafe','재민의 가계부','커피를 마시다 재민 님이 말했다.\n"사실 동생 학비를 제가 내요. 그래서 기준이 좀 빡빡한 거예요."',[{l:'"재민 님 진짜 멋있어요"',s:'♥↑↑'},{l:'부업 정보를 나눈다',s:'소통력↑'}],[{aff_jaemin:5,st:-4},{comm:1,aff_jaemin:4}],['"…멋있긴요." 재민 님이 처음으로 커피값을 냈다.','"블로그 원고료요? 메모해 둘게요." 재민 님 체크리스트가 한 줄 늘었다.'])],
+  hanmin:[ST('hanmin',2,'sc_rain','태풍 오는 날','태풍 때문에 물류가 멈췄다. 이한민 과장은 창고에서 밤을 새울 생각이다.\n"고객 주문은 끝까지 나가야 합니다."',[{l:'창고로 같이 간다',s:'실행력↑ 체력↓'},{l:'사무실에서 고객 공지문을 쓴다',s:'소통력·평판↑'}],[{exec:3,hp:-12,aff_hanmin:6},{comm:2,rep:2,aff_hanmin:4}],['비바람 속에서 마지막 상자가 트럭에 실렸다. 과장님이 말없이 우산을 씌워 줬다.','"공지 덕분에 문의가 절반으로 줄었습니다." 과장님 목소리가 조금 풀렸다.']),
+          ST('hanmin',3,'sc_factory','과장님의 손편지','창고 구석, 과장님이 뭔가 쓰고 있다. 현장 직원들에게 보내는 손편지 스무 장.\n"말로는 잘 못 해서요."',[{l:'옆에서 같이 쓴다',s:'소통력↑ 스트레스↓'},{l:'현장에 음료를 돌린다',s:'평판↑'}],[{comm:2,st:-6,aff_hanmin:5},{money:-3,rep:2,aff_hanmin:4}],['험쮜 글씨가 섞인 편지를 받은 직원이 웃었다. 과장님도 웃었다.','"…다음엔 제가 사겠습니다." 과장님이 캔커피를 하나 건넸다.'])],
+};
+Object.keys(STORY2).forEach(k=>STORIES[k].splice(2,0,...STORY2[k]));
 function pendingStory(){S.story=S.story||{};
   for(const k of Object.keys(MATES)){const done=S.story[k]||0;if(done<3&&S.aff[k]>=STORY_AT[done])return k}return null}
 async function playStory(k){S.story[k]=(S.story[k]||0)+1;await STORIES[k][S.story[k]-1]()}
@@ -1778,10 +1844,10 @@ async function playMk(e){S.flags['mk_'+e.id]=1;setPlace(e.place);
 /* ================= 챕터(기승전결) + 월간 미션 =================
    매달 상사가 미션을 준다 → 그 미션을 위해 부서 일을 고른다 → 월말에 성공/실패 결과가 이야기로 이어진다 */
 const CHAPTERS=[
-  {from:0,act:1,n:'1막 · 론칭 준비',img:'ev_arrive',sub:'론칭까지 6개월.\n카테고리, 제형, 용기, 물류, ERP, 채널, 카피, PR —\n매달 업무 회의에서 어떤 판단을 내리느냐에 따라\n론칭의 완성도가 달라진다.'},
-  {from:6,act:2,n:'2막 · 매출을 만들어라',img:'sc_store',sub:'론칭은 출발선일 뿐.\n1년 동안 매달 매출 목표가 내려온다.\n이제 모든 회사일이 매출로 이어진다.'},
-  {from:12,act:2,n:'2막 · 위기와 반격',img:'sc_rain',sub:'투자 무산, 카피캣 등장.\n버티는 법은 하나 — 매출로 증명하라.'},
-  {from:18,act:3,n:'3막 · 세계로',img:'c_global',sub:'국내 1등으로는 부족하다.\n미국·일본·동남아 — 6개월 동안\nSTAGE:ZERO를 얼마나 키울 수 있을까?'}];
+  {from:0,act:1,n:'1막 · 인턴의 봄',img:'ev_arrive',sub:'론칭까지 8개월.\n평일엔 층마다 돌며 사람을 만나고 일을 돕고,\n휴일엔 나를 위해 쓴다.\n그 하루하루가 STAGE:ZERO가 된다.'},
+  {from:8,act:2,n:'2막 · 매출을 만들어라',img:'sc_store',sub:'론칭은 출발선일 뿐.\n이제 회사에서 하는 모든 일이 매출로 이어진다.'},
+  {from:15,act:2,n:'2막 · 위기와 반격',img:'sc_rain',sub:'투자 무산, 카피캣 등장.\n버티는 법은 하나 — 사람과 숫자로 증명하라.'},
+  {from:24,act:3,n:'3막 · 세계로',img:'c_global',sub:'입사 3년차.\n미국·일본·동남아 — 마지막 1년,\nSTAGE:ZERO를 얼마나 키울 수 있을까?'}];
 const chapterOf=m=>[...CHAPTERS].reverse().find(c=>m>=c.from);
 // 미션 종류: msG(체크리스트 +n) · msF(체크리스트 완료) · gain(수치 +n) · val(수치 n 이상) · core(핵심 7개) · work(회사일 n번)
 // 미션 종류: msG(체크리스트 +n) · msF(체크리스트 완료) · bp(론칭 체크 n%) · gain(수치 +n) · val(수치 n 이상) · sales(이번 달 매출 n) · glG(해외 진척 +n) · glN(해외 n곳) · brand(브랜드 점수) · work(회사일 n번)
@@ -1860,8 +1926,8 @@ async function missionResult(){const M=S.mission;if(!M||M.done||M.m!==S.m)return
 
 /* ================= 승진 평가 =================
    3개월마다 분기 평가(8번). 한 번에 한 단계씩, 인턴 → 사원 → 주임 → 대리 → 팀장 → 이사 → CEO */
-const EVAL_AT={2:'수습 평가',5:'1분기 평가',8:'2분기 평가',11:'연간 평가',14:'1분기 평가',17:'2분기 평가',20:'3분기 평가',23:'최종 평가 · 대표 선임'};
-const REQ=[null,{rep:10,boss:8},{rep:25,bp:30,boss:12},{rep:40,launch:1,boss:18},{rep:55,sales:130,boss:24},{rep:75,sales:170,boss:42},{rep:90,gl:1,brand:72,boss:60,aff:40}];
+const EVAL_AT={2:'수습 평가',5:'1분기 평가',8:'2분기 평가',11:'연간 평가',14:'1분기 평가',17:'2분기 평가',20:'3분기 평가',23:'연간 평가',26:'1분기 평가',29:'2분기 평가',32:'3분기 평가',35:'최종 평가 · 대표 선임'};
+const REQ=[null,{rep:10,boss:12},{rep:22,bp:30,boss:18},{rep:35,launch:1,boss:26},{rep:50,sales:150,boss:36},{rep:70,sales:230,boss:50},{rep:90,gl:2,brand:75,boss:65,aff:55}];
 function reqWhy(r){
   if(S.rep<r.rep)return `평판이 ${r.rep} 이상 필요해요 (지금 ${S.rep}).`;
   if(r.sum&&sumStat()<r.sum)return `능력치 합계가 ${r.sum} 이상 필요해요 (지금 ${sumStat()}).`;
@@ -1882,11 +1948,11 @@ async function evaluate(name){
   const nx=S.rank+1,r=REQ[nx];
   if(r&&!reqWhy(r)){
     S.rank=nx;
-    if(nx===6)await showClip({a:'c_ev_ceo',b:'c_ev_ceo_b',kick:'CEO',title:'인턴 험쮜, 캔버스랩 CEO 취임!',sub:`${PROMO_LINE[nx]}\n2년 전 면접장에서 떨던 실험쥐가 대표가 됐다.`});
+    if(nx===6)await showClip({a:'c_ev_ceo',b:'c_ev_ceo_b',kick:'CEO',title:'인턴 험쮜, 캔버스랩 CEO 취임!',sub:`${PROMO_LINE[nx]}\n3년 전 면접장에서 떨던 실험쥐가 대표가 됐다.`});
     else await showClip({a:'c_ev_promo',b:'c_ev_promo_b',kick:'PROMOTION',title:`${RANKS[nx-1]} → ${RANKS[nx]}`,sub:`${name} 통과! 월급 ${PAY[nx]}만원\n${PROMO_LINE[nx]}`});
   }else if(r){
     await result({st:8},`${name} 결과… 이번엔 ${RANKS[S.rank]} 유지.\n다음 직급 「${RANKS[nx]}」까지: ${reqWhy(r)}\n<span class="t">(다음 분기엔 꼭.)</span>`,name,'hyunsu');
-  }else await result({rep:2},`${name}. "CEO 험쮜 님, 2년 동안 고생 많았어요."`,name,'sangho');
+  }else await result({rep:2},`${name}. "CEO 험쮜 님, 3년 동안 고생 많았어요."`,name,'sangho');
 }
 
 /* ================= 론칭 ================= */
@@ -1912,15 +1978,9 @@ async function launch(){
   await say({who:'sangho',title:'2막 · 이제 매출이다',text:'"론칭은 출발선이에요. 지금부터 1년, 매달 매출 목표가 내려갑니다.\n이제 매달 매출 목표가 내려와요. MD 협상, 라이브, 리뷰 대응… 업무 회의의 판단이 그대로 매출이 돼요."\n<span class="t">📈 매달 말 매출과 손익이 집계돼요. 회사 자금 1.5억으로 시작해요.\n🌍 3막엔 해외 바이어와의 판단이 해외 진출을 열어요.</span>'});
 }
 function recordSales(){if(!S.launched||S.m<=LAUNCH_M)return null;
-  const tp=teamPush(),M=meet(),pl=monthPL((S.push||0)+tp,M),v=pl.rev;S.co=S.co||{cash:150,profitSum:0,last:null};
-  S.salesLog=S.salesLog||[];S.salesLog.push(v);S.salesSum=(S.salesSum||0)+v;S.salesBest=Math.max(S.salesBest||0,v);S.chan=(S.chan||0)+Math.round(((S.push||0)+tp)*.3);S.push=0;
-  S.co.cash+=pl.profit;S.co.profitSum+=pl.profit;S.co.last={...pl,m:S.m,by:M.by};(S.co.log=S.co.log||[]).push(pl.profit);
-  if(M.ch==='infl'&&M.ad)S.buzz=clamp(S.buzz+Math.round(M.ad/8));
-  if(M.disc>=.2)S.rep=clamp(S.rep-1,0,100);
-  if(pl.soldOut)S.rep=clamp(S.rep-1,0,100);
-  if(M.by==='me'){S.stat.plan=clamp(S.stat.plan+2);S.stat.data=clamp(S.stat.data+1)}
-  if(S.co.cash<0){S.st=clamp(S.st+8);S.flags.cashNeg=(S.flags.cashNeg||0)+1;if(S.co.cash<-80)S.flags.crisis=true}
-  S.buzz=Math.max(0,S.buzz-Math.max(3,Math.round(S.buzz*.12)));return pl}
+  const v=salesNow();S.salesLog=S.salesLog||[];S.salesLog.push(v);S.salesSum=(S.salesSum||0)+v;S.salesBest=Math.max(S.salesBest||0,v);
+  S.chan=Math.round((S.chan||0)*.9+(S.push||0)*.3);S.push=0;
+  S.buzz=Math.max(0,S.buzz-Math.max(3,Math.round(S.buzz*.12)));return v}
 
 /* ================= 엔딩 ================= */
 function computeEnding(){
@@ -1950,7 +2010,7 @@ function finish(){
     na:`${p}는 국내 성공에 이어 ${glList().filter(g=>(S.gl||0)>=g.at).map(g=>g.n.split(' ').slice(1).join(' ')).join(', ')}에 입점했다.\n험쮜는 ${RANKS[S.rank]}로서 글로벌 TF를 맡게 됐다.\n"전체 판을 읽고, 방향을 잡아봅시다." 이제 그 말을 험쮜가 한다.`,
     hit:`${p}는 입소문을 타고 꾸준히 팔렸다.\n험쮜는 ${RANKS[S.rank]}로서 두 번째 제품 기획서를 쓰기 시작했다.`,
     ok:`큰 화제는 없었지만, ${p}를 찾는 단골이 생겼다.\n"다음엔 더 잘할 수 있어." 험쮜는 오늘도 출근한다.`,
-    delay:`${p}는 조용히 진열대 뒤로 밀려났다.\n하지만 험쮜는 2년 동안 브랜드가 만들어지고, 팔리고, 버티는 모든 과정을 겪었다.\n카테고리부터 물류, ERP, 이커머스까지. 그 경험은 사라지지 않는다.`,
+    delay:`${p}는 조용히 진열대 뒤로 밀려났다.\n하지만 험쮜는 3년 동안 브랜드가 만들어지고, 팔리고, 버티는 모든 과정을 겪었다.\n카테고리부터 물류, ERP, 이커머스까지. 그 경험은 사라지지 않는다.`,
     love:`론칭보다 먼저 꽃핀 건 사랑이었다.\n영업팀 한다람 주임과의 비밀연애는 회식 자리에서 들통났고,\n팀 전체의 축하(와 놀림)를 받았다.`,
     cafe:`곰 사장님은 은퇴하며 가게를 험쮜에게 맡겼다.\n카운터 옆엔 ${p} 샘플이 놓여 있다. "이거, 제가 만든 거예요."`,
     fox:`험쮜는 폭스뷰티로 자리를 옮겼다.\n가끔 STAGE:ZERO 광고를 보면 마음 한구석이 찡하다.`,
@@ -1975,25 +2035,168 @@ function finish(){
 const NEWS={1:'새해 H&B 랭킹: 고보습 크림·밤 제형 검색량 급상승',2:'졸업·입학 시즌, 20대 첫 스킨케어 세트 수요 증가',3:'환절기 민감 피부 고민 ↑ — "장벽" 키워드 검색 2배',4:'미세먼지 시즌, 저자극 클렌징·진정 카테고리 성장',
   5:'선케어 시즌 개막: 선세럼·톤업 선 경쟁 치열',6:'숏폼에서 「스킨플러딩(수분 레이어링)」 챌린지 유행',7:'여름 휴가철, 끈적임 없는 젤 제형 인기',8:'PDRN·엑토인, 올해의 성분 키워드로 급부상',
   9:'식약처, 화장품 과대광고 집중 점검 예고 — "재생·치료" 표현 주의',10:'가을 건조 시작, "속건조" 검색 급증 — 장벽 크림 대전',11:'블랙프라이데이·연말 세트 대비 이커머스 물량 경쟁',12:'K-뷰티 북미 수출 역대 최대, 아마존 뷰티 카테고리 강세'};
-async function runMonth(){
-  if(busy)return;
-  busy=true;closeSheets();hideOffice();
-  if(!S.mission||S.mission.m!==S.m)newMission();
-  S.snap={bp:bpPct(),rep:S.rep,bq:S.bq,buzz:S.buzz,aff:{...S.aff}};
-  document.body.classList.add('running');playBgm('work');
-  await meetingScene();
-  S.st=clamp(S.st-8);S.hp=clamp(S.hp+8);
-  await afterMs();
-  await missionResult();
-  const madLeft=S.talk&&S.talk.m===S.m&&S.talk.mad?S.talk.mad.filter(k=>!S.talk.cool[k]):[];madLeft.forEach(k=>S.aff[k]=clamp((S.aff[k]||0)-2));
-  const PL=recordSales(),sold=PL?PL.rev:null;
+// 할 질문을 다 들은 사람과는 가벼운 수다 (♥ 조금 · 스트레스 조금↓)
+const SMALL={
+  sangho:['요즘 시장, 재밌게 돌아가요. 뉴스 꼭 챙겨 봐요.','이 나침반요? 아직도 방향 잡을 때 꺼내 봐요.','점심 같이 할래요? 판 읽는 얘기 좀 해 줄게요.'],
+  hyunsu:['퍼즐은 마지막 한 조각이 제일 재밌어요.','회의 일정 맞추는 게 세상에서 제일 어려운 퍼즐이에요, 하하.','험쮜 님 기획서, 요즘 많이 늘었어요.'],
+  seohwi:['오늘 메시지 하나 잘 뽑았어요. 기분 좋네요!','험쮜 님, 밥은 먹고 다녀요?','보도자료는 첫 문장이 반이에요. 기억해 둬요.'],
+  eunbin:['이거 새로 나온 젤리인데 먹어 볼래요?','어제 숏폼 조회수 봤어요? 대박이죠!','근데 이렇게 하면 더 재밌지 않아요?'],
+  sumin:['어제 대시보드 숫자가 딱 맞아떨어졌어요. 행복했어요.','커피는 시럽 반만. 그게 최적이에요.','조용히 있는 것도 일의 일부예요.'],
+  jiyoung:['오늘 하늘 색, 뚜껑 컬러로 쓰고 싶다…','무드보드에 사진 한 장 더 붙였어요. 볼래요?','감각은 매일 조금씩 쌓는 거예요.'],
+  jaemin:['영수증은 날짜순! 잊지 마세요.','체크리스트 하나 더 만들었어요. 공유드릴게요.','기준만 서 있으면 일은 반쯤 끝난 거예요.'],
+  hanmin:['오늘 출고 3,000건, 사고 없이 끝났습니다.','창고는 정리가 반입니다.','자판기 커피 한 잔 하실래요? 제가 살게요.'],
+  daram:['오늘 매장 다섯 곳 돌았어요! 다리 아파요ㅠ','험쮜 씨, 점심 뭐 먹었어요?','현장은 발로 뛰면 길이 보여요!'],
+  any:['오늘도 수고 많아요.','날씨 좋네요.']};
+// 휴일 데이트 메뉴의 「주말 약속」 (♥30부터): [어디서, 무슨 일, 장면]
+const MEETUP={
+  sangho:['동네 산 등산','정상에서 사업부장님이 보온병 커피를 따라 줬다. "높이 올라오면 판이 보여요."','sc_park'],
+  hyunsu:['보드게임 카페','"퍼즐 게임은 제가 좀 합니다." 기획부장님이 내리 세 판을 이겼다.','sc_cafe'],
+  seohwi:['성수동 브런치','"회사 밖에선 편하게 불러요." 사수님이 팬케이크를 반 갈라 줬다.','sc_cafe'],
+  eunbin:['팝업 스토어 투어','팝업 세 곳을 돌며 사진 200장. "이거 콘텐츠로 쓰면 재밌겠다!"','sc_store'],
+  sumin:['조용한 북카페','각자 책을 읽다가 가끔 눈이 마주쳤다. 말없이도 편한 시간.','sc_cafe'],
+  jiyoung:['미술관 전시','"이 파란색, 우리 다음 용기 색 같지 않아요?" 둘이 한참 그림 앞에 서 있었다.','sc_park'],
+  jaemin:['시장 장보기','"가격표만 봐도 물가 흐름이 보여요." 재민 님의 가계부 비법을 전수받았다.','sc_store'],
+  hanmin:['한강 자전거','"페이스 유지가 제일 중요합니다." 과장님 뒤를 따라 20km를 달렸다.','sc_park']};
+/* ================= 인턴의 하루 =================
+   한 달 = 평일 하루 + 휴일 하루. 3년(36개월).
+   평일: 캔버스랩 빌딩에서 층마다 갈 곳 3곳을 골라 차례로 들른다. 그날 그 자리에 있는 사람과 대화하거나, 그곳 업무를 돕는다.
+         ♥가 쌓인 사람이 있는 곳에 가면 그 사람의 이야기(관계 이벤트)가 열린다.
+   휴일: 부업·데이트·휴식·여행·쇼핑·자기계발 중 하나.
+   회사 이야기(론칭·매출·위기·해외 진출)와 승진 평가는 월말에 찾아온다. */
+const PLACES={
+  roof:{f:'RF',n:'옥상 정원',ic:'🌿',scene:'sc_park',brk:1},
+  boss:{f:'5F',n:'부장실',ic:'🧭',scene:'sc_meeting',acts:['schedule','minutes']},
+  strat:{f:'4F',n:'전략기획팀',ic:'📐',scene:'sc_package',acts:['research','package']},
+  lab:{f:'4F',n:'연구실',ic:'🧪',scene:'sc_lab',acts:['formula']},
+  mkt:{f:'3F',n:'마케팅팀',ic:'📣',scene:'sc_office',acts:['keymsg','review']},
+  studio:{f:'3F',n:'촬영 스튜디오',ic:'🎬',scene:'sc_studio',acts:['content']},
+  sales:{f:'2F',n:'영업팀',ic:'🤝',scene:'sc_store',acts:['md','cs','global']},
+  ops:{f:'2F',n:'경영지원팀',ic:'🗂️',scene:'sc_office',acts:['erp','settle']},
+  cafe:{f:'1F',n:'1층 카페',ic:'☕',scene:'sc_cafe',brk:1},
+  wh:{f:'B1',n:'물류 창고',ic:'📦',scene:'sc_factory',acts:['filling','logistics']},
+};
+const FLOORS=[['RF','옥상'],['5F','임원'],['4F','전략기획'],['3F','마케팅'],['2F','영업·지원'],['1F','로비'],['B1','창고']];
+// 평소 자리. 하루에 한 곳에 있고, 가끔은 카페·옥상에서 쉬고 있다
+const HOME={sangho:['sales','boss'],hyunsu:['strat','boss'],jiyoung:['strat','lab'],seohwi:['mkt'],sumin:['mkt'],eunbin:['studio','mkt'],daram:['sales'],jaemin:['ops'],hanmin:['wh','ops']};
+const VISITS=3;
+function newDay(){const at={};
+  TEAM.forEach(k=>{at[k]=R()<.2?(R()<.6?'cafe':'roof'):pick(HOME[k])});
+  ['cafe','roof'].forEach(p=>{if(!TEAM.some(k=>at[k]===p)){const k=pick(TEAM.filter(x=>!PLACES[at[x]].brk));at[k]=p}});
+  S.day={m:S.m,at,pick:[],phase:'week'};S.autoAll=false}
+const ppl=p=>TEAM.filter(k=>S.day.at[k]===p);
+const storyReady=k=>{if(!STORIES[k])return false;const d=(S.story&&S.story[k])||0;return d<STORY_AT.length&&(S.aff[k]||0)>=STORY_AT[d]};
+const ga=w=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?'이':'가'},wa=w=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?'과':'와'};
+const placeActs=p=>(PLACES[p].acts||[]).filter(id=>!lockReason(id));
+
+/* ----- 빌딩 화면 ----- */
+function showBld(){if(!S)return;hideActor();$('#dialog').hidden=true;$('#bld').hidden=false;document.body.classList.add('in-bld');renderBld()}
+function hideBld(){$('#bld').hidden=true;document.body.classList.remove('in-bld')}
+function placeCard(p){const P=PLACES[p],ps=ppl(p),n=S.day.pick.indexOf(p),acts=placeActs(p);
+  const faces=ps.map(k=>`<span class="bf ${storyReady(k)?'ev':''}" style="${faceStyle(k)}" title="${esc(tagName(k))}">${storyReady(k)?'<i>♥</i>':''}</span>`).join('')||'<span class="none">비어 있음</span>';
+  const sub=P.brk?'💬 대화 · ☕ 휴식':acts.map(id=>ACTS[id].name).join(' · ');
+  return `<button class="bp ${n>=0?'on':''} ${P.brk?'brk':''}" data-place="${p}" type="button"><span class="bp-n">${n>=0?n+1:''}</span>
+    <span class="bp-h"><i>${P.ic}</i><b>${P.n}</b></span><span class="bp-f">${faces}</span><small>${esc(sub)}</small></button>`}
+function renderBld(){if($('#bld').hidden)return;const D=S.day,left=VISITS-D.pick.length,evs=TEAM.filter(k=>storyReady(k)).length;
+  $('#bl-top').innerHTML=`<div class="r1"><b>${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 평일</b><span class="sp"></span><span class="pill">💪 ${S.hp}</span><span class="pill ${S.st>=70?'hot':''}">😵 ${S.st}</span><span class="pill">💰 ${S.money}만</span></div>
+    <div class="r2">${left?`오늘 들를 곳 <b>${left}곳</b> 더 골라요 · 고른 순서대로 가요`:'준비 완료! 「출근」을 눌러요'}${evs?` · <span class="hot">♥ 표시 = 이야기가 기다리는 사람</span>`:''}</div>`;
+  $('#bl-floors').innerHTML=FLOORS.map(([f,l])=>{const ps=Object.keys(PLACES).filter(p=>PLACES[p].f===f);
+    return `<div class="fl fl-${f}"><span class="fl-l"><b>${f}</b><small>${l}</small></span><div class="fl-ps n${ps.length}">${ps.map(placeCard).join('')}</div></div>`}).join('');
+  const go=$('#bl-go');go.textContent=left?`출근 ▶ ${D.pick.length}/${VISITS}`:'출근 ▶';go.classList.toggle('ready',!left)}
+$('#bl-floors').addEventListener('click',e=>{const b=e.target.closest('[data-place]');if(!b||busy||!S)return;const p=b.dataset.place,D=S.day,i=D.pick.indexOf(p);
+  if(i>=0)D.pick.splice(i,1);else if(D.pick.length>=VISITS){toast(`하루에 ${VISITS}곳까지예요. 고른 곳을 다시 누르면 빠져요`);return}else{D.pick.push(p);sfx('tap')}
+  renderBld()});
+$('#bl-go').onclick=()=>{if(busy||!S)return;if(S.day.pick.length<VISITS){toast(`${VISITS-S.day.pick.length}곳 더 골라 주세요`);return}workday()};
+$('#bl-leave').onclick=async()=>{if(busy||!S)return;if(S.leave<1){toast('남은 연차가 없어요');return}
+  busy=true;hideBld();const c=await ask({who:'me',title:'🌴 오늘 연차 쓸까요?',text:`남은 연차 ${S.leave}일. 오늘은 회사에 안 가고 푹 쉬어요.\n<span class="t">(사람도 일도 못 만나지만, 체력·스트레스가 크게 회복돼요.)</span>`,choices:[{l:'연차 쓰고 집콕',s:'연차 −1 · 체력↑↑ 스트레스↓↓'},{l:'아니, 출근할래',s:'빌딩으로'}]});
+  if(c===1){busy=false;showBld();return}
+  await runAct('leave',0);S.day.phase='weekend';save();await afterDay()};
+$('#bl-bot').addEventListener('click',e=>{const t=e.target.closest('[data-bsheet]');if(t&&!busy)openSheet(t.dataset.bsheet)});
+
+/* ----- 평일: 고른 곳을 차례로 들른다 ----- */
+async function workday(){busy=true;hideBld();document.body.classList.add('running');playBgm('work');
+  const picks=[...S.day.pick];
+  for(let i=0;i<picks.length;i++){if(S.ending)break;await visit(picks[i],i)}
+  hideActor();if(S.ending)return finish();
+  setPlace('sc_home');
+  S.day.phase='weekend';save();await afterDay()}
+async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('whoosh');
+  // ♥가 쌓인 사람이 있으면 그 사람의 이야기가 먼저 열린다
+  const sk=ps.find(storyReady);
+  if(sk){await say({who:sk,speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ♥ 이야기`,text:`${tagName(sk)}${ga(tagName(sk))} 험쮜를 보고 손을 흔든다.\n<span class="t">(…뭔가 할 얘기가 있는 얼굴이다.)</span>`});
+    await playStory(sk);hideActor();render();return}
+  const ch=[],ops=[];
+  ps.forEach(k=>{const v=S.aff[k]||0;ch.push({l:`💬 ${JOB_TAG[k]} ${given(k)}에게 말 걸기`,s:`♥${v} ${relLv(v)[1]}${hasTalk(k)?'':' · 수다'}`});ops.push(['talk',k])});
+  if(ps.includes('daram')&&(S.flags.crush||S.flags.dating)){ch.push({l:'☕ 다람 주임 자리에 커피 두고 오기',s:'💘 설렘↑ · 1만원'});ops.push(['act','coffee'])}
+  placeActs(p).forEach(id=>{const a=ACTS[id],m=a.mate&&ps.includes(a.mate);ch.push({l:`💼 ${a.name}`,s:`${Object.keys(a.g).map(k=>STATS[k]).join('·')}↑${m?` · ${given(a.mate)}${wa(given(a.mate))} 함께 ♥↑`:''}`});ops.push(['work',id])});
+  if(P.brk||!ch.length){ch.push({l:'☕ 잠깐 쉬어 가기',s:'스트레스↓ 체력↑'});ops.push(['rest'])}
+  const pr=ask({who:'me',speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ${P.ic} ${P.n}`,text:ps.length?`${ps.map(k=>tagName(k)).join(', ')}${ga(tagName(ps[ps.length-1]))} 있다.`:'아무도 없다. 조용하다.',choices:ch});
+  if(ps.length)showGroup(ps);
+  const [op,arg]=ops[await pr];hideGroup();
+  const hi=ps.filter(k=>k!==arg&&!(op==='work'&&ACTS[arg].mate===k));if(hi.length)applyFx(Object.fromEntries(hi.map(k=>['aff_'+k,1])));
+  if(op==='talk')await talkTo(arg);
+  else if(op==='work'||op==='act')await runAct(arg,i,ps);
+  else await result({st:-12,hp:6},pick(['창밖을 멍하니 봤다. 구름이 크림 같다.','따뜻한 라떼 한 잔. 오늘 처음으로 숨을 쉬었다.','벤치에 앉아 눈을 감았다. 5분이 꿀 같았다.']),'잠깐 휴식');
+  hideActor();render()}
+// 대화: 그 사람이 지금 고민하는 질문에 답한다. 다 들은 사람과는 가벼운 수다
+async function talkTo(k){const T=pickTalk(k);
+  if(!T){const L=SMALL[k]||SMALL.any;await result({['aff_'+k]:2,st:-4},`${given(k)}: "${pick(L)}"`,'💬 수다',k);return}
+  const order=shuffle([0,1,2]);
+  const c=await ask({who:k,title:`💬 ${tagName(k)}`,text:`"${esc(T.q)}"`,choices:order.map(i=>({l:T.o[i][0]}))});
+  const [ans,sc,re]=T.o[order[c]],g=(MATES[k]&&MATES[k].g)||['comm','exec'];
+  const fx=sc===2?{['aff_'+k]:6,[g[0]]:2,rep:2}:sc===1?{['aff_'+k]:3,[g[1]]:1}:{['aff_'+k]:-1,st:4};
+  if(k==='daram'&&sc===2)fx.love=5;
+  const chips=applyFx(fx);if(sc)addMs('any',sc===2?3:1,chips);
+  sfx(['fail','ok','great'][sc]);
+  await say({who:k,title:['C · 다시 생각해 봐요','B · 아쉬워요','A · 바로 그거예요!'][sc],text:`험쮜: "${esc(ans)}"\n${given(k)}: "${esc(re)}"`,chips});
+  await afterMs()}
+// 업무·휴일 활동 공통: 미니게임(업무) 또는 장면 → 결과
+async function runAct(id,i,ps){const a=ACTS[id];let perf=null;
+  if(a.cat==='work'&&a.game)perf=await playGame(id,i);else await playMini(id,i);
+  const r=doAction(id,perf);
+  if(a.cat==='work'&&!r.burn){if(ps&&a.mate&&ps.includes(a.mate))bump(r.chips,'aff_'+a.mate,2);
+    if(S.launched){const v=r.res==='great'?12:r.res==='ok'?7:2;S.push=(S.push||0)+v;r.chips.push({l:'📈 매출 기여',d:v})}}
+  if(r.jobUp)sfx('great');else sfx(r.res==='fail'?'fail':r.res==='great'?'great':'ok');
+  await say({who:r.mate||(id==='coffee'?'daram':'me'),title:r.title,text:r.text,chips:r.chips,pic:r.pic||clipOf(id)});
+  if(a.cat==='work')await afterMs();render()}
+
+/* ----- 휴일 ----- */
+const WKND={
+  job:{n:'💰 부업',d:'통장 채우기 · 횟수가 쌓이면 승급',ids:['cafe','store','shoot','blog']},
+  love:{n:'💘 데이트',d:'설렘·♥ · 친한 동료(♥20↑)와 주말 약속',ids:['date','blind','selfdate']},
+  rest:{n:'🌴 휴식',d:'체력·스트레스 회복',ids:['home','walk','run','gym','pilates','pt','snack','friends']},
+  trip:{n:'✈️ 여행',d:'크게 회복 · 연차·돈이 들어요',ids:['daytrip','trip','jeju','abroad']},
+  shop:{n:'🛍️ 쇼핑',d:'스트레스↓ · 트렌드 감각',ids:['shop_hb','shop_online','shop_mall']},
+  self:{n:'📚 자기계발',d:'능력치↑ · 돈이 들어요',ids:['lecture','ingredient','english','excel','ai','license','mba']},
+};
+const actSub=id=>{const a=ACTS[id],l=lockReason(id),m=a.cost&&S.money<a.cost?'통장 부족':null;if(l||m)return '🔒 '+(l||m);
+  const bits=[a.d];if(a.pay)bits.push(`+${jobPay(id)}만원`);if(a.cost)bits.push(`${a.cost}만원`);if(a.leave)bits.push(`연차 ${a.leave}일`);return bits.join(' · ')};
+async function weekend(){busy=true;document.body.classList.add('running');playBgm('rest');setPlace('sc_home');
+  for(;;){const ks=Object.keys(WKND);
+    const c=await ask({who:'me',speaker:`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 휴일`,title:'이번 휴일엔 뭘 할까?',text:`체력 ${S.hp} · 스트레스 ${S.st} · 통장 ${S.money}만원 · 연차 ${S.leave}일`,choices:ks.map(k=>({l:WKND[k].n,s:WKND[k].d}))});
+    const K=WKND[ks[c]],ids=K.ids.filter(id=>!(id==='date'&&!S.flags.dating));
+    const ch=ids.map(id=>({l:ACTS[id].name,s:actSub(id)})),ops=ids.map(id=>['act',id]);
+    if(ks[c]==='love')TEAM.filter(k=>k!=='daram'&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).slice(0,3).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${MEETUP[k][0]} · ♥↑ 스트레스↓ · 5만원`});ops.push(['meet',k])});
+    ch.push({l:'← 다른 걸 할래',s:''});ops.push(['back']);
+    const j=await ask({who:'me',speaker:`${monthOf(S.m)}월 · 휴일`,title:K.n,text:K.d,choices:ch,cls:'wk'});
+    const [op,id]=ops[j];if(op==='back')continue;
+    if(op==='meet'){await meetup(id);break}
+    const lk=lockReason(id)||(ACTS[id].cost&&S.money<ACTS[id].cost&&'통장 잔고가 부족해요');if(lk){toast('🔒 '+lk);continue}
+    await runAct(id,0);break}
+  hideActor()}
+async function meetup(k){const [place,line,sc]=MEETUP[k];setPlace(sc);
+  await result({['aff_'+k]:6,st:-14,money:-5,...(MATES[k]?{[MATES[k].g[0]]:1}:{})},`${place}. ${line}`,`${given(k)}${wa(given(k))} 주말 약속`,k)}
+
+/* ----- 하루 끝 → 휴일 → 월말 ----- */
+const runMonth=()=>monthIntro(); // 예전 버튼 호환
+async function afterDay(){busy=true;await weekend();await monthEnd()}
+async function monthEnd(){busy=true;document.body.classList.add('running');
+  await afterMs();S.st=clamp(S.st-6);S.hp=clamp(S.hp+8);
+  const sold=recordSales();
   const pay=payOf(),RENT=rentOf(),LIVING=livingOf(),out=RENT+LIVING+LOAN;S.money+=pay-out;
   const perkChips=[];Object.keys(S.perk||{}).forEach(k=>{const {txt,...fx}=PERK[k];applyFx(fx,perkChips)});
   if(S.money<0)bump(perkChips,'st',6);
-  const relChips=REL_KEYS.filter(k=>(S.aff[k]||0)!==(S.snap.aff[k]||0)).map(k=>({l:'♥ '+who(k).name.split(' ')[0],d:(S.aff[k]||0)-(S.snap.aff[k]||0)}));
   setPlace('sc_home');
-  const sum=[[S.launched?'📈 매출':'🧾 론칭 체크',S.launched?0:bpPct()-S.snap.bp,'%'],['평판',S.rep-S.snap.rep],['제품력',S.bq-S.snap.bq],['화제성',S.buzz-S.snap.buzz]].filter(x=>x[1]).map(([l,d,u])=>({l,d,pct:u==='%'}));
-  await say({who:'me',speaker:'MONTHLY',title:`${monthOf(S.m)}월 결산`,text:`${S.talk&&S.talk.m===S.m&&S.talk.n?`💬 사무실 대화 성과: 정답 ${S.talk.ok}/${S.talk.n}\n`:''}${madLeft.length?`🔥 못 식힌 동료: ${madLeft.map(k=>JOB_TAG[k]).join('·')} (♥-2)\n`:''}${sold!=null?`📈 STAGE:ZERO 매출 <b>${fmtW(sold)}</b>${PL.soldOut?' (품절! 수요 '+fmtW(PL.demand)+')':''} · 이익 <b>${PL.profit>=0?'+':'−'}${fmtW(Math.abs(PL.profit))}</b>\n🏦 회사 자금 ${S.co.cash<0?'−':''}${fmtW(Math.abs(S.co.cash))}${PL.ad?` · 광고 ${fmtW(PL.ad)} → ROAS ${Math.round(PL.roas*100)}%`:''}${PL.stock?` · 재고비 ${fmtW(PL.stock)}`:''}${S.co.cash<0?'\n<span class="t">회사 자금이 마이너스… 부장님들 얼굴이 어둡다.</span>':''}\n`:''}월급 ${pay}만원${S.rank===0?' (수습)':''} − 월세 ${RENT} − 생활비 ${LIVING} − 학자금 ${LOAN}\n통장 잔고 ${S.money}만원 · 남은 연차 ${S.leave}일${Object.keys(S.perk||{}).length?`\n단짝 보너스: ${Object.keys(S.perk).map(k=>MATES[k].name.split(' ')[0]).join('·')}`:''}\n관계: 상사 평가 ${bossAff()} · 동료 평균 ♥${avgAff()}${S.money<0?`\n<span class="t">마이너스 통장… 이자 걱정에 스트레스가 쌓인다.</span>`:''}`,chips:[{l:'이번 달 통장',d:pay-out,won:true},...sum,...perkChips,...relChips]});
+  await say({who:'me',speaker:'MONTHLY',title:`${monthOf(S.m)}월 결산`,text:`${sold!=null?`📈 STAGE:ZERO 매출 <b>${fmtW(sold)}</b>\n`:''}💰 월급 ${pay} − 월세 ${RENT} − 생활비 ${LIVING} − 학자금 ${LOAN} = <b>${pay-out>=0?'+':''}${pay-out}만원</b>\n통장 ${S.money}만원${S.money<0?' (마이너스! 스트레스↑)':''}`,chips:perkChips});
   if(S.m===LAUNCH_M&&!S.launched)await launch();
   if(S.m===TOTAL-2){
     if(S.flags.bearYes){setPlace('sc_cafe');const c=await ask({who:'bear',title:'곰 사장님의 최종 제안',text:'"험쮜 씨, 다음 달부터 우리 가게 맡아 줄 수 있어요? 이제 답을 들어야 해서요."',choices:[{l:'"죄송해요, 저는 캔버스랩에 남을게요"',s:'제안 거절'},{l:'"네, 해 볼게요!"',s:'카페 엔딩 루트 확정'}]});
@@ -2003,50 +2206,35 @@ async function runMonth(){
   }
   if(monthOf(S.m)===S.prof.bm&&S.m>0){setPlace('sc_office');
     await result({st:-15,hp:5,...Object.fromEntries(Object.keys(MATES).map(k=>['aff_'+k,2]))},`${S.prof.bm}월 ${S.prof.bd}일. 출근하자마자 불이 꺼지고 케이크가 들어왔다.\n"험쮜 님, 생일 축하해요!"\n<span class="t">(${S.prof.mbti[2]==='F'?'…이런 거에 약하다. 울컥.':'…티 안 내려 했는데 입꼬리가 올라간다.'})</span>`,'🎂 생일 축하해요!','seohwi')}
-  const fx=FIXED[S.m],sk=pendingStory(),ev=EVAL_AT[S.m];
-  let extra=false;
-  if(fx)await fx();
-  if(!S.ending&&sk&&!(fx&&R()<.5)){await playStory(sk);extra=true}
-  else if(!fx&&R()<.6){const pool=RANDOM_EV.filter(e=>e.w()&&!(e.id&&S.flags['ev_'+e.id]));if(pool.length){const e=pick(pool);if(e.id)S.flags['ev_'+e.id]=1;await e.run();extra=true}}
+  const fx=FIXED[S.m],ev=EVAL_AT[S.m];let extra=false;
+  if(fx){await fx();extra=true}
+  else if(R()<.55){const pool=RANDOM_EV.filter(e=>e.w()&&!(e.id&&S.flags['ev_'+e.id]));if(pool.length){const e=pick(pool);if(e.id)S.flags['ev_'+e.id]=1;await e.run();extra=true}}
   if(!S.ending&&ev)await evaluate(`${yearOf(S.m)}년차 ${monthOf(S.m)}월 ${ev}`);
   if(!S.ending&&!extra&&!S.flags.dating&&(!S.flags.confess&&S.love>=25||S.flags.slow&&S.flags.confess<2&&S.love>=45)){await confess();extra=true}
   if(!S.ending&&!extra&&S.flags.dating&&!S.flags.d_ramen){await dateRamen();extra=true}
   if(!S.ending&&!extra&&S.flags.dating&&S.flags.d_ramen&&!S.flags.d_picnic&&S.love>=55){await datePicnic();extra=true}
-  if(!S.ending&&!extra&&R()<.6){const pool=MAKNAE.filter(e=>(!e.w||e.w())&&!S.flags['mk_'+e.id]);if(pool.length)await playMk(pick(pool))}
+  if(!S.ending&&!extra&&R()<.5){const pool=MAKNAE.filter(e=>(!e.w||e.w())&&!S.flags['mk_'+e.id]);if(pool.length)await playMk(pick(pool))}
+  if(!S.ending&&S.st>=95&&S.burnouts>=3)S.ending='burnout';
   hideActor();
   if(S.ending)return finish();
   S.m++;
   if(S.m>=TOTAL)return finish();
-  busy=false;document.body.classList.remove('running');save();monthIntro();
-}
-function monthIntro(){
-  playBgm('office');
-  if(!S.mission||S.mission.m!==S.m)newMission();
-  render();
-  showScene(pick(['sc_office','sc_office','sc_meeting']),null);
+  busy=false;document.body.classList.remove('running');save();monthIntro()}
+function monthIntro(){playBgm('office');render();hideActor();
   if(S.chap!==chapterOf(S.m).from){busy=true;chapterCard().then(()=>{busy=false;monthIntro()});return}
-  const M=S.mission,[pa,pb]=missionProg();
-  if(lineOn()){$('#dialog').hidden=true;showOffice();note(`<span class="news">📰 ${NEWS[monthOf(S.m)]}</span>\n<b class="mtitle">🎯 이번 달 미션: ${M.t}</b>\n${M.why}\n<span class="t">💬 동료를 탭해서 대화해요 (한 달 ${TALK_N}번 · 맞는 답일수록 미션이 쉬워져요)\n🔥 열받은 동료에겐 간식을 사다 줘요\n📋 준비되면 「업무 회의」에서 이번 달 판단을 내려요\n(탭해서 닫기)</span>`,`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · ${chapterOf(S.m).n}`,M.g);
-    const d=$('#dialog');d.onclick=()=>{d.hidden=true;d.onclick=null;hideActor()};return}
-  if(M&&!(S.m===0&&S.plan[0]==='orient')){note(`<span class="news">📰 ${NEWS[monthOf(S.m)]}</span>\n<b class="mtitle">🎯 이번 달 미션: ${M.t}</b>\n${M.why}\n<span class="t">추천: ${missionHint()} · 성공하면 평판·성과급·♥, 실패하면 스트레스</span>`,`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · ${chapterOf(S.m).n}`,M.g);return}
-  note(`<span class="news">📰 ${NEWS[monthOf(S.m)]}</span>\n`+(S.m===0&&DEPTS[S.firstDept]&&S.plan[0]==='orient'?`"첫 달은 오리엔테이션이에요. ${DEPTS[S.firstDept].n} 일까지 채워 뒀으니 「이번 달 시작!」을 눌러요. 회사일은 직접 하면 미니게임, 맡기면 자동이에요."`:advice()),`${yearOf(S.m)}년차 ${monthOf(S.m)}월`);
-}
+  if(!S.day||S.day.m!==S.m)newDay();
+  if(S.day.phase==='weekend'){afterDay();return}
+  setPlace('ev_building');showBld();
+  if(!S.seenNews||S.seenNews!==S.m){S.seenNews=S.m;toast(`📰 ${NEWS[monthOf(S.m)]}`)}}
 function advice(){
-  const f=focusMs(),dl=LAUNCH_M-S.m,tired=TEAM.filter(k=>cond(k)<35&&!isSick(k));
-  if(tired.length)return `"${tired.map(k=>JOB_TAG[k]).join('·')} 컨디션이 바닥이에요. 이번 달엔 🌴 휴가 칸에 보내요. 0이 되면 병가예요."`;
-  if(R()<.3)return pick(['"버튼은 병이 칸 가운데 노란 선에 올 때! 미리 누르면 헛손질이에요."','"주문서 색이랑 병 꼬리표 색을 같이 봐요. #2 주문은 젤일 수도 있어요."','"벨트가 빠르면 SCM 과장님을 도우미로 불러요. 속도를 낮춰 줘요."','"라벨 없는 주문(🚫🏷️)에 라벨 붙이면 불량이에요. 꼭 주문서 확인!"']);
-  if(S.st>=75)return '"험쮜 님, 얼굴이 말이 아니에요. 연차 써요. 번아웃 오면 다 무너져요."';
-  if(S.hp<=30)return '"체력이 바닥이네요. 연차 집콕이라도 해요."';
-  if(S.money<30)return '"월세 괜찮아요? 주말 부업이라도 해야 하는 거 아니에요?" 통장이 마이너스면 매달 스트레스가 쌓여요.';
-  const ev=nextEval();if(ev!=null&&ev-S.m<=1&&REQ[S.rank+1]&&R()<.6){const w=reqWhy(REQ[S.rank+1]);return w?`"곧 분기 평가예요! 「${RANKS[S.rank+1]}」 승진까지 ${w}"`:`"곧 분기 평가예요. 지금이면 「${RANKS[S.rank+1]}」 승진 확실해요!"`}
-  const nx=REQ[S.rank+1];if(nx&&bossAff()<nx.boss&&R()<.5)return `"상사 평가(두 부장님 ♥ 평균)가 ${bossAff()}이에요. 다음 승진엔 ${nx.boss} 이상이 필요해요. 비서실·영업팀·전략기획팀 일을 같이 해 봐요."`;
-  if(!S.launched&&dl>=0&&R()<.6)return `"론칭까지 ${dl?dl+'개월':'이번 달'}! 지금 론칭 체크 ${bpPct()}%, 예상 완성도 ${launchScore()}점. 60%도 안 된 부품은 론칭 날 그대로 구멍이 돼요. ${f?`지금 제일 급한 건 「${ST1_N[f]}」 시제품이에요.`:''}"`;
-  if(S.launched&&S.m<GLOBAL_M)return pick([`"지난달 매출 ${fmtW((S.salesLog||[]).slice(-1)[0]||0)}. 정확하게 만든 병 하나하나가 매출이에요. 영업 주임님을 도우미로 부르면 단가가 올라가요."`,`"론칭 효과는 매달 조금씩 빠져요. 콤보를 이어 가면 화제성이 붙어요!"`]);
-  if(S.m>=GLOBAL_M)return `"해외 진척 ${S.gl||0}/${GL_TOT}. 해외 주문서(국기)를 정확하게 만들수록 빨리 열려요."`;
-  if(f){const tasks=Object.entries(ACTS).filter(([,a])=>a.ms&&a.ms[f]).map(([,a])=>a.name).slice(0,2).join('·');
-    return pick([`"지금 제일 급한 건 「${MS[f].n}」이에요. ${tasks} 쪽 일을 잡아봐요."`,`"같이 일한 선배와 ♥가 쌓여요. ♥40(믿는 사이)이 넘으면 더 많이 배우고, 맡겨도 성공률이 올라가요."`,`"목표는 CEO! 3개월마다 분기 평가가 있어요. 「능력치」 화면에서 다음 승진 조건을 볼 수 있어요."`,`"제품력과 화제성이 론칭 성적을 좌우해요."`])}
-  return '"요즘 잘하고 있어요. 그대로만 가요!"';
-}
+  if(S.st>=75)return '"험쮜 님, 얼굴이 말이 아니에요. 휴일엔 꼭 쉬어요. 연차를 써도 돼요."';
+  if(S.hp<=30)return '"체력이 바닥이네요. 휴일엔 집콕이라도 해요."';
+  if(S.money<30)return '"월세 괜찮아요? 휴일에 부업이라도 해야 하는 거 아니에요?"';
+  const ev=TEAM.filter(storyReady);if(ev.length)return `"${ev.map(k=>given(k)).join('·')} 님이 험쮜 님한테 할 얘기가 있대요. 빌딩에서 ♥ 표시를 찾아가 봐요."`;
+  const nx=REQ[S.rank+1];if(nx){const w=reqWhy(nx);if(w&&R()<.6)return `"다음 승진(${RANKS[S.rank+1]})까지: ${w}"`}
+  if(!S.launched){const f=focusMs();if(f){const ps=[...new Set(Object.entries(PLACES).filter(([,P])=>(P.acts||[]).some(id=>ACTS[id].ms&&ACTS[id].ms[f])).map(([,P])=>P.n))];return `"론칭까지 ${Math.max(0,LAUNCH_M-S.m)}개월! 지금 제일 급한 건 「${MS[f].n}」이에요. ${ps.join('·')}에 가서 일을 도와줘요."`}}
+  if(S.m>=GLOBAL_M)return `"해외 진척 ${S.gl||0}/${GL_TOT}. 영업팀 바이어 미팅이 제일 빨라요."`;
+  return pick(['"사람을 자주 만나면 ♥가 쌓여요. ♥가 쌓이면 그 사람만의 이야기가 열려요."','"업무는 그 일을 맡은 사람이 있을 때 하면 ♥도 같이 올라요."','"평판은 업무와 대화에서 쌓여요. 승진엔 두 부장님 ♥도 중요해요."'])}
 
 /* ================= 화면 ================= */
 function showScene(key,label){
@@ -2128,7 +2316,7 @@ function showClip(o){[o.a,o.b].forEach(k=>{const i=new Image();i.src=IMG(k)});
   const iv=setInterval(()=>{t^=1;el.style.backgroundImage=`url(${IMG(t?o.b:o.a)})`},300);
   return p.then(()=>{clearInterval(iv);cg.classList.remove('clip');el.style.backgroundPosition=''})}
 const CLIPS=new Set(['snack','content','keymsg','review','md','cs','global','research','formula','package','filling','logistics','erp','settle','schedule','minutes','overtime','orient','cafe','store','shoot','blog','lecture','ingredient','english','ai','excel','mba','license','run','gym','pt','pilates','leave','half','trip','walk','friends','shop_hb','shop_mall','shop_online','coffee','date','blind','selfdate']);
-const clipOf=id=>id==='date'?dimg('ramen'):CLIPS.has(id)?'c_'+id:null;
+const clipOf=id=>id==='date'?dimg('ramen'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
 function playMini(id,i){
   const a=ACTS[id],w=$('#mini'),clip=clipOf(id),fa=clip||a.mini;
   w.innerHTML=`<div class="mini-win" role="img" aria-label="${esc(a.name)} 하는 중"><div class="mini-title"><span>${esc(a.name)}</span><em>${slotName(i)}</em></div>
@@ -2398,13 +2586,9 @@ function render(){
   const A=actOf(S.m),last=(S.salesLog||[]).slice(-1)[0];
   $('#h-bp').style.width=(A===1?bp:A===2?Math.min(100,salesNow()/1.5):(S.gl||0)/GL_TOT*100)+'%';
   $('#h-sub').textContent=A===1?`${ACT_NAME[1]} · 론칭 체크 ${bp}%${dl>0?` · D-${dl}개월`:' · 이번 달 론칭!'}`:A===2?`${ACT_NAME[2]} · 이번 달 예상 ${fmtW(salesNow())}${last!=null?` · 지난달 ${fmtW(last)}`:''}`:`${ACT_NAME[3]} · 해외 ${glOpen()}/3곳 · 진척 ${S.gl||0}/${GL_TOT}`;
-  {const mb=$('#mission'),M=S.mission;if(M&&M.m===S.m){const [a,b]=missionProg(),ok=a>=b;mb.hidden=false;mb.classList.toggle('ok',ok);mb.innerHTML=`<span>🎯 ${esc(M.t)}</span><b>${missionTxt()}${ok?' ✓':''}</b><i style="width:${Math.min(100,a/b*100)}%"></i>`}else mb.hidden=true}
+  $('#mission').hidden=true;
   $('#hud-res').innerHTML=[['💰',`${S.money}만`,S.money<0],['⭐',`평판 ${S.rep}`],S.launched?['📈',`${fmtW(salesNow())}`]:['🧴',`제품 ${S.bq}`],['📣',`화제 ${S.buzz}`],['🌴',`연차 ${S.leave}`]].map(([i,b,w])=>`<span class="res"><i>${i}</i><b class="${w?'warn':''}">${b}</b></span>`).join('');
   $('#g-hp').innerHTML=ring(S.hp,'#4cc25a','체력');$('#g-st').innerHTML=ring(S.st,S.st>=75?'#e0525a':'#ff9330','스트레스');
-  $('#slots').innerHTML=S.plan.map((p,i)=>`<button class="slot3 ${p?'filled':''} ${S.runIdx===i&&busy?'running':''}" data-slot="${i}"><small>${slotName(i)}</small><b>${p?ACTS[p].name:'비어 있음'}</b></button>`).join('');
-  const full=S.plan.every(Boolean),go=$('#btn-go');go.textContent=full?'이번 달 시작!':'스케줄 짜기';go.classList.toggle('ready',full);
-  $('#badge-brand').hidden=!f;{const tw=$('.tb.t-work');if(tw)tw.hidden=AFTER()}
-  if(!$('#office').hidden&&!OF.busy)$('#of-top').innerHTML=officeTop();else $('#btn-office').hidden=!officeOn()||busy||!$('#office').hidden;
   layoutScene();
 }
 function actCard(id,a){
@@ -2531,7 +2715,7 @@ function brandHTML(){
     <div class="tot"><span class="grades">${GRADES.map(([g,n])=>`<span class="${(S.score??launchScore())>=n?'on':''}">${g} ${n}↑</span>`).join('')}</span><b>${S.score??launchScore()}</b></div>
     <small style="color:var(--mute);font-size:11.5px">60% 미만 부품은 론칭 날 구멍(펌프 불량·배송 지연·심의 경고…)이 돼요. 팀장·이사는 월 매출, CEO는 해외 진출과 브랜드 점수 70↑가 필요해요.</small></div></div>
   <div class="group"><h4>체크리스트 · ${bpPct()}%</h4>${rows}</div>
-  <div class="group"><p style="margin:0;font-size:12.5px;color:var(--mute)">1막(1년차 3~8월) 론칭 준비 → 8월 말 론칭, 연기 없음. 2막(9월~이듬해 8월) 매달 매출 목표. 3막(2년차 9월~) 해외 진출.</p></div>`;
+  <div class="group"><p style="margin:0;font-size:12.5px;color:var(--mute)">1막(1년차 3~10월) 론칭 준비 → 10월 말 론칭, 연기 없음. 2막(11월~2년차 2월) 매출 만들기. 3막(3년차) 해외 진출. 평일에 회사일을 도울수록 부품이 채워지고, 론칭 뒤엔 그달 매출이 돼요.</p></div>`;
 }
 function matesHTML(){
   const head=S?`<div class="relsum"><div><small>상사 평가</small><b>${bossAff()}</b><span>사업부장·기획부장 ♥ 평균<br>승진 심사에 들어가요</span></div><div><small>동료 평균</small><b>♥${avgAff()}</b><span>8명 동료 평균<br>황금막내 조건 37↑</span></div></div>`:'';
@@ -2543,7 +2727,7 @@ function relCard(k){const M=who(k),v=S?S.aff[k]||0:0,[,lb,col]=relLv(v),isM=!!MA
   const next=[...REL_LV].reverse().find(([n])=>n>v);
   return `<div class="mate"><div class="ph" style="--el:${isM?EL[M.el]+'33':'#ffe3ec'};${ph}"></div><div><div class="mrow"><b>${JOB_TAG[k]?`<span class="jt">${JOB_TAG[k]}</span>`:''}${M.name}</b><span class="rtag">${REL_TAG[k]}</span><span class="relnum" style="--rc:${col}">♥${v}</span></div>
   <div class="role">${M.role} · <span style="color:${col}">${lb}</span>${next?` · ${next[1]}까지 ${next[0]-v}`:''}</div><q>${M.q}</q>
-  <div class="tr">${isM?`${M.tr}<br>${S&&S.perk&&S.perk[k]?`♥ 단짝 — ${PERK[k].txt}`:`이야기 ${st}/3 · 다음 이야기는 ♥${STORY_AT[Math.min(2,st)]}`}`:k==='ceo'?'비서실 일을 함께하면 가까워져요. 상사 평가에 들어가요.':'영업팀 일을 함께하면 가까워져요.'}</div>
+  <div class="tr">${isM?`${M.tr}<br>${S&&S.perk&&S.perk[k]?`♥ 단짝 — ${PERK[k].txt}`:`이야기 ${st}/${STORY_AT.length} · 다음 이야기는 ♥${STORY_AT[Math.min(STORY_AT.length-1,st)]}`}`:k==='ceo'?'비서실 일을 함께하면 가까워져요. 상사 평가에 들어가요.':'영업팀 일을 함께하면 가까워져요.'}</div>
   <div class="affbar"><i style="width:${v}%;background:${col}"></i></div></div></div>`}
 const dexImg=e=>e.id==='love'?dimg('picnic'):e.img;
 function dexHTML(){const dex=ls.get(DEXKEY)||{};return ENDINGS.map(e=>`<div class="dx ${dex[e.id]?'':'lock'}"><button type="button" class="th" data-dex="${e.id}" aria-label="${dex[e.id]?esc(e.t)+' 크게 보기':'잠긴 엔딩'}" style="background-image:url(${IMG(dexImg(e))})"></button><div><b>${dex[e.id]?e.t:'???'}</b><small class="${dex[e.id]?'':'hint'}">${dex[e.id]?e.sub:'힌트: '+e.hint}</small></div></div>`).join('')}
@@ -3038,8 +3222,8 @@ $('#of-bot').addEventListener('click',e=>{if(!S||busy||OF.busy)return;
   if(e.target.closest('#of-party')){if(S.party===S.m)return;if(S.money<10){toast('통장이 10만원도 없어요…');return}
     S.party=S.m;S.money-=10;S.cond=S.cond||{};TEAM.forEach(k=>{if(!isSick(k))S.cond[k]=Math.min(100,cond(k)+12);S.aff[k]=clamp((S.aff[k]||0)+1)});sfx('great');toast('🍻 회식! 모두 컨디션 +12 · ♥+1 (통장 −10만원)');save();renderOffice();render();return}
   if(e.target.closest('#of-go')){const n=talkLeft();if(n>0&&Date.now()-goArm>3000){goArm=Date.now();toast(`대화가 ${n}번 남았어요. 한 번 더 누르면 바로 회의`);return}runMonth()}});
-$('#btn-office').onclick=()=>{if(!S||busy)return;showOffice()};
-$('#btn-go').onclick=()=>{if(!S||busy)return;S.plan.every(Boolean)?runMonth():openActs(curCat||'work')};
+
+$('#btn-go').onclick=()=>{if(!S||busy)return;monthIntro()};
 $('#btn-advice').onclick=()=>{if(S&&!busy)note(advice(),'사수의 한마디')};
 document.addEventListener('click',e=>{if(e.target.closest('.snd')){auInit();setSound(!AU.on);sfx('tap')}});
 document.addEventListener('click',e=>{const t=e.target.closest('[data-dex]');if(!t)return;e.stopPropagation();const E=ENDINGS.find(x=>x.id===t.dataset.dex),dex=ls.get(DEXKEY)||{};
@@ -3181,16 +3365,16 @@ $('#btn-start').onclick=async()=>{
   hideActor();
   await showClip({a:'ev_pass',b:'ev_pass_b',pos:'72% 40%',kick:'합격',title:'캔버스랩 인턴 최종 합격!',sub:`"험쮜 님, 다음 주 월요일부터 출근입니다."\n면접 ${IVG[1]}등급 · 수습 월급 ${IVG[2]}만원\n…실험실 아니고, 뷰티회사입니다.`});
   await showClip({a:'ev_subway',b:'ev_subway_b',kick:'월요일 오전 8:12',title:'출근길 2호선',sub:'사원증을 몇 번이나 만져 봤다. 진짜다.\n덜컹— 기둥을 꼭 잡았다.\n(떨지 마, 험쮜. 쥐구멍에도 볕 들 날 있다.)'});
-  await showClip({a:'ev_arrive',b:'ev_arrive_b',pos:'60% 45%',kick:'PROLOGUE',title:'첫 출근, 캔버스랩',sub:'마케팅팀 인턴 험쮜의 2년이 시작된다.\n목표: STAGE:ZERO 론칭, 그리고 인턴에서 CEO까지.'});
+  await showClip({a:'ev_arrive',b:'ev_arrive_b',pos:'60% 45%',kick:'PROLOGUE',title:'첫 출근, 캔버스랩',sub:'마케팅팀 인턴 험쮜의 3년이 시작된다.\n목표: STAGE:ZERO 론칭, 그리고 인턴에서 CEO까지.'});
   setPlace('sc_office');document.body.classList.remove('pro');
   await say({who:'seohwi',title:'"반가워요, 사수 박서휘예요."',text:(S.prof.bm===3&&S.prof.bd<=7?'"어? 인사카드 보니까 이번 주가 생일이네요! 첫 출근이랑 생일이 같은 주라니, 다시 태어난 셈이네요.\n':'"')+'우리 회사 첫 자체 브랜드 STAGE:ZERO를 6개월 뒤에 론칭해요.\nTF는 6개 부서에서 모인 9명이에요. 먼저 사람들부터 만나 봐요."'});
   await showCG({img:'sc_office',chapter:true,kick:`${monthOf(0)}월 · 입사 첫 달`,title:'오리엔테이션',sub:'캔버스랩을 소개합니다.\n부서와 사람들을 만나 보고,\n어디서부터 일할지 골라 보세요.'});
   for(const [k,D] of Object.entries(DEPTS)){setPlace(D.scene);
     const gs=[...new Set(Object.values(ACTS).filter(a=>a.dept===k).flatMap(a=>Object.keys(a.g)))].slice(0,3);
-    await say({who:D.lead,group:D.ppl,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">◎ 잘 맞는 일: ${D.ppl.map(p=>`${JOB_TAG[p]} — ${APT[p][0].split(' ').map(st=>(ST1_N[st]||ST2[st].n)).join('·')}`).join(' / ')}</span>`})}
+    await say({who:D.lead,group:D.ppl,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">📍 ${[...new Set(D.ppl.flatMap(p=>HOME[p]||[]))].map(q=>`${PLACES[q].f} ${PLACES[q].n}`).join(' · ')} · 하는 일: ${[...new Set(Object.values(ACTS).filter(a=>a.dept===k&&!a.hidden).map(a=>a.name))].slice(0,3).join('·')}</span>`})}
   setPlace('sc_office');hideActor();
-  await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO TF 막내예요."',text:'"론칭까지 6개월. 매달 누군가 험쮜 님한테 미션을 줄 거예요.\n사람들이랑 얘기하면서 감을 잡고, 월말 업무 회의에서 판단을 내려 줘요. 그 판단이 그대로 론칭이 되고, 매출이 돼요."'});
-  await say({who:'seohwi',title:'💬 한 달은 이렇게 흘러가요',text:'1) 사무실에서 동료를 탭해 대화해요. 한 달에 3번이에요. 맞는 답을 할수록 일이 풀리고 ♥가 올라요.\n2) 🔥 열받은 동료가 있으면 맞는 간식을 사다 줘요.\n3) 준비되면 「📋 업무 회의」에서 이번 달 상황에 대한 판단을 골라요. 좋은 판단일수록 론칭 준비 → 매출 → 해외 진출이 쭉쭉 나가요.\n매달 말엔 이벤트와 평가가 기다리고 있어요.'});
+  await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO TF 막내예요."',text:'"론칭까지 8개월. 막내는 모든 부서를 다 도와야 해요.\n누구를 만나고 어디서 일할지는 험쮜 님이 정해요. 그게 쌓여서 제품이 되고, 험쮜 님 커리어가 돼요. 목표는… 3년 안에 CEO, 어때요?"'});
+  await say({who:'seohwi',title:'🏢 인턴의 하루는 이렇게 흘러가요',text:'1) 평일: 빌딩에서 오늘 들를 곳 3곳을 골라요. 그 자리에 있는 사람과 대화하거나, 그곳 일을 도와요.\n2) 자주 만나 ♥가 쌓이면 그 사람의 이야기가 열려요. 빌딩에서 ♥ 표시를 찾아가요.\n3) 휴일: 부업·데이트·휴식·여행·쇼핑·자기계발 중 하나를 골라요.\n4) 월말엔 회사 사건과 분기 평가(승진)가 찾아와요. 3년, 버텨 봐요!'});
   applyFx(Object.fromEntries(TEAM.map(k=>['aff_'+k,3])));
   hideActor();busy=false;document.body.classList.remove('running');save();monthIntro();
 };
@@ -3198,7 +3382,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-acd603';
+const BUILD='2026.10.09-bc07cf';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
