@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=cf89f4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=cf89f4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=cf89f4">
+<link rel="manifest" href="manifest.json?v=f781a4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=f781a4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=f781a4">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -141,8 +141,8 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .actor img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
 .actor-name{position:absolute;left:50%;top:0;transform:translateX(-50%) rotate(-4deg);white-space:nowrap;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:13px;padding:1px 10px;border-radius:99px;border:2px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .group-actors{position:absolute;left:0;right:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;pointer-events:none}
-.group-actors figure{margin:0 -8px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
-.group-actors img{height:calc(100% - 26px);width:auto;max-width:150px;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
+.group-actors figure{margin:0 -6px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
+.group-actors img{width:auto;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
 .group-actors figcaption{background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:12.5px;padding:1px 9px;border-radius:99px;white-space:nowrap;margin-bottom:4px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 .actor.rival .actor-name{background:linear-gradient(180deg,#d8607a,#8f1f3b)}
 @keyframes actor-in{from{transform:translateX(60%) scale(.92);opacity:0}to{transform:none;opacity:1}}
@@ -2067,9 +2067,14 @@ function showActor(k){hideGroup();const n=who(k);if(!n)return;if(n.noImg){hideAc
   if(!el.hidden&&el.dataset.k===k){placeActor();return}el.dataset.k=k;el.hidden=false;el.style.animation='none';el.offsetWidth;el.style.animation='';placeActor()}
 // 여러 명을 한 번에 소개할 때: 대화창 위에 나란히 세운다
 function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');g.id='group';g.className='group-actors';$('#phone').appendChild(g)}
-  g.innerHTML=ks.map((k,i)=>`<figure style="animation-delay:${i*.08}s"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(imgOf(k))}" alt="${esc(who(k).name)}"></figure>`).join('');g.hidden=false;placeGroup()}
+  // 그림마다 캐릭터 크기가 달라서, 사무실 자리와 같은 비율(CROP: 얼굴 폭 맞춤)로 키를 맞춘다. r = 얼굴 폭을 같게 했을 때의 그림 높이
+  g.innerHTML=ks.map((k,i)=>{const kk=imgOf(k).slice(2),r=(CROP[kk]||[70])[0]*640/(SPR_W[kk]||250);
+    return `<figure style="animation-delay:${i*.08}s" data-r="${r}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(imgOf(k))}" alt="${esc(who(k).name)}"></figure>`}).join('');g.hidden=false;placeGroup()}
+const SPR_W={sangho:247,hyunsu:259,hanmin:258,seohwi:281,jiyoung:253,daram:257,daram_f:264,eunbin:332,sumin:216,jaemin:247}; // 원본 그림 폭 (높이는 모두 640)
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
-  const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px'}
+  const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px';
+  const fs=[...g.querySelectorAll('figure')],rmax=Math.max(...fs.map(f=>+f.dataset.r));
+  fs.forEach(f=>{f.querySelector('img').style.height=((h-26)*(+f.dataset.r)/rmax)+'px'})}
 function hideGroup(){const g=$('#group');if(g){g.hidden=true;g.innerHTML=''}}
 function hideActor(){hideGroup();const el=$('#actor');el.hidden=true;el.dataset.k=''}
 function faceStyle(w){
@@ -3146,8 +3151,8 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-cf89f4';
-$('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;if(window.__fitInfo)$('#build-title').textContent+=` · ${window.__fitInfo}`;
+const BUILD='2026.10.09-f781a4';
+$('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
   const msg=(t,ms)=>{bar.textContent=t;bar.hidden=false;clearTimeout(bar._t);if(ms)bar._t=setTimeout(()=>bar.hidden=true,ms)};
