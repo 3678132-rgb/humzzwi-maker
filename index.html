@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=9ab841"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=9ab841"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=9ab841">
+<link rel="manifest" href="manifest.json?v=dbbb6e"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=dbbb6e"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=dbbb6e">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -308,7 +308,13 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .ms .v{text-align:right;font-size:11.5px;color:var(--mute)}
 .ms small{display:block;font-size:11px;color:var(--mute)}
 .dialog.tall{max-height:66%!important}
-.dialog.picmode{max-height:72%!important}
+.dialog.picmode{max-height:78%!important;background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;grid-template-columns:minmax(0,1fr);padding:4px 2px}
+.dialog.picmode .face,.dialog.picmode .speaker{display:none}
+.dialog.picmode .head{display:inline-block;background:rgba(42,31,51,.82);color:#fff;border-radius:99px;padding:4px 14px;font-size:18px}
+.dialog.picmode .text{color:#fff;font-size:13px;text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 8px rgba(0,0,0,.6);margin:4px 4px 0}
+.dialog.picmode .choice.pic{box-shadow:0 6px 16px rgba(0,0,0,.35);border-color:#fff}
+.dialog.picmode .choice.back{background:rgba(255,255,255,.9)}
+body.picmode-on .shade{background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,rgba(42,31,51,0) 18%,rgba(30,20,40,.3) 45%,rgba(30,20,40,.65) 100%)}
 .choices.pics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
 .choices.pics.c3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .choice.pic{display:grid;gap:1px;align-content:start;padding:0 0 6px;overflow:hidden;text-align:center;border-radius:14px;background:#fff}
@@ -478,6 +484,12 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .bl-top .sp{flex:1}
 .bl-top .pill{background:rgba(255,255,255,.14);border-radius:99px;padding:2px 8px;font-size:12px;white-space:nowrap}
 .bl-top .pill.hot{background:#e0525a}
+.bl-top .goal{display:grid;gap:6px;background:linear-gradient(180deg,#ff8fb3,#ff5c8a);border-radius:14px;padding:8px 10px;box-shadow:0 3px 0 #c93a66}
+.bl-top .goal.done{background:linear-gradient(180deg,#ffd45c,#ff9f1c);box-shadow:0 3px 0 #c26a00}
+.bl-top .goal b{font-family:var(--display);font-weight:400;font-size:19px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.2)}
+.bl-top .goal .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.bl-top .goal .steps i{font-style:normal;text-align:center;background:rgba(255,255,255,.3);border:2px dashed rgba(255,255,255,.75);border-radius:10px;padding:3px 4px;font-family:var(--display);font-size:14px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bl-top .goal .steps i.on{background:#fff;border-style:solid;border-color:#fff;color:var(--pink-d)}
 .bl-top .r2{font-size:12.5px;color:#cfe0f5;line-height:1.35}.bl-top .r2 b{color:#ffd86b;font-weight:400;font-family:var(--display)}.bl-top .r2 .hot{color:#ff9cc0}
 .bl-floors{overflow:auto;padding:8px 10px 6px;display:flex;flex-direction:column}
 .fl{flex:1 0 auto;display:grid;grid-template-columns:36px minmax(0,1fr);gap:6px;padding:5px 6px;background:#f8eddf;border:solid #c9a27c;border-width:0 4px 2px;border-bottom-color:#e2c9ab}
@@ -2209,7 +2221,8 @@ function placeCard(p){const P=PLACES[p],ps=ppl(p),n=S.day.pick.indexOf(p),acts=p
     <span class="bp-h"><i>${P.ic}</i><b>${P.n}</b></span><span class="bp-f">${faces}</span><small>${esc(sub)}</small></button>`}
 function renderBld(){if($('#bld').hidden)return;const D=S.day,left=VISITS-D.pick.length,evs=TEAM.filter(k=>storyReady(k)).length;
   $('#bl-top').innerHTML=`<div class="r1"><b>${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 평일</b><span class="sp"></span><span class="pill">💪 ${S.hp}</span><span class="pill ${S.st>=70?'hot':''}">😵 ${S.st}</span><span class="pill">💰 ${S.money}만</span></div>
-    <div class="r2">${left?`오늘 들를 곳 <b>${left}곳</b> 더 골라요 · 고른 순서대로 가요`:'준비 완료! 「출근」을 눌러요'}${evs?` · <span class="hot">♥ 표시 = 이야기가 기다리는 사람</span>`:''}</div>`;
+    <div class="goal ${left?'':'done'}"><b>${left?`📍 오늘 갈 곳 ${VISITS}곳 고르기`:'✅ 준비 완료! 출근해요'}</b><span class="steps">${[0,1,2].map(n=>{const q=D.pick[n];return `<i class="${q?'on':''}">${q?`${n+1} ${PLACES[q].n}`:n+1}</i>`}).join('')}</span></div>
+    ${evs?'<div class="r2"><span class="hot">♥ 표시 = 이야기가 기다리는 사람</span></div>':''}`;
   $('#bl-floors').innerHTML=FLOORS.map(([f,l])=>{const ps=Object.keys(PLACES).filter(p=>PLACES[p].f===f);
     return `<div class="fl fl-${f}"><span class="fl-l"><b>${f}</b><small>${l}</small></span><div class="fl-ps n${ps.length}">${ps.map(placeCard).join('')}</div></div>`}).join('');
   const go=$('#bl-go');go.textContent=left?`출근 ▶ ${D.pick.length}/${VISITS}`:'출근 ▶';go.classList.toggle('ready',!left)}
@@ -2389,7 +2402,7 @@ function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');
   // 모두 같은 배율의 그림이라 BODY_T(실제 키) 비율 그대로 세운다
   g.innerHTML=ks.map((k,i)=>`<figure style="animation-delay:${i*.08}s" data-t="${bodyT(k)}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(sprOf(k))}" alt="${esc(who(k).name)}"></figure>`).join('');g.hidden=false;placeGroup()}
 // 모든 동료 그림은 한 장의 라인업에서 같은 배율로 오려낸 것. BODY_T = 그림의 실제 픽셀 키 (얼굴 크기는 모두 같다)
-const BODY_T={"sangho":597,"hyunsu":533,"hanmin":581,"seohwi":536,"jiyoung":493,"daram":585,"eunbin":515,"sumin":556,"jaemin":593,"daram_f":486},T_MAX=597;
+const BODY_T={"sangho":597,"hyunsu":533,"hanmin":581,"seohwi":536,"jiyoung":493,"daram":570,"eunbin":515,"sumin":556,"jaemin":566,"daram_f":486},T_MAX=597;
 const sprOf=k=>imgOf(k);
 const bodyT=k=>BODY_T[imgOf(k).slice(2)]||T_MAX;
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
@@ -2425,9 +2438,9 @@ function dialogHTML(o,inner){
   const sp=o.speaker||(o.who&&o.who!=='me'?tagName(o.who):'험쮜'),pic=o.pic||PIC;
   return `${pic?`<div class="dpic"><img src="${IMG(pic)}" alt=""><img class="b" src="${IMG(pic+'_b')}" alt=""></div>`:''}<div class="face" style="${faceStyle(o.who)}"></div><div><div class="speaker">${esc(sp)}${relChip(o.who)}</div>${o.title?`<div class="head">${esc(o.title)}</div>`:''}<div class="text">${o.text||''}</div>${chipsHTML(o.chips)}${inner||''}</div>`;
 }
-function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
+function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic','picmode');document.body.classList.remove('picmode-on');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
 function say(o){
-  return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall','picmode');d.classList.toggle('haspic',!!(o.pic||PIC));
+  return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall','picmode');document.body.classList.remove('picmode-on');d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.group){hideActor();}else if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
     d.innerHTML=dialogHTML(o,`<div class="next"><button class="next-btn">다음 ▶</button></div>`);d.hidden=false;d.scrollTop=0;
     if(o.group)showGroup(o.group);placeActor();d.querySelector('.next-btn').onclick=e=>{e.stopPropagation();res()};});
@@ -2436,7 +2449,7 @@ function say(o){
 function picChoices(o){const n=o.choices.filter(c=>c.img).length,col=n>4?3:2;
   return `<div class="choices pics c${col} ${o.cls||''}">${o.choices.map((c,i)=>c.img?`<button class="choice pic" data-i="${i}"><span class="ci ${c.face?'fc':''}" style="background-image:url(${IMG(c.img)})">${c.tag?`<em>${esc(c.tag)}</em>`:''}</span><b>${esc(c.l)}</b>${c.s?`<small>${esc(c.s)}</small>`:''}</button>`:`<button class="choice back" data-i="${i}">${esc(c.l)}</button>`).join('')}</div>`}
 function ask(o){
-  return new Promise(res=>{const d=$('#dialog'),pics=o.choices.some(c=>c.img);d.classList.toggle('tall',o.choices.length>4||pics);d.classList.toggle('picmode',pics);d.classList.toggle('haspic',!!(o.pic||PIC));
+  return new Promise(res=>{const d=$('#dialog'),pics=o.choices.some(c=>c.img);d.classList.toggle('tall',o.choices.length>4||pics);d.classList.toggle('picmode',pics);document.body.classList.toggle('picmode-on',pics);d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
     d.innerHTML=dialogHTML(o,pics?picChoices(o):`<div class="choices ${o.cls||''}">${o.choices.map((c,i)=>`<button class="choice" data-i="${i}">${esc(c.l)}${c.s?`<small>${esc(c.s)}</small>`:''}</button>`).join('')}</div>`);d.hidden=false;d.scrollTop=0;
     placeActor();d.querySelectorAll('.choice').forEach(b=>b.onclick=e=>{e.stopPropagation();res(+b.dataset.i)});});
@@ -2917,7 +2930,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-mset]');if
    말주머니로 질문 → 답을 고르면 업무 성과 평가(정답일수록 매출·해외 진출·♥ 상승). 한 달에 3번. */
 const SEAT={sangho:[30,26],hyunsu:[70,26],hanmin:[18,48],seohwi:[50,48],jiyoung:[82,48],daram:[13,70],eunbin:[37,70],sumin:[63,70],jaemin:[87,70]};
 // 캐릭터마다 원본 그림 크기가 달라서, 얼굴 폭이 같아 보이도록 자르는 값 [너비%, 왼쪽%, 위%]
-const CROP={"sangho": [110.3, -3.0, 4.8], "hyunsu": [112.7, -1.2, 4.8], "hanmin": [119.4, -7.0, 4.8], "seohwi": [110.3, -1.5, 4.8], "jiyoung": [98.2, 2.2, 4.8], "daram": [107.3, -0.6, 4.8], "eunbin": [169.7, -35.2, 4.8], "sumin": [130.9, -12.4, 4.8], "jaemin": [115.8, -1.5, 4.8], "daram_f": [105.5, -1.5, 4.8]};
+const CROP={"sangho": [110.3, -3.0, 4.8], "hyunsu": [112.7, -1.2, 4.8], "hanmin": [119.4, -7.0, 4.8], "seohwi": [110.3, -1.5, 4.8], "jiyoung": [98.2, 2.2, 4.8], "daram": [109.1, -1.8, 4.8], "eunbin": [169.7, -35.2, 4.8], "sumin": [130.9, -12.4, 4.8], "jaemin": [119.4, -3.6, 4.8], "daram_f": [105.5, -1.5, 4.8]};
 const SEAT_ROW=[[11.5,'부장실'],[81,'인턴석 · 문 바로 옆']];
 const MY_SEAT=[60,96];
 // 사무실에선 이름 대신 직무로 표기
@@ -3516,7 +3529,10 @@ $('#btn-start').onclick=async()=>{
     await say({who:D.lead,group:D.ppl,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">📍 ${[...new Set(D.ppl.flatMap(p=>HOME[p]||[]))].map(q=>`${PLACES[q].f} ${PLACES[q].n}`).join(' · ')} · 하는 일: ${[...new Set(Object.values(ACTS).filter(a=>a.dept===k&&!a.hidden).map(a=>a.name))].slice(0,3).join('·')}</span>`})}
   setPlace('sc_office');hideActor();
   await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO TF 막내예요."',text:'"론칭까지 8개월. 막내는 모든 부서를 다 도와야 해요.\n누구를 만나고 어디서 일할지는 험쮜 님이 정해요. 그게 쌓여서 제품이 되고, 험쮜 님 커리어가 돼요. 목표는… 3년 안에 CEO, 어때요?"'});
-  await say({who:'seohwi',title:'🏢 인턴의 하루는 이렇게 흘러가요',text:'1) 평일: 빌딩에서 오늘 들를 곳 3곳을 골라요. 그 자리에 있는 사람과 대화하거나, 그곳 일을 도와요.\n2) 자주 만나 ♥가 쌓이면 그 사람의 이야기가 열려요. 빌딩에서 ♥ 표시를 찾아가요.\n3) 휴일: 부업·데이트·휴식·여행·쇼핑·자기계발 중 하나를 골라요.\n4) 월말엔 회사 사건과 분기 평가(승진)가 찾아와요. 3년, 버텨 봐요!'});
+  await say({who:'seohwi',title:'🏢 평일엔 출근!',text:'빌딩에서 오늘 갈 곳 3곳을 골라요.'});
+  await say({who:'seohwi',title:'💬 대화하거나 💼 일하거나',text:'가서 사람과 이야기하거나, 그곳 일을 도와요.'});
+  await say({who:'seohwi',title:'♥ 친해지면 이야기가 열려요',text:'빌딩에서 ♥ 표시가 뜬 사람을 찾아가요.'});
+  await say({who:'seohwi',title:'🌴 휴일은 나를 위해',text:'부업·데이트·여행… 하고 싶은 걸 골라요.\n월말엔 승진 평가가 있어요. 3년, 화이팅!'});
   applyFx(Object.fromEntries(TEAM.map(k=>['aff_'+k,3])));
   hideActor();busy=false;document.body.classList.remove('running');save();monthIntro();
 };
@@ -3524,7 +3540,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-9ab841';
+const BUILD='2026.10.09-dbbb6e';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
