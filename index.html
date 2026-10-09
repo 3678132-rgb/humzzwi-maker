@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=883eae"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=883eae"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=883eae">
+<link rel="manifest" href="manifest.json?v=9ab841"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=9ab841"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=9ab841">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -505,10 +505,8 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .bl-bot .mini{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:12px;padding:8px 8px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
 .bl-bot .cta{width:100%;font-size:19px;padding:9px 6px}
 .in-bld .dialog{z-index:8}
-.bp{grid-template-columns:40px minmax(0,1fr);column-gap:6px;align-items:center;padding:5px 7px 5px 5px}
-.bp>.bp-pic{grid-row:1/4;align-self:stretch;min-height:44px;border-radius:9px;background:#eee center/cover no-repeat;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
-.bp.on>.bp-pic{box-shadow:0 0 0 2px var(--pink)}
-.fl-ps.n1 .bp{grid-template-columns:58px minmax(0,1fr) auto}.fl-ps.n1 .bp>.bp-pic{grid-row:1/3}.fl-ps.n1 .bp-h{grid-column:2/-1}.fl-ps.n1 .bp-f{grid-column:2}.fl-ps.n1 .bp small{grid-column:3;grid-row:2;max-width:170px;text-align:right}
+.fl-ps.n1 .bp{grid-template-columns:minmax(0,1fr) auto;column-gap:8px;align-items:center}.fl-ps.n1 .bp-h{grid-column:1/-1}.fl-ps.n1 .bp small{grid-column:2;grid-row:2;max-width:190px;text-align:right;white-space:normal}
+.bp .bf{width:34px;height:34px}.bp-f{min-height:34px}
 
 .choices.wk small{display:block}
 .office{position:absolute;inset:0;z-index:7;display:grid;grid-template-rows:auto minmax(0,1fr) auto 68px;background:#f6ead9;padding-top:var(--st);padding-bottom:var(--sb)}
@@ -2208,7 +2206,7 @@ function placeCard(p){const P=PLACES[p],ps=ppl(p),n=S.day.pick.indexOf(p),acts=p
   const faces=ps.map(k=>`<span class="bf ${storyReady(k)?'ev':''}" style="${faceStyle(k)}" title="${esc(tagName(k))}">${storyReady(k)?'<i>♥</i>':''}</span>`).join('')||'<span class="none">비어 있음</span>';
   const sub=P.brk?'💬 대화 · ☕ 휴식':acts.map(id=>ACTS[id].name).join(' · ');
   return `<button class="bp ${n>=0?'on':''} ${P.brk?'brk':''}" data-place="${p}" type="button" ><span class="bp-n">${n>=0?n+1:''}</span>
-    <span class="bp-pic" style="background-image:url(${IMG(P.pic)})"></span><span class="bp-h"><i>${P.ic}</i><b>${P.n}</b></span><span class="bp-f">${faces}</span><small>${esc(sub)}</small></button>`}
+    <span class="bp-h"><i>${P.ic}</i><b>${P.n}</b></span><span class="bp-f">${faces}</span><small>${esc(sub)}</small></button>`}
 function renderBld(){if($('#bld').hidden)return;const D=S.day,left=VISITS-D.pick.length,evs=TEAM.filter(k=>storyReady(k)).length;
   $('#bl-top').innerHTML=`<div class="r1"><b>${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 평일</b><span class="sp"></span><span class="pill">💪 ${S.hp}</span><span class="pill ${S.st>=70?'hot':''}">😵 ${S.st}</span><span class="pill">💰 ${S.money}만</span></div>
     <div class="r2">${left?`오늘 들를 곳 <b>${left}곳</b> 더 골라요 · 고른 순서대로 가요`:'준비 완료! 「출근」을 눌러요'}${evs?` · <span class="hot">♥ 표시 = 이야기가 기다리는 사람</span>`:''}</div>`;
@@ -2237,16 +2235,25 @@ async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('who
   const sk=ps.find(storyReady);
   if(sk){await say({who:sk,speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ♥ 이야기`,text:`${tagName(sk)}${ga(tagName(sk))} 험쮜를 보고 손을 흔든다.\n<span class="t">(…뭔가 할 얘기가 있는 얼굴이다.)</span>`});
     await playStory(sk);hideActor();render();return}
-  const ch=[],ops=[];
-  ps.forEach(k=>{const v=S.aff[k]||0;ch.push({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${v} ${relLv(v)[1]}${hasTalk(k)?'':' · 수다'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💬 말 걸기'});ops.push(['talk',k])});
-  if(ps.includes('daram')&&(S.flags.crush||S.flags.dating)){ch.push({l:'다람 주임에게 커피',s:'💘 설렘↑ · 1만원',img:dimg('coffeegive'),tag:'☕ 몰래'});ops.push(['act','coffee'])}
-  placeActs(p).forEach(id=>{const a=ACTS[id],m=a.mate&&ps.includes(a.mate);ch.push({l:a.name,s:`${Object.keys(a.g).map(k=>STATS[k]).join('·')}↑${m?` · ${given(a.mate)}${wa(given(a.mate))} ♥↑`:''}`,img:clipOf(id)||a.scene,tag:'💼 업무'});ops.push(['work',id])});
-  if(ps.includes('eunbin')){ch.push({l:'은빈의 사내 소식',s:'커피 3만원 · 동료 취향 듣기',img:'c_coffee',tag:'📰 소식통'});ops.push(['intel'])}
-  if(TEAM.some(k=>LIKE[k]&&HOME[k].includes(p)&&!(S.day.noted||{})[k])){ch.push({l:'책상에 쪽지 남기기',s:'자리에 없어도 OK · ♥↑',img:'s_desk',tag:'📝 쪽지'});ops.push(['note'])}
-  if(P.brk||!ch.length){ch.push({l:'잠깐 쉬어 가기',s:'스트레스↓ 체력↑',img:p==='cafe'?'c_half':'c_walk',tag:'☕ 휴식'});ops.push(['rest'])}
-  const pr=ask({who:'me',speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ${P.ic} ${P.n}`,text:ps.length?`${ps.map(k=>tagName(k)).join(', ')}${ga(tagName(ps[ps.length-1]))} 있다.`:'아무도 없다. 조용하다.',choices:ch});
-  if(ps.length)showGroup(ps);
-  const [op,arg]=ops[await pr];hideGroup();
+  const acts=placeActs(p),noteOK=TEAM.some(k=>LIKE[k]&&HOME[k].includes(p)&&!(S.day.noted||{})[k]);
+  const talkCh=[],talkOps=[];
+  ps.forEach(k=>{const v=S.aff[k]||0;talkCh.push({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${v} ${relLv(v)[1]}${hasTalk(k)?'':' · 수다'}`,img:imgOf(k).replace('a_','f_'),face:1});talkOps.push(['talk',k])});
+  if(ps.includes('daram')&&(S.flags.crush||S.flags.dating)){talkCh.push({l:'다람 주임에게 커피',s:'💘 설렘↑ · 1만원',img:dimg('coffeegive'),tag:'☕ 몰래'});talkOps.push(['act','coffee'])}
+  if(ps.includes('eunbin')){talkCh.push({l:'은빈의 사내 소식',s:'커피 3만원 · 동료 취향 듣기',img:'f_eunbin',face:1,tag:'📰 소식통'});talkOps.push(['intel'])}
+  const workCh=acts.map(id=>{const a=ACTS[id],m=a.mate&&ps.includes(a.mate);return {l:a.name,s:`${Object.keys(a.g).map(k=>STATS[k]).join('·')}↑${m?` · ${given(a.mate)}${wa(given(a.mate))} ♥↑`:''}`,img:clipOf(id)||a.scene}}),workOps=acts.map(id=>['work',id]);
+  const top=[],topOps=[];
+  if(talkCh.length){top.push({l:'💬 대화한다',s:ps.map(k=>given(k)).join('·')});topOps.push('talk')}
+  if(workCh.length){top.push({l:'💼 일한다',s:acts.map(id=>ACTS[id].name).join(' · ')});topOps.push('work')}
+  if(noteOK){top.push({l:'📝 책상에 쪽지 남기기',s:'자리에 없어도 OK · ♥↑'});topOps.push('note')}
+  if(P.brk||!top.length||!workCh.length){top.push({l:'☕ 잠깐 쉬어 간다',s:'스트레스↓ 체력↑'});topOps.push('rest')}
+  const head={who:'me',speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ${P.ic} ${P.n}`};
+  const said=ps.length?`${ps.map(k=>tagName(k)).join(', ')}${ga(tagName(ps[ps.length-1]))} 있다.`:'아무도 없다. 조용하다.';
+  let op,arg;
+  for(;;){const pr=ask({...head,text:said+'\n무엇을 할까?',choices:top});if(ps.length)showGroup(ps);const t=topOps[await pr];hideGroup();
+    if(t==='note'||t==='rest'){op=t;break}
+    const [c2,o2]=t==='talk'?[talkCh,talkOps]:[workCh,workOps];
+    const j=await ask({...head,title:t==='talk'?'💬 누구랑 이야기할까?':'💼 어떤 일을 도울까?',text:t==='talk'?said:'그 자리 담당자와 함께하면 ♥도 올라요.',choices:[...c2,{l:'← 돌아가기',s:''}]});
+    if(j===c2.length)continue;[op,arg]=o2[j];break}
   const hi=ps.filter(k=>k!==arg&&!(op==='work'&&ACTS[arg].mate===k));if(hi.length)applyFx(Object.fromEntries(hi.map(k=>['aff_'+k,1])));
   if(op==='talk')await talkTo(arg);
   else if(op==='work'||op==='act')await runAct(arg,i,ps);
@@ -3517,7 +3524,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-883eae';
+const BUILD='2026.10.09-9ab841';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
