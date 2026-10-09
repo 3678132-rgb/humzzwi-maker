@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=850ceb"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=850ceb"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=850ceb">
+<link rel="manifest" href="manifest.json?v=d718e7"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=d718e7"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=d718e7">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2364,7 +2364,7 @@ function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');
   // 모두 같은 배율의 그림이라 BODY_T(실제 키) 비율 그대로 세운다
   g.innerHTML=ks.map((k,i)=>`<figure style="animation-delay:${i*.08}s" data-t="${bodyT(k)}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(sprOf(k))}" alt="${esc(who(k).name)}"></figure>`).join('');g.hidden=false;placeGroup()}
 // 모든 동료 그림은 한 장의 라인업에서 같은 배율로 오려낸 것. BODY_T = 그림의 실제 픽셀 키 (얼굴 크기는 모두 같다)
-const BODY_T={"sangho":597,"hyunsu":533,"hanmin":609,"seohwi":536,"jiyoung":493,"daram":585,"eunbin":504,"sumin":538,"jaemin":593,"daram_f":486},T_MAX=609;
+const BODY_T={"sangho":597,"hyunsu":533,"hanmin":581,"seohwi":536,"jiyoung":493,"daram":585,"eunbin":504,"sumin":538,"jaemin":593,"daram_f":486},T_MAX=597;
 const sprOf=k=>imgOf(k);
 const bodyT=k=>BODY_T[imgOf(k).slice(2)]||T_MAX;
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
@@ -2889,7 +2889,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-mset]');if
    말주머니로 질문 → 답을 고르면 업무 성과 평가(정답일수록 매출·해외 진출·♥ 상승). 한 달에 3번. */
 const SEAT={sangho:[30,26],hyunsu:[70,26],hanmin:[18,48],seohwi:[50,48],jiyoung:[82,48],daram:[13,70],eunbin:[37,70],sumin:[63,70],jaemin:[87,70]};
 // 캐릭터마다 원본 그림 크기가 달라서, 얼굴 폭이 같아 보이도록 자르는 값 [너비%, 왼쪽%, 위%]
-const CROP={"sangho": [110.3, -3.0, 4.8], "hyunsu": [112.7, -1.2, 4.8], "hanmin": [104.2, 2.2, 4.8], "seohwi": [110.3, -1.5, 4.8], "jiyoung": [98.2, 2.2, 4.8], "daram": [107.3, -0.6, 4.8], "eunbin": [106.1, -2.8, 4.8], "sumin": [103.0, 3.4, 4.8], "jaemin": [115.8, -1.5, 4.8], "daram_f": [105.5, -1.5, 4.8]};
+const CROP={"sangho": [110.3, -3.0, 4.8], "hyunsu": [112.7, -1.2, 4.8], "hanmin": [119.4, -7.0, 4.8], "seohwi": [110.3, -1.5, 4.8], "jiyoung": [98.2, 2.2, 4.8], "daram": [107.3, -0.6, 4.8], "eunbin": [106.1, -2.8, 4.8], "sumin": [103.0, 3.4, 4.8], "jaemin": [115.8, -1.5, 4.8], "daram_f": [105.5, -1.5, 4.8]};
 const SEAT_ROW=[[11.5,'부장실'],[81,'인턴석 · 문 바로 옆']];
 const MY_SEAT=[60,96];
 // 사무실에선 이름 대신 직무로 표기
@@ -3496,7 +3496,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-850ceb';
+const BUILD='2026.10.09-d718e7';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
