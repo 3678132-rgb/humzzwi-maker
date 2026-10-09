@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=bc930c"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=bc930c"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=bc930c">
+<link rel="manifest" href="manifest.json?v=cf89f4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=cf89f4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=cf89f4">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -26,6 +26,8 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{height:100%}
+/* 홈 화면 앱: 아이폰이 문서 높이를 상태바만큼 짧게 잡는 경우가 있어 화면 전체(100lvh)로 늘린다 */
+@media (display-mode: standalone){html,body{height:100lvh;min-height:100vh}}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;background:var(--night);color:var(--ink);font:14px/1.55 var(--body);word-break:keep-all;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
@@ -2912,7 +2914,11 @@ function fitPhone(){const ph=document.querySelector('.phone');if(!ph)return;
   if(!FIT_MQ.matches){['--z','--ph','--px'].forEach(k=>ph.style.removeProperty(k));return}
   const vv=window.visualViewport,W=innerWidth;let H=(vv&&vv.height)||innerHeight;
   // 홈 화면 앱(상태바 투명)에서는 아이폰이 상태바만큼 짧은 높이를 알려 줘서 아래가 비었다 → 화면 전체 높이를 쓴다
-  if((navigator.standalone||matchMedia('(display-mode: standalone)').matches)&&innerHeight>=innerWidth)H=Math.max(H,innerHeight,screen.height);
+  const SA=navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+  if(SA&&innerHeight>=innerWidth){const pr=document.createElement('div');pr.style.cssText='position:fixed;top:0;left:0;width:1px;height:100vh;visibility:hidden;pointer-events:none';document.body.appendChild(pr);
+    const vh=pr.offsetHeight;pr.style.height='100lvh';const lvh=pr.offsetHeight;pr.remove();
+    H=Math.max(H,innerHeight,screen.height,vh,lvh,document.documentElement.clientHeight);
+    window.__fitInfo=`화면 ${screen.width}×${screen.height} · 보고 ${Math.round((vv&&vv.height)||innerHeight)} · 사용 ${Math.round(H)}`;}
   const z=Math.min(W/390,H/700);
   ph.style.setProperty('--z',z);ph.style.setProperty('--ph',(H/z)+'px');ph.style.setProperty('--px',Math.max(0,(W-390*z)/2)+'px');
   if(typeof layoutScene==='function')layoutScene();if(typeof placeActor==='function')placeActor()}
@@ -3140,8 +3146,8 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-bc930c';
-$('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
+const BUILD='2026.10.09-cf89f4';
+$('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;if(window.__fitInfo)$('#build-title').textContent+=` · ${window.__fitInfo}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
   const msg=(t,ms)=>{bar.textContent=t;bar.hidden=false;clearTimeout(bar._t);if(ms)bar._t=setTimeout(()=>bar.hidden=true,ms)};
