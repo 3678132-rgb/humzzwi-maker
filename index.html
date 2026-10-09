@@ -4,8 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>험쮜 메이커</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
+<meta name="theme-color" content="#2a1f33">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
+/* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
+@font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Gowun Dodum";src:url(fonts/GowunDodum-Regular.woff2) format("woff2");font-display:swap}
+.build-code{font-size:10.5px;opacity:.6;margin:2px 0 0;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.sw-bar{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:60;background:rgba(42,31,51,.92);color:#fff;font-size:12.5px;padding:6px 14px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,.3);max-width:92vw;text-align:center}
 /* 레이아웃: 프린세스 메이커식 세로 한 화면 — 장면 일러스트를 꽉 채우고 그 위에 상태창(위)·플로팅 버튼(좌우)·3칸 스케줄과 시작 버튼(아래)·카테고리 탭바(맨 아래).
    팔레트는 험쮜의 밀크티 털색·볼터치 핑크·사원증 줄 하늘색·귀 안쪽 버터색에서. */
 :root{
@@ -868,6 +876,7 @@ body.running .mission{opacity:.85}
       <button class="btn" id="btn-save">저장하기</button>
       <button class="btn ghost" id="btn-title">타이틀로</button>
     </div>
+    <p class="build-code" id="build-menu" style="text-align:center;color:var(--mute)"></p>
   </div></div>
 
   <div class="cg" id="cg" hidden role="button" tabindex="0" aria-label="이벤트 장면, 누르면 계속"><div class="cg-img" id="cg-img"></div><div class="cg-fx" id="cg-fx"></div><div class="cg-cap"><small id="cg-kick"></small><b id="cg-title"></b><span id="cg-sub"></span><em>화면을 누르면 계속</em></div></div>
@@ -879,6 +888,7 @@ body.running .mission{opacity:.85}
     <p class="hook">면접 87:1 뚫은 인턴 험쮜.<br>겉으론 <b>"넵!"</b> 속으론 <b>"뻥~"</b><br>2년 안에 <b>CEO</b> 될 수 있을까?</p>
     <div class="tags"><span>🎮 미니게임 업무</span><span>💘 사내연애</span><span>👑 엔딩 11종</span></div>
     <div class="btn-row"><button class="btn" id="btn-new">새로 시작</button><button class="btn ghost" id="btn-cont" hidden>불러오기</button><button class="btn ghost" id="btn-dex" type="button">📖 엔딩 도감</button></div>
+    <p class="build-code" id="build-title"></p>
     <p class="disclaimer">등장인물은 실제 동료를 모티프로 한 가상 캐릭터이며, 사건은 모두 허구예요.</p>
   </section>
 
@@ -2991,7 +3001,7 @@ document.addEventListener('click',e=>{
   renderProfile();
 });
 document.addEventListener('change',e=>{if(e.target.id==='pf-bm'){PF.bm=+e.target.value;renderProfile()}else if(e.target.id==='pf-bd'){PF.bd=+e.target.value;renderProfile()}});
-function showTitle(){playBgm('title');$('#scr-title').hidden=false;$('#btn-cont').hidden=!anySlot()}
+function showTitle(){if(window.__swUpdate){location.reload();return}playBgm('title');$('#scr-title').hidden=false;$('#btn-cont').hidden=!anySlot()}
 function openSetup(){
   $('#scr-title').hidden=true;$('#scr-setup').hidden=false;renderProfile();
   $('#origins').innerHTML=ORIGINS.map(o=>`<button class="origin" data-o="${o.id}" aria-pressed="${o.id===originSel}"><b>${o.name}</b><span>${o.d}</span><em>${Object.entries(o.bonus).map(([k,v])=>`${STATS[k]}+${v}`).join(' · ')} · 통장 ${o.money}만원</em></button>`).join('');
@@ -3115,6 +3125,22 @@ $('#btn-start').onclick=async()=>{
 };
 ['sc_office','sc_meeting','a_seohwi','a_sangho','a_hyunsu','ev_pass','ev_pass_b','ev_subway','ev_subway_b','ev_arrive','ev_arrive_b'].forEach(k=>{const i=new Image();i.src=IMG(k)});
 setSound(AU.on);
+/* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
+   tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
+const BUILD='2026.10.09-5efc54';
+$('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
+  const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
+  const msg=(t,ms)=>{bar.textContent=t;bar.hidden=false;clearTimeout(bar._t);if(ms)bar._t=setTimeout(()=>bar.hidden=true,ms)};
+  const hadCtl=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!hadCtl)return;
+    // 새 버전: 타이틀 화면이면 바로, 게임 중이면 타이틀로 갈 때 적용 (진행은 매달 자동 저장)
+    if(!$('#scr-title').hidden&&!busy)location.reload();else{window.__swUpdate=true;msg('새 버전이 준비됐어요 · 타이틀로 가면 적용돼요',6000)}});
+  navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};
+    if(d.type==='progress'&&!hadCtl)msg(`비행기 모드용 파일 받는 중 ${d.done}/${d.total}`);
+    if(d.type==='ready'&&!hadCtl)msg('✓ 오프라인 준비 완료! 이제 비행기 모드에서도 돼요',4500)});
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+}
 showTitle();
 </script>
 </body>
