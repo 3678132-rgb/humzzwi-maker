@@ -14,6 +14,7 @@ files = STATIC + sorted('fonts/' + f for f in os.listdir('fonts')) + sorted('ass
 html = open('index.html', encoding='utf-8').read()
 # 빌드 코드 자체는 해시에서 뺀다 (같은 내용이면 같은 코드)
 body = re.sub(r"const BUILD='[^']*'", "const BUILD=''", html)
+body = re.sub(r'\?v=[0-9a-f]+"', '?v="', body)
 h = hashlib.sha256(body.encode())
 for f in files:
     h.update(f.encode()); h.update(open(f, 'rb').read())
@@ -22,6 +23,8 @@ old = re.search(r"const BUILD='([^']*)'", html)
 if old and old.group(1).endswith(code[-6:]):
     code = old.group(1)  # 내용이 그대로면 날짜도 그대로
 html = re.sub(r"const BUILD='[^']*'", f"const BUILD='{code}'", html)
+# 아이콘·매니페스트 주소에도 빌드 코드를 붙여서 아이폰이 예전 아이콘을 다시 쓰지 않게 한다
+html = re.sub(r'(apple-touch-icon\.png|icon-192\.png|manifest\.json)\?v=[^"]*', lambda m: m.group(1) + '?v=' + code[-6:], html)
 open('index.html', 'w', encoding='utf-8').write(html)
 assets = ['./', 'index.html'] + files
 sw = open('tools/sw.template.js', encoding='utf-8').read()
