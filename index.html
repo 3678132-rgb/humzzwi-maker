@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=f781a4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=f781a4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=f781a4">
+<link rel="manifest" href="manifest.json?v=8cf2c5"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8cf2c5"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8cf2c5">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2068,8 +2068,9 @@ function showActor(k){hideGroup();const n=who(k);if(!n)return;if(n.noImg){hideAc
 // 여러 명을 한 번에 소개할 때: 대화창 위에 나란히 세운다
 function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');g.id='group';g.className='group-actors';$('#phone').appendChild(g)}
   // 그림마다 캐릭터 크기가 달라서, 사무실 자리와 같은 비율(CROP: 얼굴 폭 맞춤)로 키를 맞춘다. r = 얼굴 폭을 같게 했을 때의 그림 높이
-  g.innerHTML=ks.map((k,i)=>{const kk=imgOf(k).slice(2),r=(CROP[kk]||[70])[0]*640/(SPR_W[kk]||250);
+  g.innerHTML=ks.map((k,i)=>{const kk=imgOf(k).slice(2),r=(CROP[kk]||[70])[0]*640/(SPR_W[kk]||250)*(MALE.includes(kk)?1.3:1);
     return `<figure style="animation-delay:${i*.08}s" data-r="${r}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(imgOf(k))}" alt="${esc(who(k).name)}"></figure>`}).join('');g.hidden=false;placeGroup()}
+const MALE=['sangho','hanmin','jaemin','daram']; // 남자 캐릭터는 키를 키운다 (다람 여성판 daram_f 제외)
 const SPR_W={sangho:247,hyunsu:259,hanmin:258,seohwi:281,jiyoung:253,daram:257,daram_f:264,eunbin:332,sumin:216,jaemin:247}; // 원본 그림 폭 (높이는 모두 640)
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
   const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px';
@@ -3151,7 +3152,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-f781a4';
+const BUILD='2026.10.09-8cf2c5';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
