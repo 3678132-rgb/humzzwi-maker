@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=0f33d4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0f33d4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0f33d4">
+<link rel="manifest" href="manifest.json?v=acd603"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=acd603"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=acd603">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -288,7 +288,7 @@ body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
 .dept .heart{margin-left:auto;font-family:var(--body);font-size:11px;color:var(--pink-d)}
 .mates{display:grid;gap:10px}
 .mate{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;border:2px solid var(--line);background:#fff;border-radius:16px;padding:8px;align-items:start}
-.mate .ph{width:70px;height:92px;border-radius:12px;background:linear-gradient(180deg,var(--el,#ffe3ec),#fff) 50% 4%/190% no-repeat}
+.mate .ph{width:70px;height:92px;border-radius:12px;background:linear-gradient(180deg,var(--el,#ffe3ec),#fff) 50% 3%/145% no-repeat}
 .mate b{font-family:var(--display);font-weight:400;font-size:16px}
 .mate .role{font-size:12px;color:var(--mute)}
 .mate q{display:block;font-size:13px;margin-top:3px;color:var(--ink)}
@@ -2062,12 +2062,11 @@ function showActor(k){hideGroup();const n=who(k);if(!n)return;if(n.noImg){hideAc
   if(!el.hidden&&el.dataset.k===k){placeActor();return}el.dataset.k=k;el.hidden=false;el.style.animation='none';el.offsetWidth;el.style.animation='';placeActor()}
 // 여러 명을 한 번에 소개할 때: 대화창 위에 나란히 세운다
 function showGroup(ks){let g=$('#group');if(!g){g=document.createElement('div');g.id='group';g.className='group-actors';$('#phone').appendChild(g)}
-  // 그림마다 캐릭터 크기가 달라서, 사무실 자리와 같은 비율(CROP: 얼굴 폭 맞춤)로 키를 맞춘다. r = 얼굴 폭을 같게 했을 때의 그림 높이
+  // 모두 같은 배율의 그림이라 BODY_T(실제 키) 비율 그대로 세운다
   g.innerHTML=ks.map((k,i)=>`<figure style="animation-delay:${i*.08}s" data-t="${bodyT(k)}"><figcaption>${JOB_TAG[k]?JOB_TAG[k]+' · '+given(k):who(k).name}</figcaption><img src="${IMG(sprOf(k))}" alt="${esc(who(k).name)}"></figure>`).join('');g.hidden=false;placeGroup()}
-// 같은 세상 비율 그림 b_*: 얼굴 크기는 그대로 두고 몸 길이만 늘이거나 줄여 머리:몸 비율을 맞춘 그림 (tools에서 만든 것)
-// BODY_T = 얼굴 폭을 같게 했을 때의 키 (여자 185 · 남자 205). 모두 같은 자로 재서 그린다
-const BODY_T={sangho:205,hanmin:205,jaemin:205,daram:205,hyunsu:185,seohwi:185,jiyoung:185,eunbin:185,sumin:185,daram_f:185},T_MAX=205;
-const sprOf=k=>{const kk=imgOf(k).slice(2);return BODY_T[kk]?'b_'+kk:imgOf(k)};
+// 모든 동료 그림은 한 장의 라인업에서 같은 배율로 오려낸 것. BODY_T = 그림의 실제 픽셀 키 (얼굴 크기는 모두 같다)
+const BODY_T={"sangho":597,"hyunsu":533,"hanmin":609,"seohwi":536,"jiyoung":493,"daram":585,"eunbin":504,"sumin":538,"jaemin":593,"daram_f":486},T_MAX=609;
+const sprOf=k=>imgOf(k);
 const bodyT=k=>BODY_T[imgOf(k).slice(2)]||T_MAX;
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
   const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px';
@@ -2592,7 +2591,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-mset]');if
    말주머니로 질문 → 답을 고르면 업무 성과 평가(정답일수록 매출·해외 진출·♥ 상승). 한 달에 3번. */
 const SEAT={sangho:[30,26],hyunsu:[70,26],hanmin:[18,48],seohwi:[50,48],jiyoung:[82,48],daram:[13,70],eunbin:[37,70],sumin:[63,70],jaemin:[87,70]};
 // 캐릭터마다 원본 그림 크기가 달라서, 얼굴 폭이 같아 보이도록 자르는 값 [너비%, 왼쪽%, 위%]
-const CROP={"seohwi": [77.4, 14.6, 4.8], "eunbin": [79.8, 11.1, 4.8], "sumin": [69.4, 19.0, 4.8], "jiyoung": [67.9, 18.2, 4.8], "hyunsu": [75.0, 13.5, 4.8], "sangho": [62.0, 19.0, 4.8], "jaemin": [66.3, 19.0, 4.8], "hanmin": [75.1, 14.6, 4.8], "daram": [64.5, 18.2, 4.8], "daram_f": [63.9, 18.0, 4.8]};
+const CROP={"sangho": [110.3, -3.0, 4.8], "hyunsu": [112.7, -1.2, 4.8], "hanmin": [104.2, 2.2, 4.8], "seohwi": [110.3, -1.5, 4.8], "jiyoung": [98.2, 2.2, 4.8], "daram": [107.3, -0.6, 4.8], "eunbin": [106.1, -2.8, 4.8], "sumin": [103.0, 3.4, 4.8], "jaemin": [115.8, -1.5, 4.8], "daram_f": [105.5, -1.5, 4.8]};
 const SEAT_ROW=[[11.5,'부장실'],[81,'인턴석 · 문 바로 옆']];
 const MY_SEAT=[60,96];
 // 사무실에선 이름 대신 직무로 표기
@@ -3199,7 +3198,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-0f33d4';
+const BUILD='2026.10.09-acd603';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
