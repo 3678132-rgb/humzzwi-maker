@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=fe6403"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=fe6403"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=fe6403">
+<link rel="manifest" href="manifest.json?v=850ceb"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=850ceb"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=850ceb">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2159,16 +2159,16 @@ async function finalValentine(){
    휴일: 부업·데이트·휴식·여행·쇼핑·자기계발 중 하나.
    회사 이야기(론칭·매출·위기·해외 진출)와 승진 평가는 월말에 찾아온다. */
 const PLACES={
-  roof:{f:'RF',n:'옥상 정원',ic:'🌿',pic:'c_walk',scene:'sc_park',brk:1},
-  boss:{f:'5F',n:'부장실',ic:'🧭',pic:'c_schedule',scene:'sc_meeting',acts:['schedule','minutes']},
-  strat:{f:'4F',n:'전략기획팀',ic:'📐',pic:'c_research',scene:'sc_package',acts:['research','package']},
-  lab:{f:'4F',n:'연구실',ic:'🧪',pic:'c_formula',scene:'sc_lab',acts:['formula']},
-  mkt:{f:'3F',n:'마케팅팀',ic:'📣',pic:'c_keymsg',scene:'sc_office',acts:['keymsg','review']},
-  studio:{f:'3F',n:'스튜디오',ic:'🎬',pic:'c_content',scene:'sc_studio',acts:['content']},
-  sales:{f:'2F',n:'영업팀',ic:'🤝',pic:'c_md',scene:'sc_store',acts:['md','cs','global']},
-  ops:{f:'2F',n:'경영지원팀',ic:'🗂️',pic:'c_erp',scene:'sc_office',acts:['erp','settle']},
-  cafe:{f:'1F',n:'1층 카페',ic:'☕',pic:'c_cafe',scene:'sc_cafe',brk:1},
-  wh:{f:'B1',n:'물류 창고',ic:'📦',pic:'c_logistics',scene:'sc_factory',acts:['filling','logistics']},
+  roof:{f:'RF',n:'옥상 정원',ic:'🌿',pic:'c_walk',scene:'pl_roof',brk:1},
+  boss:{f:'5F',n:'부장실',ic:'🧭',pic:'c_schedule',scene:'pl_boss',acts:['schedule','minutes']},
+  strat:{f:'4F',n:'전략기획팀',ic:'📐',pic:'c_research',scene:'pl_strat',acts:['research','package']},
+  lab:{f:'4F',n:'연구실',ic:'🧪',pic:'c_formula',scene:'pl_lab',acts:['formula']},
+  mkt:{f:'3F',n:'마케팅팀',ic:'📣',pic:'c_keymsg',scene:'pl_mkt',acts:['keymsg','review']},
+  studio:{f:'3F',n:'스튜디오',ic:'🎬',pic:'c_content',scene:'pl_studio',acts:['content']},
+  sales:{f:'2F',n:'영업팀',ic:'🤝',pic:'c_md',scene:'pl_sales',acts:['md','cs','global']},
+  ops:{f:'2F',n:'경영지원팀',ic:'🗂️',pic:'c_erp',scene:'pl_ops',acts:['erp','settle']},
+  cafe:{f:'1F',n:'1층 카페',ic:'☕',pic:'c_cafe',scene:'pl_cafe',brk:1},
+  wh:{f:'B1',n:'물류 창고',ic:'📦',pic:'c_logistics',scene:'pl_wh',acts:['filling','logistics']},
 };
 const FLOORS=[['RF','옥상'],['5F','임원'],['4F','전략기획'],['3F','마케팅'],['2F','영업·지원'],['1F','로비'],['B1','창고']];
 // 평소 자리. 하루에 한 곳에 있고, 가끔은 카페·옥상에서 쉬고 있다
@@ -3496,7 +3496,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-fe6403';
+const BUILD='2026.10.09-850ceb';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
