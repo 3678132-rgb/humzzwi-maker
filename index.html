@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=2afdec"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2afdec"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2afdec">
+<link rel="manifest" href="manifest.json?v=b0bab1"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=b0bab1"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=b0bab1">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -149,6 +149,7 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 /* 그림 칸 크기와 아래 칸 높이를 진행·결과에서 똑같이 둬서 카드가 커졌다 작아졌다 하지 않게 */
 .mini-pop.sched{background:none}.mini-win.sched{max-width:340px}.mini-win.sched .mini-stage{aspect-ratio:16/11}
 .mini-low{min-height:150px;display:grid;align-content:start}
+@media (max-height:760px){.mini-win.sched .mini-stage{aspect-ratio:16/8.5}.mini-low{min-height:130px}.mr-t{font-size:14.5px}}
 .mini-low .mini-doing{font-family:var(--display);font-size:17px;color:#7a4a00;text-align:center;padding:18px 0 4px}
 .mini-res{display:grid;gap:4px;padding:8px 6px 2px;animation:fadein .25s both}
 .mr-who{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#8a6f63}.mr-who i{width:24px;height:24px;border-radius:50%;border:2px solid var(--pink);background-size:cover}
@@ -2375,7 +2376,9 @@ async function runAct(id,i,ps){const a=ACTS[id];let perf=null;
     if(S.launched){const v=r.res==='great'?12:r.res==='ok'?7:2;S.push=(S.push||0)+v;r.chips.push({l:'📈 매출 기여',d:v})}}
   if(r.jobUp)sfx('great');else sfx(r.res==='fail'?'fail':r.res==='great'?'great':'ok');
   const o={who:r.mate||(id==='coffee'?'daram':'me'),title:r.title,text:r.text,chips:r.chips,pic:r.pic||clipOf(id)};
-  if(!$('#mini').hidden&&$('#mini-stage'))await miniResult(o,a.name);else{closeMini();await say(o)}
+  // 스케줄·회사일 모두 화면 가운데 카드 하나로 결과를 보여 준다(미니게임 뒤에도)
+  if($('#mini').hidden||!$('#mini-stage')){if(o.pic)openCard(id,i,o.pic,true,'');else{closeMini();await say(o)}}
+  if(!$('#mini').hidden&&$('#mini-stage'))await miniResult(o,a.name);
   if(a.cat==='work')await afterMs();render()}
 
 /* ----- 휴일 ----- */
@@ -2544,9 +2547,9 @@ function syncClip(){const d=$('#dialog'),m=$('#mini'),st=!m.hidden&&m.querySelec
 new MutationObserver(syncClip).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
-function chipsHTML(chips){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-chipRank(b));if(!chips.length)return '';
+function chipsHTML(chips,all){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-chipRank(b));if(!chips.length)return '';
   const one=c=>{const good=c.inv?c.d<0:c.d>0;return `<span class="chip ${good?'up':'down'} ${chipRank(c)<2?'key':''}">${esc(c.l)} ${c.d>0?'+':''}${Math.round(c.d*10)/10}${c.won?'만':c.pct?'%':''}</span>`};
-  const head=chips.slice(0,5).map(one).join(''),rest=chips.slice(5);
+  const head=chips.slice(0,all?99:5).map(one).join(''),rest=chips.slice(all?99:5);
   return `<div class="chips">${head}${rest.length?`<button class="chip more" type="button" data-more>+${rest.length}개 더보기</button><span class="chips-rest" hidden>${rest.map(one).join('')}</span>`:''}</div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-more]');if(!b)return;e.stopPropagation();const r=b.nextElementSibling;r.hidden=false;b.remove()},true);
 function dialogHTML(o,inner){
@@ -2592,15 +2595,18 @@ function miniResult(o,name){const w=$('#mini'),win=w.querySelector('.mini-win');
   return new Promise(res=>{win.classList.add('done');const low=win.querySelector('.mini-low');low.innerHTML='';
     const who=o.who&&o.who!=='me'?`<span class="mr-who"><i style="${faceStyle(o.who)}"></i>${esc(tagName(o.who))}</span>`:'';
     const h=o.title&&o.title!==name?`<b class="mr-h">${esc(o.title)}</b>`:'';
-    low.insertAdjacentHTML('beforeend',`<div class="mini-res">${who}${h}<div class="mr-t">${o.text||''}</div>${chipsHTML(o.chips)}<div class="next"><button class="next-btn" type="button">다음 ▶</button></div></div>`);
+    low.insertAdjacentHTML('beforeend',`<div class="mini-res">${who}${h}<div class="mr-t">${o.text||''}</div>${chipsHTML(o.chips,1)}<div class="next"><button class="next-btn" type="button">다음 ▶</button></div></div>`);
     win.querySelector('.next-btn').onclick=e=>{e.stopPropagation();w.hidden=true;w.innerHTML='';w.classList.remove('sched');syncClip();res()}})}
+function openCard(id,i,fa,clip,low){const a=ACTS[id],w=$('#mini');
+  w.innerHTML=`<div class="mini-win sched" role="img" aria-label="${esc(a.name)}"><div class="mini-title"><span>${esc(a.name)}</span><em>${slotName(i)}</em></div>
+  <div class="mini-stage k-${a.cat==='love'||/date|blind/.test(id)?'love':a.cat} ${clip?'clip':''}" id="mini-stage"><img class="a" src="${IMG(fa)}" alt=""><img class="b" src="${IMG(fa+'_b')}" alt=""></div>
+  <div class="mini-low">${low}</div></div>`;
+  w.onclick=null;w.classList.remove('game');w.classList.add('sched');w.hidden=false;$('#dialog').hidden=true;hideActor();
+  const st=$('#mini-stage');st.querySelector('img.b').onerror=()=>st.classList.add('nob');syncClip()}
 function closeMini(){const w=$('#mini');if(!w.hidden&&w.querySelector('#mini-stage')){w.hidden=true;w.innerHTML='';w.classList.remove('sched');syncClip()}}
 function playMini(id,i){
   const a=ACTS[id],w=$('#mini'),clip=clipOf(id),fa=clip||a.mini;
-  w.innerHTML=`<div class="mini-win sched" role="img" aria-label="${esc(a.name)} 하는 중"><div class="mini-title"><span>${esc(a.name)}</span><em>${slotName(i)}</em></div>
-  <div class="mini-stage k-${a.cat==='love'||/date|blind/.test(id)?'love':a.cat} ${clip?'clip':''}" id="mini-stage"><img class="a" src="${IMG(fa)}" alt=""><img class="b" src="${IMG(fa+'_b')}" alt=""></div>
-  <div class="mini-low"><div class="mini-doing">${esc(a.name)} 하는 중…</div><div class="mini-bar"><i id="mini-bar"></i></div><div class="mini-day"><span id="mini-day">${monthOf(S.m)}월 ${i*10+1}일</span><span>탭하면 건너뛰기</span></div></div></div>`;
-  w.classList.add('sched');w.hidden=false;$('#dialog').hidden=true;hideActor();syncClip();
+  openCard(id,i,fa,!!clip,`<div class="mini-doing">${esc(a.name)} 하는 중…</div><div class="mini-bar"><i id="mini-bar"></i></div><div class="mini-day"><span id="mini-day">${monthOf(S.m)}월 ${i*10+1}일</span><span>탭하면 건너뛰기</span></div>`);
   const st=$('#mini-stage');st.querySelector('img.b').onerror=()=>st.classList.add('nob');
   return new Promise(res=>{let d=0;const total=10;
     const iv=setInterval(()=>{if(d%2===0||!clip)st.classList.toggle('alt');d++;$('#mini-day').textContent=`${monthOf(S.m)}월 ${Math.min(30,i*10+d)}일`;$('#mini-bar').style.width=(d/total*100)+'%';
@@ -3668,7 +3674,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-2afdec';
+const BUILD='2026.10.10-b0bab1';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
