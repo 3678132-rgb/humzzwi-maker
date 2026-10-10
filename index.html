@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=7ce158"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7ce158"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7ce158">
+<link rel="manifest" href="manifest.json?v=392b34"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=392b34"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=392b34">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -390,7 +390,7 @@ body.picmode-on .shade{background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,r
 /* 대화창 속 두 사람 그림 (2장 움짤) */
 .dialog.haspic{max-height:74%!important}
 /* 그림이 든 대화창은 상태창 아래 남은 공간의 가운데에 */
-.dialog.haspic.mid{bottom:calc(18px + var(--sb));height:-webkit-fit-content;height:fit-content;margin-block:auto}
+.dialog.haspic.mid{bottom:auto!important}
 /* 스케줄 그림이 나올 땐 뒤 배경(방·사무실)을 빼고, 같은 그림을 흐리게 깔아 그림 하나에만 눈이 가게 */
 /* 스케줄 배경 시안 — body[data-mbg]: A 활동 색 땡땡이 · B 다이어리 모눈 · C 장소를 어둡게 */
 /* 배경은 늘 분홍 땡땡이 */
@@ -2580,7 +2580,10 @@ $('#actor-img').addEventListener('load',placeActor);
 function syncClip(){const d=$('#dialog'),m=$('#mini'),st=!m.hidden&&m.querySelector('#mini-stage.clip'),im=st||(!d.hidden&&d.classList.contains('haspic')&&!d.classList.contains('keepbg')&&d.querySelector('.dpic img'));
   if(st)document.body.dataset.cat=(st.className.match(/k-(\w+)/)||[])[1]||'work';else if(im)document.body.dataset.cat='love';
   if(!document.body.dataset.mbg)document.body.dataset.mbg='A';document.body.classList.toggle('clip-on',!!im);
-  const mid=!d.hidden&&d.classList.contains('haspic')&&!d.classList.contains('picmode');d.classList.toggle('mid',mid);d.style.top=mid?hudBottom()+'px':'';}
+  const mid=!d.hidden&&d.classList.contains('haspic')&&!d.classList.contains('picmode');d.classList.toggle('mid',mid);
+  if(mid){const hb=hudBottom(),ph=$('#phone').clientHeight,sb=parseFloat(getComputedStyle($('#phone')).paddingBottom)||0,room=ph-hb-24;
+    d.style.setProperty('max-height',room+'px','important');d.style.top=hb+'px';d.style.top=(hb+Math.max(0,(room-d.offsetHeight)/2))+'px'}else{d.style.top='';d.style.removeProperty('max-height')}
+  }
 new MutationObserver(syncClip).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
@@ -3025,7 +3028,8 @@ function planHTML(){
   const full=S.plan.every(Boolean),go=$('#plan-go');go.disabled=!full;go.classList.toggle('ready',full);go.textContent=full?'이번 달 시작!':AFTER()?'퇴근 후 일정을 골라 주세요':`${S.plan.length-S.plan.filter(Boolean).length}칸 더 골라 주세요`;
   $('#acts-title').textContent=AFTER()?`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 퇴근 후`:`${yearOf(S.m)}년차 ${monthOf(S.m)}월 스케줄`;
 }
-function openActs(cat){if(busy||!S)return;if(AFTER()&&(cat==='work'||!cat))cat=curCat==='work'?'rest':curCat;if(cat&&cat!==curCat){curCat=cat;if(cat!=='work')curDept=null}planHTML();if($('#sheet-acts').hidden){openSheet('acts');$('#acts').scrollTop=0}}
+// 예전 「월간 스케줄 짜기」 화면은 더 이상 쓰지 않는다 — 어디서 불려도 내 프로필을 연다
+function openActs(cat){if(!S)return;openSheet('status');return;if(AFTER()&&(cat==='work'||!cat))cat=curCat==='work'?'rest':curCat;if(cat&&cat!==curCat){curCat=cat;if(cat!=='work')curDept=null}planHTML();if($('#sheet-acts').hidden){openSheet('acts');$('#acts').scrollTop=0}}
 function openCat(){if(busy||!S)return;if(S.plan.every(Boolean)&&!$('#sheet-acts').hidden)return;openActs(curCat||'work')}
 function statusHTML(){
   const m=(l,v,max,col)=>`<div class="meter"><span>${l}</span><div class="bar"><div class="fill" style="width:${Math.min(100,v/max*100)}%;background:${col||'var(--pink)'}"></div></div><span class="v">${v}</span></div>`;
@@ -3790,7 +3794,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-7ce158';
+const BUILD='2026.10.10-392b34';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
