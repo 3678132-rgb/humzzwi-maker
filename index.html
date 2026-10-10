@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=0585ee"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0585ee"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0585ee">
+<link rel="manifest" href="manifest.json?v=0eb1b1"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0eb1b1"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0eb1b1">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3180,9 +3180,12 @@ const TRACKS={
     ch:['C3 E4 G4 C5','F2 A3 C4 F4','G2 B3 D4 G4','C3 E4 G4 C5']},
 };
 function auInit(){
-  if(AU.ctx){if(AU.ctx.state==='suspended')AU.ctx.resume();return}
+  // 아이폰: 무음 스위치가 켜져 있어도 게임 소리가 나게(사파리 16.4+), 앱을 껐다 켜서 소리가 멈춘(interrupted) 상태도 다시 깨운다
+  try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback'}catch(e){}
+  if(AU.ctx){if(AU.ctx.state!=='running')AU.ctx.resume().catch(()=>{});return}
   const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
   try{AU.ctx=new C()}catch(e){return}
+  AU.ctx.onstatechange=()=>{if(AU.ctx.state==='running'&&AU.want){const w=AU.want;AU.want=null;playBgm(w)}};
   const c=AU.ctx;AU.master=c.createGain();AU.master.gain.value=AU.on?1:0;
   const comp=c.createDynamicsCompressor();AU.master.connect(comp);comp.connect(c.destination);
   AU.bgmBus=c.createGain();AU.bgmBus.gain.value=AU.bgmOn?.4:0;AU.bgmBus.connect(AU.master);
@@ -3191,7 +3194,8 @@ function auInit(){
   AU.timer=setInterval(auTick,30);
   if(AU.want){const w=AU.want;AU.want=null;playBgm(w)}
 }
-['pointerdown','touchend','keydown'].forEach(ev=>document.addEventListener(ev,auInit,{passive:true}));
+['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,auInit,{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&AU.ctx&&AU.ctx.state!=='running')AU.ctx.resume().catch(()=>{})});
 document.addEventListener('visibilitychange',()=>{if(!AU.ctx)return;document.hidden?AU.ctx.suspend():AU.ctx.resume()});
 function env(g,t,v,a,d){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(v,.0002),t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+a+d)}
 function tone(bus,t,f,{type='sine',v=.2,a=.005,d=.3,f2=null,lp=null}={}){
@@ -4136,7 +4140,7 @@ applyMix();applyFs();
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-0585ee';
+const BUILD='2026.10.10-0eb1b1';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
