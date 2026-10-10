@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=e859cc"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=e859cc"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=e859cc">
+<link rel="manifest" href="manifest.json?v=4b0553"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4b0553"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=4b0553">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3691,7 +3691,7 @@ async function officeTour(){
   for(let n=0;n<TOUR.length;n++){const [q,line,cap2]=TOUR[n],P=PLACES[q];setPlace(P.scene);sfx('whoosh');
     const here=TEAM.filter(k=>(HOME[k]||[]).includes(q)),acts=(P.acts||[]).map(id=>ACTS[id].name);
     // ① 서휘 안내 → ② 「둘러보기」: 장소만 담은 그림 2장을 화면 가득 → ③ 그곳 사람들
-    const c0=await ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,text:`"${line}"`,choices:[{l:'👀 둘러보기',s:'장소 그림 2장'},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
+    const c0=await ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,text:`"${line}"`,choices:[{l:'👀 둘러보기',s:''},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
     if(c0===1)break;
     await showCG({img:`tp_${q}_1`,kick:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,sub:line});
     await showCG({img:`tp_${q}_2`,kick:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,sub:cap2+(acts.length?`\n<span>💼 하는 일: ${acts.join(' · ')}</span>`:'')});
@@ -3769,7 +3769,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-e859cc';
+const BUILD='2026.10.10-4b0553';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
