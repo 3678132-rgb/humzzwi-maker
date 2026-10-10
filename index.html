@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=611a49"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=611a49"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=611a49">
+<link rel="manifest" href="manifest.json?v=c24cb9"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=c24cb9"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=c24cb9">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -130,7 +130,7 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 .next-btn{border:0;background:var(--ink);color:#fff;border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:15px}
 
 /* ---------- 미니 화면(스케줄 진행) ---------- */
-.mini-pop{position:absolute;inset:0;z-index:7;display:grid;place-items:center;padding:0 12%;background:rgba(42,31,51,.3);animation:fadein .2s both}
+.mini-pop{position:absolute;inset:0;z-index:7;display:grid;place-items:center;padding:0 7%;overflow:auto;background:rgba(42,31,51,.3);animation:fadein .2s both}
 .mini-win{width:100%;max-width:300px;border-radius:20px;padding:8px;background:linear-gradient(180deg,#fff7df,#ffe0a3);border:3px solid #fff;box-shadow:0 0 0 3px #e8a400,0 12px 30px rgba(0,0,0,.35);animation:mini-in .35s cubic-bezier(.2,.9,.3,1.3) both}
 .mini-title{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);font-size:15px;color:#7a4a00;padding:2px 6px 6px}
 .mini-title em{font-style:normal;font-size:11px;background:#e8a400;color:#fff;border-radius:99px;padding:1px 8px}
@@ -143,6 +143,13 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 .mini-bar{height:10px;margin:8px 4px 4px;border-radius:99px;background:#fff;border:2px solid #e8a400;overflow:hidden}
 .mini-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9fc4,#ffb21f);transition:width .2s linear}
 .mini-day{display:flex;justify-content:space-between;font-size:12px;color:#7a4a00;padding:0 6px}
+.mini-win.done{max-width:360px;animation:none}
+.mini-win.done .mini-stage{aspect-ratio:16/11;transition:aspect-ratio .3s}
+.mini-res{display:grid;gap:4px;padding:8px 6px 2px;animation:fadein .25s both}
+.mr-who{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#8a6f63}.mr-who i{width:24px;height:24px;border-radius:50%;border:2px solid var(--pink);background-size:cover}
+.mr-h{font-family:var(--display);font-weight:400;font-size:18px;color:#2b1d17;line-height:1.3}
+.mr-t{white-space:pre-line;font-size:15.5px;line-height:1.5;font-weight:500;color:#2b1d17}.mr-t .t{color:#7b6257;font-size:14.5px}
+.mini-res .chips{margin-top:2px}.mini-res .next{margin-top:2px}
 @keyframes mini-in{from{transform:scale(.6);opacity:0}}
 @keyframes bob{from{transform:translateY(0) scale(1,1)}to{transform:translateY(-4%) scale(1.02,.98)}}
 @keyframes fx{from{transform:translateY(0) scale(.6);opacity:0}25%{opacity:1}to{transform:translateY(-70px) scale(1.1);opacity:0}}
@@ -2356,7 +2363,8 @@ async function runAct(id,i,ps){const a=ACTS[id];let perf=null;
   if(a.cat==='work'&&!r.burn){if(ps&&a.mate&&ps.includes(a.mate))bump(r.chips,'aff_'+a.mate,2);
     if(S.launched){const v=r.res==='great'?12:r.res==='ok'?7:2;S.push=(S.push||0)+v;r.chips.push({l:'📈 매출 기여',d:v})}}
   if(r.jobUp)sfx('great');else sfx(r.res==='fail'?'fail':r.res==='great'?'great':'ok');
-  await say({who:r.mate||(id==='coffee'?'daram':'me'),title:r.title,text:r.text,chips:r.chips,pic:r.pic||clipOf(id)});
+  const o={who:r.mate||(id==='coffee'?'daram':'me'),title:r.title,text:r.text,chips:r.chips,pic:r.pic||clipOf(id)};
+  if(!$('#mini').hidden&&$('#mini-stage'))await miniResult(o,a.name);else{closeMini();await say(o)}
   if(a.cat==='work')await afterMs();render()}
 
 /* ----- 휴일 ----- */
@@ -2519,8 +2527,9 @@ function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidd
   const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,y+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
 $('#actor-img').addEventListener('load',placeActor);
 // 대화창에 스케줄 그림이 있으면 장면 배경을 그 그림의 흐린 버전으로 바꾼다
-new MutationObserver(()=>{const d=$('#dialog'),im=!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img');
-  if(im)$('#scene').style.setProperty('--clip-bg',`url("${im.getAttribute('src')}")`);document.body.classList.toggle('clip-on',!!im)}).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
+function syncClip(){const d=$('#dialog'),m=$('#mini'),im=(!m.hidden&&m.querySelector('#mini-stage.clip img'))||(!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img'));
+  if(im)$('#scene').style.setProperty('--clip-bg',`url("${im.getAttribute('src')}")`);document.body.classList.toggle('clip-on',!!im)}
+new MutationObserver(syncClip).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
 function chipsHTML(chips){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-chipRank(b));if(!chips.length)return '';
@@ -2566,17 +2575,25 @@ function showClip(o){[o.a,o.b].forEach(k=>{const i=new Image();i.src=IMG(k)});
   return p.then(()=>{clearInterval(iv);cg.classList.remove('clip');el.style.backgroundPosition=''})}
 const CLIPS=new Set(['snack','content','keymsg','review','md','cs','global','research','formula','package','filling','logistics','erp','settle','schedule','minutes','overtime','orient','cafe','store','shoot','blog','lecture','ingredient','english','ai','excel','mba','license','run','gym','pt','pilates','leave','half','trip','walk','friends','shop_hb','shop_mall','shop_online','coffee','date','blind','selfdate']);
 const clipOf=id=>id==='date'?dimg('ramen'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
+// 스케줄 카드: 진행이 끝나면 같은 카드 아래쪽이 결과(글·능력치 변화·다음)로 바뀐다 — 그림은 한 번만
+function miniResult(o,name){const w=$('#mini'),win=w.querySelector('.mini-win');
+  return new Promise(res=>{win.classList.add('done');win.querySelectorAll('.mini-bar,.mini-day').forEach(e=>e.remove());
+    const who=o.who&&o.who!=='me'?`<span class="mr-who"><i style="${faceStyle(o.who)}"></i>${esc(tagName(o.who))}</span>`:'';
+    const h=o.title&&o.title!==name?`<b class="mr-h">${esc(o.title)}</b>`:'';
+    win.insertAdjacentHTML('beforeend',`<div class="mini-res">${who}${h}<div class="mr-t">${o.text||''}</div>${chipsHTML(o.chips)}<div class="next"><button class="next-btn" type="button">다음 ▶</button></div></div>`);
+    win.querySelector('.next-btn').onclick=e=>{e.stopPropagation();w.hidden=true;w.innerHTML='';syncClip();res()}})}
+function closeMini(){const w=$('#mini');if(!w.hidden&&w.querySelector('#mini-stage')){w.hidden=true;w.innerHTML='';syncClip()}}
 function playMini(id,i){
   const a=ACTS[id],w=$('#mini'),clip=clipOf(id),fa=clip||a.mini;
   w.innerHTML=`<div class="mini-win" role="img" aria-label="${esc(a.name)} 하는 중"><div class="mini-title"><span>${esc(a.name)}</span><em>${slotName(i)}</em></div>
   <div class="mini-stage k-${a.cat} ${clip?'clip':''}" id="mini-stage"><img class="a" src="${IMG(fa)}" alt=""><img class="b" src="${IMG(fa+'_b')}" alt=""></div>
   <div class="mini-bar"><i id="mini-bar"></i></div><div class="mini-day"><span id="mini-day">${monthOf(S.m)}월 ${i*10+1}일</span><span>탭하면 건너뛰기</span></div></div>`;
-  w.hidden=false;$('#dialog').hidden=true;hideActor();
+  w.hidden=false;$('#dialog').hidden=true;hideActor();syncClip();
   const st=$('#mini-stage');st.querySelector('img.b').onerror=()=>st.classList.add('nob');
   return new Promise(res=>{let d=0;const total=10;
     const iv=setInterval(()=>{if(d%2===0||!clip)st.classList.toggle('alt');d++;$('#mini-day').textContent=`${monthOf(S.m)}월 ${Math.min(30,i*10+d)}일`;$('#mini-bar').style.width=(d/total*100)+'%';
       if(d%2===0){const f=document.createElement('span');f.className='fx';f.textContent=pick(a.fx);f.style.left=(12+R()*66)+'%';f.style.top=(28+R()*36)+'%';st.appendChild(f);setTimeout(()=>f.remove(),1100)}
-      if(d>=total){clearInterval(iv);setTimeout(()=>{w.hidden=true;w.innerHTML='';res()},250)}},230);
+      if(d>=total){clearInterval(iv);w.onclick=null;setTimeout(res,250)}},230);
     w.onclick=()=>{if(d<total)d=total-1};});
 }
 /* ================= 미니게임 (회사일) =================
@@ -3637,7 +3654,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-611a49';
+const BUILD='2026.10.10-c24cb9';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
