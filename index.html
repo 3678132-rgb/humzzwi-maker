@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=55e34e"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=55e34e"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=55e34e">
+<link rel="manifest" href="manifest.json?v=2d798f"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2d798f"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2d798f">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1371,7 +1371,7 @@ const ACTS={
   shop_mall:{cat:'rest',name:'백화점 쇼핑',d:'월급날 플렉스',cost:25,hp:-2,st:-30,g:{trend:2},scene:'sc_store',mini:'s_walk',fx:['🛍️','💳','✨','💖']},
   shop_online:{cat:'rest',name:'새벽 온라인 쇼핑',d:'잠 대신 장바구니',cost:10,hp:-4,st:-14,g:{trend:1},scene:'sc_home',mini:'m_phone',fx:['📱','🛒','🌙','✨']},
   coffee:{cat:'love',name:'영업팀에 커피 사 가기',d:'한다람 주임 자리에 아아 한 잔',cost:1,hp:-1,st:-4,eff:{love:5,aff_daram:4},scene:'sc_cafe',mini:'s_coffee',fx:['☕','💓','🙈','✨']},
-  date:{cat:'love',name:'퇴근 후 비밀 데이트',d:'한다람 주임과 한강 편의점 라면',cost:5,hp:-2,st:-20,eff:{love:10},needDating:1,scene:'sc_park',mini:'s_walk',fx:['💘','🍜','🌙','✨']},
+  date:{cat:'love',name:'주말 데이트',d:'한다람 주임과 주말 나들이 · 코스는 그때그때',cost:5,hp:-2,st:-20,eff:{love:10},needDating:1,scene:'sc_park',mini:'s_walk',fx:['💘','🎡','🍿','☕','✨']},
   blind:{cat:'love',name:'소개팅',d:'친구가 주선한 주말 소개팅',cost:6,hp:-3,st:0,g:{comm:1},scene:'sc_cafe',mini:'s_coffee',fx:['🫣','☕','💬','✨']},
   selfdate:{cat:'love',name:'셀프 데이트',d:'혼자 전시회 보고 디저트 먹기',cost:4,hp:2,st:-14,g:{trend:1},scene:'sc_park',mini:'s_eat',fx:['🖼️','🍰','💗','✨']},
   home:{cat:'rest',name:'이불 속 집콕',d:'아무것도 안 하는 날',hp:20,st:-16,scene:'sc_home',mini:'s_sleep',clip:'c_leave',fx:['💤','🍿','🌙','✨'],txt:'이불 속에서 숏폼 3시간, 낮잠 2시간. 완벽한 하루.'},
@@ -1532,11 +1532,11 @@ function doAction(id,perf){
   if(id==='blind'){const good=R()<.45;applyFx(good?{st:-12}:{st:6},chips);return {title:a.name,text:good?'대화가 끊기지 않았다. "다음에 또 봬요!"\n<span class="t">(…근데 회사 얘기만 2시간 했다.)</span>':'"무슨 일 하세요?" "화장품 회사 막내요." "아~ 샘플 많겠다!"\n<span class="t">(…샘플 얘기만 하다 끝났다.)</span>',chips,scene:a.scene}}
   text={lecture:'강의 3강 완강! 노트가 빼곡해졌다.',ingredient:'세라마이드, 판테놀, 엑토인… 성분표가 읽히기 시작했다.',english:'"Nice to meet you" 다음 문장이 늘었다.',
     snack:pick(['새벽 1시, 치킨 한 마리 반반. 양념은 내 마음을 안다.\n<span class="t">(…내일 아침 얼굴은 내일의 내가 책임진다.)</span>','떡볶이에 치즈 추가, 주먹밥까지. 매운맛에 스트레스가 다 녹았다.','배달 앱을 30분 고민하다 결국 또 치킨.\n<span class="t">(이게 다 사회생활 때문이야.)</span>']),
-    run:'한강 바람 맞으며 5km. 머리가 맑아졌다.',gym:'러닝머신 30분. 회원권 본전에 한 걸음.',coffee:S.flags.dating?pick(['다람 주임: "또 왔어요? …오늘은 제가 초콜릿 준비했는데."\n험쮜: "헉, 저 주려고요?"\n다람 주임: "쉿, 은빈 씨 본다."','다람 주임: "아아에 샷 추가, 시럽 반. 제 취향 어떻게 알았어요?"\n험쮜: "…영업팀 분석했죠."\n<span class="t">(MD 미팅보다 떨린다.)</span>']):pick(['험쮜: "주임님, 이거… 하나 남아서요."\n다람 주임: "어… 저 주시는 거예요?"\n<span class="t">(다람 주임의 귀가 빨개졌다.)</span>','다람 주임: "요즘 영업팀 앞 자주 지나가네요?"\n험쮜: "아, 그, 출고 서류 때문에요!"\n<span class="t">(출고 서류는 SCM팀에 있다.)</span>']),date:pick(['다람 주임: "오늘 MD 미팅 어땠어요?"\n험쮜: "주임님이 알려 준 장표 순서대로 했더니 통과했어요!"\n다람 주임: "역시. 계란은 축하 기념으로 두 개."','험쮜: "한강 바람 시원하다…"\n다람 주임: "험쮜 씨 볼이 더 빨개요. 라면 때문이에요, 저 때문이에요?"\n<span class="t">(…둘 다.)</span>']),selfdate:'혼자 본 전시가 의외로 좋았다. 나랑 노는 것도 재밌네.',shop_hb:'신상 앰플, 세일하는 클렌저, 샘플까지 한가득. "이것도 시장조사야."',shop_mall:'쇼핑백을 양손 가득. 통장은 가벼워졌지만 마음은 더 가벼워졌다.',shop_online:'새벽 2시, 장바구니 결제 완료.\n<span class="t">(…내일의 나에게 택배가 간다.)</span>',
+    run:'한강 바람 맞으며 5km. 머리가 맑아졌다.',gym:'러닝머신 30분. 회원권 본전에 한 걸음.',coffee:S.flags.dating?pick(['다람 주임: "또 왔어요? …오늘은 제가 초콜릿 준비했는데."\n험쮜: "헉, 저 주려고요?"\n다람 주임: "쉿, 은빈 씨 본다."','다람 주임: "아아에 샷 추가, 시럽 반. 제 취향 어떻게 알았어요?"\n험쮜: "…영업팀 분석했죠."\n<span class="t">(MD 미팅보다 떨린다.)</span>']):pick(['험쮜: "주임님, 이거… 하나 남아서요."\n다람 주임: "어… 저 주시는 거예요?"\n<span class="t">(다람 주임의 귀가 빨개졌다.)</span>','다람 주임: "요즘 영업팀 앞 자주 지나가네요?"\n험쮜: "아, 그, 출고 서류 때문에요!"\n<span class="t">(출고 서류는 SCM팀에 있다.)</span>']),date:pick(DATE_C[S.dateC||'popup'].lines),selfdate:'혼자 본 전시가 의외로 좋았다. 나랑 노는 것도 재밌네.',shop_hb:'신상 앰플, 세일하는 클렌저, 샘플까지 한가득. "이것도 시장조사야."',shop_mall:'쇼핑백을 양손 가득. 통장은 가벼워졌지만 마음은 더 가벼워졌다.',shop_online:'새벽 2시, 장바구니 결제 완료.\n<span class="t">(…내일의 나에게 택배가 간다.)</span>',
     ai:`AI로 리포트 초안을 10분 만에! ${S.ai>=2?'이제 팀에서 "AI는 험쮜한테 물어봐"가 됐다.':'신세계다.'}`,excel:'피벗 테이블과 친구가 됐다.',pilates:'코어가 깨어났다.',
     leave:'이불 속에서 숏폼 3시간. 행복했다.',half:'바삭한 돈가스 한 입. 세상이 다시 아름다워졌다.',trip:'바다를 보고 왔다. 회사 메신저는 꺼뒀다.',walk:'한강 노을에 머리가 맑아졌다.',friends:'회사 얘기로 3시간 수다. 속이 뻥!'}[id]||a.txt||a.name;
   if(id==='coffee'){const t=coffeeTier(),C=COFFEE[t];text=pick(C.lines)+`\n<span class="t">💘 ${C.name} 단계 · 설렘 ${S.love}</span>`;return {title:`${a.name} · ${C.name}`,text,chips,scene:a.scene,pic:dimg(C.pic)}}
-  return {title:a.name,text,chips,scene:a.scene,pic:id==='date'?dimg('ramen'):null};
+  return {title:id==='date'?`주말 데이트 · ${DATE_C[S.dateC||'popup'].n}`:a.name,text,chips,scene:a.scene,pic:id==='date'?dimg(S.dateC||'popup'):null};
 }
 // 커피 사 가기: 설렘(♥)에 따라 그림과 대사가 달라진다
 const coffeeTier=()=>S.flags.dating||S.love>=45?2:S.love>=20?1:0;
@@ -2402,7 +2402,7 @@ async function talkTo(k){const T=pickTalk(k);
   await say({who:k,title:['C · 다시 생각해 봐요','B · 아쉬워요','A · 바로 그거예요!'][sc],text:`험쮜: "${esc(ans)}"\n${given(k)}: "${esc(re)}"`,chips});
   await afterMs()}
 // 업무·휴일 활동 공통: 미니게임(업무) 또는 장면 → 결과
-async function runAct(id,i,ps){const a=ACTS[id];let perf=null;
+async function runAct(id,i,ps){const a=ACTS[id];let perf=null;if(id==='date')S.dateC=pick(Object.keys(DATE_C).filter(k=>k!==S.dateC));
   if(a.cat==='work'&&a.game)perf=await playGame(id,i);else await playMini(id,i);
   const r=doAction(id,perf);
   if(a.cat==='work'&&!r.burn){if(ps&&a.mate&&ps.includes(a.mate))bump(r.chips,'aff_'+a.mate,2);
@@ -2624,7 +2624,13 @@ function showClip(o){[o.a,o.b].forEach(k=>{const i=new Image();i.src=IMG(k)});
   const iv=setInterval(()=>{t^=1;el.style.backgroundImage=`url(${IMG(t?o.b:o.a)})`},300);
   return p.then(()=>{clearInterval(iv);cg.classList.remove('clip');el.style.backgroundPosition=''})}
 const CLIPS=new Set(['snack','content','keymsg','review','md','cs','global','research','formula','package','filling','logistics','erp','settle','schedule','minutes','overtime','orient','cafe','store','shoot','blog','lecture','ingredient','english','ai','excel','mba','license','run','gym','pt','pilates','leave','half','trip','walk','friends','shop_hb','shop_mall','shop_online','coffee','date','blind','selfdate']);
-const clipOf=id=>id==='date'?dimg('ramen'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
+// 주말 데이트 코스: 갈 때마다 다른 곳으로
+const DATE_C={
+  popup:{n:'성수동 팝업 투어',lines:['다람: "이 브랜드 팝업, 우리 STAGE:ZERO 팝업이랑 비교해 보러 온 거예요. …라고 하면 데이트 아닌 척 되나?"\n<span class="t">(아아 두 잔에 쇼핑백 하나. 완벽한 토요일.)</span>','험쮜: "여기 향 좋다!"\n다람: "험쮜 씨한테 어울리는 건 이거요." 테스터를 손등에 톡.\n<span class="t">(…주말까지 시장조사 하는 커플.)</span>']},
+  park:{n:'놀이공원',lines:['솜사탕을 반씩 나눠 먹고 회전목마를 두 번 탔다.\n다람: "관람차 꼭대기에서 회사 얘기 금지예요."\n<span class="t">(…3초 만에 매출 얘기를 했다.)</span>','다람: "자이로드롭 무서우면 손 잡아도 돼요."\n<span class="t">(정작 비명은 다람 쪽이 더 컸다.)</span>']},
+  movie:{n:'영화관',lines:['팝콘은 반반. 영화 중간에 손이 같은 데로 들어갔다.\n<span class="t">(…영화 내용은 하나도 기억 안 난다.)</span>','다람: "로맨스 영화 골랐는데… 회사 사람 나올 줄은 몰랐네요."\n<span class="t">(스크린 속 커플이 사내연애 중이었다.)</span>']},
+};
+const clipOf=id=>id==='date'?dimg(S.dateC||'popup'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
 // 스케줄 카드: 진행이 끝나면 같은 카드 아래쪽이 결과(글·능력치 변화·다음)로 바뀐다 — 그림은 한 번만
 function miniResult(o,name){const w=$('#mini'),win=w.querySelector('.mini-win');
   return new Promise(res=>{win.classList.add('done');const low=win.querySelector('.mini-low');low.innerHTML='';
@@ -3773,7 +3779,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-55e34e';
+const BUILD='2026.10.10-2d798f';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
