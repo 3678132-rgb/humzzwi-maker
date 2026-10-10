@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=36a4dc"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=36a4dc"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=36a4dc">
+<link rel="manifest" href="manifest.json?v=0e9b64"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0e9b64"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0e9b64">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3384,7 +3384,7 @@ function statusHTML(){
   const nx=REQ[S.rank+1];
   return `<div class="group"><h4>프로필</h4>${S.idPhoto?`<img src="${IMG('id_'+S.idPhoto)}" alt="험쮜 증명사진" style="float:right;width:72px;aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:2px solid var(--line);margin:0 0 6px 8px">`:''}<div class="kv" style="grid-template-columns:1fr">${[['이름','험쮜 (실험실 + 실험쥐)'],...profLine(S.prof)].map(([k,v])=>`<div><small>${k}</small><b style="font-size:13.5px;font-weight:400">${v}</b></div>`).join('')}</div></div>
   <div class="group"><h4>컨디션</h4>${m('체력',S.hp,100,'#4cc25a')}${m('스트레스',S.st,100,S.st>=75?'#e0525a':'#ff9330')}</div>
-  <div class="group"><h4>능력치 <span style="font-family:var(--body);font-size:12px;color:var(--mute)">합계 ${sumStat()} · AI 스킬 Lv.${S.ai}</span></h4>${Object.entries(STATS).map(([k,l])=>m(STAT_IC[k]+' '+l,S.stat[k],100,'#5aa9f5')).join('')}</div>
+  <div class="group"><h4>능력치 <span style="font-family:var(--body);font-size:12px;color:var(--mute)">합계 ${sumStat()} · AI 스킬 Lv.${S.ai} · 🗣️ ${langBar('en')} · ${langBar('jp')}</span></h4>${Object.entries(STATS).map(([k,l])=>m(STAT_IC[k]+' '+l,S.stat[k],100,'#5aa9f5')).join('')}</div>
   <div class="group"><h4>직급 · 목표는 CEO ${isGold()?'<span class="gold">✨황금막내</span>':''}</h4><div class="ladder">${RANKS.map((n,i)=>`<span class="${i<S.rank?'done':i===S.rank?'now':''}">${n}</span>`).join('')}</div>
   <p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${nx?`다음 승진(${RANKS[S.rank+1]}): ${reqText(nx)}<br>${reqWhy(nx)?`<b style="color:var(--pink-d)">부족: ${reqWhy(nx)}</b>`:'<b style="color:var(--good)">조건 충족! 다음 분기 평가를 기다려요.</b>'}<br>분기 평가: 3개월마다 (다음 평가 ${nextEval()!=null?`${yearOf(nextEval())}년차 ${monthOf(nextEval())}월`:'없음'})`:'최고 직급! 캔버스랩 CEO'}<br>황금막내 조건: 평판 55 이상 + 동료 평균 ♥37 이상</p></div>
   <div class="group"><h4>관계</h4>${m('상사 평가 (두 부장 ♥ 평균)',bossAff(),100,'#ff5c8a')}${m('동료 평가 (동료 7명 ♥ 평균)',peerAff(),100,'#ff9cc0')}<p style="margin:4px 0 0;font-size:12px;color:var(--mute)">사람별 숫자는 「관계도」에서 볼 수 있어요.</p></div>
@@ -3912,7 +3912,7 @@ document.addEventListener('click',e=>{
   const ps=e.target.closest('[data-pslot]');if(ps){const k=+ps.dataset.pslot;if(S.plan[k]){S.plan[k]=null;render();planHTML()}return}
   if(e.target.closest('#plan-go')){if(S.plan.every(Boolean)){closeSheets();runMonth()}return}
   const t=e.target.closest('[data-sheet],[data-close],[data-cat],[data-home],[data-act],[data-slot]');if(!t)return;
-  if(t.dataset.sheet!==undefined){if(busy&&t.dataset.sheet!=='menu')return;openSheet(t.dataset.sheet)}
+  if(t.dataset.sheet!==undefined){if(busy&&!['menu','status','mates','brand'].includes(t.dataset.sheet))return;openSheet(t.dataset.sheet)} // 보기만 하는 창(내 프로필·관계도·제품)은 이벤트 중에도 열린다
   else if(t.dataset.close!==undefined)closeSheets();
   else if(t.dataset.cat){if(S&&!busy){curCat=t.dataset.cat;if(curCat!=='work')curDept=null;openActs(curCat)}}
   else if(t.dataset.home)closeSheets();
@@ -4157,7 +4157,7 @@ applyMix();applyFs();
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-36a4dc';
+const BUILD='2026.10.10-0e9b64';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
