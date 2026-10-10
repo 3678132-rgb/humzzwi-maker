@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=98d1b8"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=98d1b8"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=98d1b8">
+<link rel="manifest" href="manifest.json?v=7b0e1d"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7b0e1d"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7b0e1d">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -139,7 +139,7 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 /* ---------- 등장인물 스탠딩 ---------- */
 .actor{position:absolute;left:0;right:0;bottom:calc(var(--dlg-bottom) + var(--sb) + 40px);z-index:3;height:min(42%,380px);pointer-events:none;transform-origin:50% 100%;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
 body.running .actor{bottom:calc(18px + var(--sb) + 60px)}
-.actor img{position:absolute;left:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
+.actor img{position:absolute;left:50%;bottom:0;width:auto;max-width:none;height:100%;translate:-50% 0;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:idle 3.2s ease-in-out .45s infinite}
 .actor-name{position:absolute;left:50%;top:0;transform:translateX(-50%) rotate(-4deg);white-space:nowrap;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);color:#fff;font-family:var(--display);font-size:13px;padding:1px 10px;border-radius:99px;border:2px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .group-actors{position:absolute;left:0;right:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;pointer-events:none}
 .group-actors figure{margin:0 -6px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;animation:actor-in .45s cubic-bezier(.2,.9,.3,1.2) both}
@@ -3592,7 +3592,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-98d1b8';
+const BUILD='2026.10.10-7b0e1d';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
