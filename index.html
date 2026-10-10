@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=9dc7f4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=9dc7f4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=9dc7f4">
+<link rel="manifest" href="manifest.json?v=e859cc"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=e859cc"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=e859cc">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3662,16 +3662,16 @@ function townWalk(){return new Promise(res=>{
 /* ================= 입사 첫날 회사 투어 =================
    1층 로비 카페부터 층층이 올라가며 장소(pl_ 배경)를 보여 주고, 그곳 사람들이 자기소개를 한다. 시작할 때나 장소마다 건너뛸 수 있다 */
 const TOUR=[
-  ['cafe','1층 카페예요. 출근하면 여기서 커피부터! 지친 날엔 잠깐 쉬어 가도 돼요.\n가끔 다른 팀 사람들이 쉬러 내려와서, 우연히 마주치기도 해요.'],
-  ['sales','2층 영업팀. H&B 스토어·자사몰·해외 바이어까지, 화장품이 팔리는 길을 뚫는 곳이에요.'],
-  ['ops','같은 층 경영지원팀. ERP 재고, 법인카드 정산, 예산… 회사가 흔들리지 않게 기준을 세워요.'],
-  ['mkt','3층 마케팅팀! 험쮜 님 자리가 바로 여기예요. 브랜드 메시지랑 리뷰 데이터를 다뤄요.'],
-  ['studio','옆방 스튜디오에선 숏폼이랑 제품 사진을 찍어요. 조명 선 조심하세요!'],
-  ['strat','4층 전략기획팀. 시장을 읽어 카테고리를 정하고, 용기·패키지를 설계해요.'],
-  ['lab','연구실이에요. 처방 성분을 맞추는 곳. 실험대 위 비커는 함부로 만지면 안 돼요!'],
-  ['boss','5층 부장실. 두 부장님 일정 관리랑 경영회의가 여기서 열려요. 노크는 필수!'],
-  ['roof','옥상 정원! 머리 식히기 딱 좋아요. 여기서 고민을 털어놓는 사람이 많대요.'],
-  ['wh','마지막으로 지하 물류 창고. OEM 충진부터 출고까지, 제품이 여기서 고객에게 떠나요.'],
+  ['cafe','1층 카페예요. 출근하면 여기서 커피부터! 지친 날엔 잠깐 쉬어 가도 돼요.\n가끔 다른 팀 사람들이 쉬러 내려와서, 우연히 마주치기도 해요.','오늘의 원두는 고소한 맛. 라떼 아트는 바리스타님 특기래요.'],
+  ['sales','2층 영업팀. H&B 스토어·자사몰·해외 바이어까지, 화장품이 팔리는 길을 뚫는 곳이에요.','매장에 나갈 샘플이랑 카탈로그가 매일 여기서 출발해요.'],
+  ['ops','같은 층 경영지원팀. ERP 재고, 법인카드 정산, 예산… 회사가 흔들리지 않게 기준을 세워요.','영수증 정리의 성지. 여기 서랍은 함부로 열면 안 돼요.'],
+  ['mkt','3층 마케팅팀! 험쮜 님 자리가 바로 여기예요. 브랜드 메시지랑 리뷰 데이터를 다뤄요.','그리고… 여기가 험쮜 님 자리! 환영 카드도 놓여 있어요.'],
+  ['studio','옆방 스튜디오에선 숏폼이랑 제품 사진을 찍어요. 조명 선 조심하세요!','제품 컷 하나에 조명만 세 개. 반짝임은 다 계산된 거예요.'],
+  ['strat','4층 전략기획팀. 시장을 읽어 카테고리를 정하고, 용기·패키지를 설계해요.','용기 시제품이랑 컬러칩. STAGE:ZERO의 얼굴이 여기서 정해져요.'],
+  ['lab','연구실이에요. 처방 성분을 맞추는 곳. 실험대 위 비커는 함부로 만지면 안 돼요!','크림 한 통에 처방이 수십 번 바뀐대요.'],
+  ['boss','5층 부장실. 두 부장님 일정 관리랑 경영회의가 여기서 열려요. 노크는 필수!','나침반 하나, 달력 하나. 회사의 방향이 정해지는 책상이에요.'],
+  ['roof','옥상 정원! 머리 식히기 딱 좋아요. 여기서 고민을 털어놓는 사람이 많대요.','퇴근 전 노을 맛집. 여기서 고민 상담이 제일 많대요.'],
+  ['wh','마지막으로 지하 물류 창고. OEM 충진부터 출고까지, 제품이 여기서 고객에게 떠나요.','충진 라인에서 막 나온 병들. 고객에게 가는 마지막 길이에요.'],
 ];
 const HELLO={
   sangho:'이상호 사업부장이에요. 영업팀이랑 STAGE:ZERO TF를 맡고 있어요.\n전체 판을 읽는 법, 천천히 알려 줄게요.',
@@ -3688,11 +3688,13 @@ async function officeTour(){
   const c=await ask({who:'seohwi',title:'🏢 회사 한 바퀴 돌아볼까요?',text:'"첫날이니까 제가 빌딩 안내해 줄게요.\n층마다 어떤 곳인지, 누가 있는지 보여 줄게요."',choices:[{l:'🚶 같이 둘러보기',s:'장소 10곳 · 동료 소개'},{l:'⏭ 건너뛰기',s:'바로 일 시작'}]});
   if(c===1)return;
   const met=new Set(['seohwi']);
-  for(let n=0;n<TOUR.length;n++){const [q,line]=TOUR[n],P=PLACES[q];setPlace(P.scene);sfx('whoosh');
+  for(let n=0;n<TOUR.length;n++){const [q,line,cap2]=TOUR[n],P=PLACES[q];setPlace(P.scene);sfx('whoosh');
     const here=TEAM.filter(k=>(HOME[k]||[]).includes(q)),acts=(P.acts||[]).map(id=>ACTS[id].name);
-    // ① 장소만: 배경(빈 장소) 위에 그 장소를 가까이서 본 일러스트
-    hideActor();const c0=await ask({who:'seohwi',bg:1,pic:'tp_'+q,speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,text:`"${line}"`,choices:[{l:'둘러보기 ▶',s:here.length?'여기 사람들 만나기':''},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
+    // ① 서휘 안내 → ② 「둘러보기」: 장소만 담은 그림 2장을 화면 가득 → ③ 그곳 사람들
+    const c0=await ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,text:`"${line}"`,choices:[{l:'👀 둘러보기',s:'장소 그림 2장'},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
     if(c0===1)break;
+    await showCG({img:`tp_${q}_1`,kick:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,sub:line});
+    await showCG({img:`tp_${q}_2`,kick:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,sub:cap2+(acts.length?`\n<span>💼 하는 일: ${acts.join(' · ')}</span>`:'')});
     if(!here.length){continue}
     const pr=ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f} ${P.n}`,title:`👥 ${P.n} 사람들`,
       text:`${here.map(k=>tagName(k)).join(', ')}${acts.length?`\n<span class="t">💼 여기서 하는 일: ${acts.join(' · ')}</span>`:''}`,
@@ -3767,7 +3769,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-9dc7f4';
+const BUILD='2026.10.10-e859cc';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
