@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=c60008"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=c60008"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=c60008">
+<link rel="manifest" href="manifest.json?v=79f1db"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=79f1db"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=79f1db">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1206,12 +1206,32 @@ const HOLE={cat:['타깃이 흐릿하다','"누구를 위한 크림이에요?" �
   pr:['론칭 소식이 묻혔다','보도자료가 나가지 않았다. 아무도 모르는 론칭.',{buzz:-6}]};
 // 2·3막: 매출(단위 백만원)과 해외 진출
 const fmtW=v=>v>=100?`${(v/100).toFixed(1)}억`:`${(v*100).toLocaleString()}만원`;
-const GL=[{k:'us',n:'🇺🇸 미국 아마존',at:10},{k:'jp',n:'🇯🇵 일본 큐텐',at:20},{k:'sea',n:'🇸🇬 동남아 쇼피',at:32}];
-const GL_TOT=32;
+const GL=[{k:'us',n:'🇺🇸 미국 아마존',at:18},{k:'jp',n:'🇯🇵 일본 큐텐',at:36},{k:'sea',n:'🇸🇬 동남아 쇼피',at:56}];
+const GL_TOT=56;
 const glList=()=>{const o=S.choice.gl;return o?[GL.find(g=>g.k===o),...GL.filter(g=>g.k!==o)].map((g,i)=>({...g,at:GL[i].at})):GL};
 const glOpen=()=>glList().filter(g=>(S.gl||0)>=g.at).length;
+// 3막은 나라별로: S.gl 누적을 나라 칸(10·10·12)으로 나눠 쓰고, 나라마다 막히는 곳·핵심 업무·바이어 언어가 다르다
+const LANG={en:{n:'영어',ic:'🇬🇧'},jp:{n:'일본어',ic:'🇯🇵'}},LANG_NEED=3;
+const langLv=l=>(S&&S.lang&&S.lang[l])||0;
+const GLC={
+  us:{lang:'en',city:'시애틀',key:['formula','keymsg'],buyer:'아마존 바이어와 영어 미팅',game:'english',block:'성분 규제 · 영문 상세페이지',hint:'🧪 연구실 처방 · 📣 마케팅 카피 · 🤝 영업 바이어 미팅'},
+  jp:{lang:'jp',city:'도쿄',key:['package','content'],buyer:'큐텐 바이어와 일본어 미팅',game:'japanese',block:'일본어 라벨 · 메가와리 라이브',hint:'📐 전략기획 패키지 · 🎬 스튜디오 숏폼 · 🤝 영업 바이어 미팅'},
+  sea:{lang:'en',city:'싱가포르',key:['logistics','filling'],buyer:'쇼피 바이어와 영어 미팅',game:'english',block:'더위 속 제형 · 해외 배송',hint:'📦 창고 출고·충진 · 🤝 영업 바이어 미팅'}};
+const glCur=()=>S&&S.launched&&S.m>=GLOBAL_M?glList()[glOpen()]||null:null;
+const glSeg=g=>{const L=glList(),i=L.findIndex(x=>x.k===g.k),a=i>0?L[i-1].at:0;return [Math.max(0,Math.min(g.at-a,(S.gl||0)-a)),g.at-a]};
+const glFlag=g=>g.n.split(' ')[0];
+function syncGlobalAct(){const A=typeof ACTS!=='undefined'&&ACTS.global,c=glCur();if(!A)return;
+  if(c){const G=GLC[c.k];A.name=`${glFlag(c)} 바이어 미팅`;A.d=G.buyer;A.game=G.game}else{A.name='해외 바이어 미팅';A.d='해외 바이어와 미팅';A.game='english'}}
+const glLangLock=()=>{const c=glCur();if(!c)return null;const l=GLC[c.k].lang;return langLv(l)<LANG_NEED?l:null};
+// 입점 = 나라 칸이 다 차고 + 그 나라 말로 바이어 계약 + 현지 위기 해결(출장 두 달 뒤). 그 전엔 칸이 1 모자란 채로 멈춘다
+const glSt=g=>(S.glst||{})[g.k]||{},glDealt=g=>!!glSt(g).deal,glReady=g=>glDealt(g)&&!!glSt(g).c;
+const glCap=()=>{for(const g of glList()){if((S.gl||0)>=g.at)continue;if(!glReady(g))return g.at-1}return GL_TOT};
+function glDeal(){const c=glCur();if(!c||glDealt(c))return false;S.glst=S.glst||{};(S.glst[c.k]=S.glst[c.k]||{a:S.m}).deal=1;
+  const ch=[];addGl(1,ch);toast(`🤝 ${c.n} 바이어 계약 성사!`);return true}
 let glJust=[];
-function addGl(v,chips){if(!S.launched||S.m<GLOBAL_M||v<=0)return;const b=glOpen();S.gl=Math.min(GL_TOT,(S.gl||0)+v);chips.push({l:'🌍 해외 진출',d:v});
+function addGl(v,chips){if(!S.launched||S.m<GLOBAL_M||v<=0)return;const b=glOpen(),g0=S.gl||0;S.gl=Math.max(g0,Math.min(GL_TOT,glCap(),g0+v));const d=S.gl-g0;if(d>0)chips.push({l:'🌍 해외 진출',d});
+  {const c=glCur();if(c&&!glDealt(c)&&S.gl>=c.at-1){S.glst=S.glst||{};const st=S.glst[c.k]=S.glst[c.k]||{a:S.m};if(st.full==null)st.full=S.m}
+  if(c&&!glReady(c)&&S.gl>=c.at-1&&S.glWait!==S.m){S.glWait=S.m;const l=GLC[c.k].lang;toast(glDealt(c)?`🚨 ${glFlag(c)} 진척 가득! 월말 현지 이슈만 넘기면 입점`:`🤝 ${glFlag(c)} 진척 가득! ${LANG[l].n} 바이어 계약만 남았어요`)}}
   glList().forEach((g,i)=>{if(i>=b&&S.gl>=g.at)glJust.push(g)})}
 function salesCalc(push){if(!S.launched)return 0;const since=Math.max(1,S.m-LAUNCH_M);
   const hype=(S.score||0)*Math.max(.3,1-.07*(since-1));
@@ -1358,7 +1378,8 @@ const ACTS={
   blog:{cat:'job',name:'뷰티 블로그 부업',d:'리뷰 포스팅 원고료',pay:12,g:{trend:1,data:1},hp:-4,st:3,scene:'sc_home',mini:'m_phone',fx:['✍️','💰','📱','✨']},
   lecture:{cat:'self',name:'마케팅 강의',d:'퍼포먼스 마케팅 클래스',cost:15,g:{plan:2,trend:2},hp:-4,st:3,scene:'sc_study',mini:'m_study',fx:['✏️','📖','💡','✨']},
   ingredient:{cat:'self',name:'성분 공부',d:'성분·화장품법 독학',cost:8,g:{know:4},hp:-4,st:4,scene:'sc_study',mini:'m_lab',fx:['🧪','📖','💡','🔬']},
-  english:{cat:'self',name:'영어 회화',d:'북미 바이어 미팅 대비',cost:12,g:{comm:3,data:1},hp:-3,st:3,scene:'sc_study',mini:'m_study',fx:['🗣️','📖','🌎','✨']},
+  english:{cat:'self',name:'영어 회화',d:'해외 바이어 미팅 대비 (미국·동남아)',lang:'en',cost:12,g:{comm:3,data:1},hp:-3,st:3,scene:'sc_study',mini:'m_study',fx:['🗣️','📖','🌎','✨']},
+  japanese:{cat:'self',name:'일본어 회화',d:'해외 바이어 미팅 대비 (일본)',lang:'jp',clip:'c_english',cost:12,g:{comm:2,trend:2},hp:-3,st:3,scene:'sc_study',mini:'m_study',fx:['🗣️','📖','🗾','✨']},
   ai:{cat:'self',name:'AI 스킬업',d:'AI로 리포트·콘텐츠 자동화',cost:10,g:{data:3,exec:1},ai:1,hp:-4,st:3,scene:'sc_study',mini:'m_study',fx:['🤖','⚡','💡','✨']},
   excel:{cat:'self',name:'엑셀·데이터 스터디',d:'피벗·함수·대시보드',cost:6,g:{data:3},hp:-3,st:4,scene:'sc_study',mini:'m_study',fx:['📊','🧮','💡','✨']},
   mba:{cat:'self',name:'야간 MBA 특강',d:'비싸지만 확실하게 큰다',cost:45,g:{plan:4,data:3,comm:2},hp:-7,st:7,scene:'sc_study',mini:'m_study',fx:['🎓','📚','💡','✨'],rank:1},
@@ -1420,7 +1441,7 @@ function newGame(originId,prof){
   let affB=0,stB=0;[...prof.mbti].forEach(c=>Object.entries(MBTI_B[c]).forEach(([k,v])=>{if(k==='aff')affB+=v;else if(k==='st')stB+=v;else st[k]+=v}));
   return {prof,m:0,plan:[null,null,null],runIdx:-1,hp:85,st:15+stB,money:o.money,rank:0,rep:5,stat:st,bq:30,buzz:0,leave:LEAVE_PER_YEAR,
     ms:Object.fromEntries(Object.keys(MS).map(k=>[k,0])),cond:{},sick:{},aff:Object.fromEntries(REL_KEYS.map(k=>[k,5+affB])),love:0,ai:0,safe:0,
-    daramF:prof.gender==='남성',story:{},perk:{},snap:{bp:0,rep:0,bq:30,buzz:0},buff:0,nextBuff:0,origin:o.id,jobs:0,burnouts:0,ot:0,probPay:PAY[0],flags:{},launched:false,score:null,delayed:false,ending:null,choice:{}};
+    daramF:prof.gender==='남성',story:{},perk:{},snap:{bp:0,rep:0,bq:30,buzz:0},buff:0,nextBuff:0,origin:o.id,jobs:0,burnouts:0,ot:0,probPay:PAY[0],flags:{},lang:{en:0,jp:0},glst:{},launched:false,score:null,delayed:false,ending:null,choice:{}};
 }
 const save=()=>{if(S&&!S.ending)ls.set(slotKey(S.slot||1),{S,at:Date.now()})};
 const slotData=n=>ls.get(slotKey(n));
@@ -1449,6 +1470,8 @@ function bump(chips,k,d){
   else if(k==='buzz'){S.buzz=clamp(S.buzz+d);chips.push({l:'화제성',d})}
   else if(k==='love'){S.love=clamp(S.love+d);chips.push({l:'💘 설렘',d})}
   else if(k==='leave'){S.leave+=d;chips.push({l:'연차',d})}
+  else if(k==='deal'){if(glDeal())chips.push({l:'🤝 바이어 계약',d:1})}
+  else if(k==='gl')addGl(d,chips);
   else if(k.startsWith('aff_')){const m=k.slice(4);S.aff[m]=clamp((S.aff[m]||0)+d);chips.push({l:'♥ '+who(m).name.split(' ')[0],d})}
   else if(k.startsWith('ms_')){const m=k.slice(3);addMs(m,d,chips)}
 }
@@ -1472,6 +1495,7 @@ function lockReason(id){
   const a=ACTS[id];
   if(a.rank&&S.rank<a.rank)return `${RANKS[a.rank]}부터`;
   if(a.needLaunch&&S.m<GLOBAL_M)return '3막(해외 진출)부터';
+  if(id==='global'){const l=glLangLock();if(l)return `${LANG[l].n} Lv.${LANG_NEED} 필요`}
   if(a.req)for(const [k,v] of Object.entries(a.req))if(S.stat[k]<v)return `${STATS[k]} ${v} 필요`;
   if(a.leave&&S.leave<a.leave)return '연차 부족';
   if(a.needDating&&!S.flags.dating)return '사내연애 중일 때';
@@ -1504,9 +1528,12 @@ function doAction(id,perf){
     if(perf==null){const roll=R();great=roll<p*.22*(D.greatX||1);ok=roll<p}
     else{const q=(.6*perf+.4*p)*(low?.82:1);great=q>=.8;ok=q>=.45}
     let mul=(great?1.6:ok?1:.35)*(D.bpX||1);if(mate&&aff>=40)mul*=1.2;
+    const gc=glCur();if(id==='global'&&gc&&langLv(GLC[gc.k].lang)>=LANG_NEED+2)mul*=1.25;
+    const dealNow=id==='global'&&ok&&gc&&glDeal();
     const extra=(great?1:0)+(mate&&aff>=40?1:0);
     applyFx(Object.fromEntries(Object.entries(a.g).map(([k,v])=>[k,v+extra])),chips);
     Object.entries(a.ms||{}).forEach(([k,v])=>addMs(k,Math.max(1,Math.round(v*mul)),chips));
+    if(gc&&GLC[gc.k].key.includes(id))addGl(great?3:ok?2:1,chips);
     if(a.bq)bump(chips,'bq',Math.round(a.bq*(ok?1:.3)*(D.bqX||1)));
     if(a.buzz)bump(chips,'buzz',Math.round(a.buzz*(great?1.6:ok?1:.35)*(D.buzzX||1)));
     if(D.buff&&ok)S.nextBuff=D.buff;
@@ -1523,6 +1550,8 @@ function doAction(id,perf){
     if(M)text+=`\n${M.name.split(' ')[0]}: "${great?M.q:ok?pick(mateLine[mate]):pick(['괜찮아요, 다시 봐요.','이 부분만 고쳐볼까요?'])}"`;
     text+=`\n<span class="t">${great?'(이 맛에 회사 다니나…?)':ok?pick(['(…집에 가고 싶다.)','(인턴인데 왜 이것까지…)','(속은 뻥~)','(오늘도 한 뼘 성장.)']):'(…하. 속으로만 욕했다.)'}</span>`;
     if(low)text+=`\n<span class="t">(${STATS[low]}이(가) 부족해서 버거웠다… 교육이 필요할지도.)</span>`;
+    if(dealNow)text+=`\n🤝 <b>${gc.n} 바이어 계약 성사!</b> 진척 칸이 다 차면 입점해요.`;
+    else if(id==='global'&&!ok&&gc&&!glDealt(gc))text+='\n🤝 계약은 다음 미팅에서… 다시 도전!';
     return {title:great?`${a.name} · 대성공`:ok?a.name:`${a.name} · 실패`,text,chips,scene:a.scene,mate,res:great?'great':ok?'ok':'fail',low};
   }
   if(a.cat==='job'){
@@ -1535,12 +1564,14 @@ function doAction(id,perf){
     return {title:lv1>lv0?`${a.name} · 승급!`:a.name,text,chips,scene:a.scene,res:lv1>lv0?'great':'coin',jobUp:lv1>lv0?{id,lv:lv1}:null};
   }
   applyFx(a.g||{},chips);applyFx({hp:a.hp,st:a.st},chips);if(a.ai)S.ai+=a.ai;if(a.eff)applyFx(a.eff,chips);
+  if(a.lang){S.lang=S.lang||{en:0,jp:0};S.lang[a.lang]=(S.lang[a.lang]||0)+1;chips.push({l:`🗣️ ${LANG[a.lang].n} Lv`,d:1})}
   if(id==='blind'){const good=R()<.45;applyFx(good?{st:-12}:{st:6},chips);return {title:a.name,text:good?'대화가 끊기지 않았다. "다음에 또 봬요!"\n<span class="t">(…근데 회사 얘기만 2시간 했다.)</span>':'"무슨 일 하세요?" "화장품 회사 막내요." "아~ 샘플 많겠다!"\n<span class="t">(…샘플 얘기만 하다 끝났다.)</span>',chips,scene:a.scene}}
-  text={lecture:'강의 3강 완강! 노트가 빼곡해졌다.',ingredient:'세라마이드, 판테놀, 엑토인… 성분표가 읽히기 시작했다.',english:'"Nice to meet you" 다음 문장이 늘었다.',
+  text={lecture:'강의 3강 완강! 노트가 빼곡해졌다.',ingredient:'세라마이드, 판테놀, 엑토인… 성분표가 읽히기 시작했다.',english:'"Nice to meet you" 다음 문장이 늘었다.',japanese:'「はじめまして」 다음 문장이 늘었다.',
     snack:pick(['새벽 1시, 치킨 한 마리 반반. 양념은 내 마음을 안다.\n<span class="t">(…내일 아침 얼굴은 내일의 내가 책임진다.)</span>','떡볶이에 치즈 추가, 주먹밥까지. 매운맛에 스트레스가 다 녹았다.','배달 앱을 30분 고민하다 결국 또 치킨.\n<span class="t">(이게 다 사회생활 때문이야.)</span>']),
     run:'한강 바람 맞으며 5km. 머리가 맑아졌다.',gym:'러닝머신 30분. 회원권 본전에 한 걸음.',coffee:S.flags.dating?pick(['다람 주임: "또 왔어요? …오늘은 제가 초콜릿 준비했는데."\n험쮜: "헉, 저 주려고요?"\n다람 주임: "쉿, 은빈 씨 본다."','다람 주임: "아아에 샷 추가, 시럽 반. 제 취향 어떻게 알았어요?"\n험쮜: "…영업팀 분석했죠."\n<span class="t">(MD 미팅보다 떨린다.)</span>']):pick(['험쮜: "주임님, 이거… 하나 남아서요."\n다람 주임: "어… 저 주시는 거예요?"\n<span class="t">(다람 주임의 귀가 빨개졌다.)</span>','다람 주임: "요즘 영업팀 앞 자주 지나가네요?"\n험쮜: "아, 그, 출고 서류 때문에요!"\n<span class="t">(출고 서류는 SCM팀에 있다.)</span>']),date:pick(DATE_C[S.dateC||'popup'].lines),selfdate:'혼자 본 전시가 의외로 좋았다. 나랑 노는 것도 재밌네.',shop_hb:'신상 앰플, 세일하는 클렌저, 샘플까지 한가득. "이것도 시장조사야."',shop_mall:'쇼핑백을 양손 가득. 통장은 가벼워졌지만 마음은 더 가벼워졌다.',shop_online:'새벽 2시, 장바구니 결제 완료.\n<span class="t">(…내일의 나에게 택배가 간다.)</span>',
     ai:`AI로 리포트 초안을 10분 만에! ${S.ai>=2?'이제 팀에서 "AI는 험쮜한테 물어봐"가 됐다.':'신세계다.'}`,excel:'피벗 테이블과 친구가 됐다.',pilates:'코어가 깨어났다.',
     leave:'이불 속에서 숏폼 3시간. 행복했다.',half:'바삭한 돈가스 한 입. 세상이 다시 아름다워졌다.',trip:'바다를 보고 왔다. 회사 메신저는 꺼뒀다.',walk:'한강 노을에 머리가 맑아졌다.',friends:'회사 얘기로 3시간 수다. 속이 뻥!'}[id]||a.txt||a.name;
+  if(a.lang){const v=langLv(a.lang);text+=`\n🗣️ ${LANG[a.lang].n} <b>Lv.${v}</b>${v<LANG_NEED?` · 바이어 미팅까지 Lv.${LANG_NEED}`:v===LANG_NEED?' · 이제 통역 없이 바이어 미팅 OK!':' · 바이어 미팅 성과↑'}`}
   if(id==='coffee'){const t=coffeeTier(),C=COFFEE[t];text=pick(C.lines)+`\n<span class="t">💘 ${C.name} 단계 · 설렘 ${S.love}</span>`;return {title:`${a.name} · ${C.name}`,text,chips,scene:a.scene,pic:dimg(C.pic)}}
   return {title:id==='date'?`주말 데이트 · ${DATE_C[S.dateC||'popup'].n}`:a.name,text,chips,scene:a.scene,pic:id==='date'?dimg(S.dateC||'popup'):null};
 }
@@ -1572,6 +1603,70 @@ const mateLine={
   daram:['MD님이 웃으셨어요! 이건 됐다!','고객님이 고맙다고 하셨어요. 우리 잘했죠?'],
 };
 
+/* ================= 3막: 나라별 이야기 =================
+   첫 나라 고르기 → 나라마다 출장(그 나라에 집중하기 시작할 때) → 위기(두 달 뒤나 절반쯤) → 입점(축하 그림 뒤) */
+async function glPick(){setPlace('sc_meeting');
+  const c=await ask({who:'sangho',title:'3막 · 첫 해외 시장은?',text:'"국내 1년, 버텼고 키웠어요. 이제 바다 건너예요. 첫 나라는 험쮜 님이 골라요.\n나라마다 막히는 곳이 다르고, 바이어는 그 나라 말로 만나야 해요."',choices:[
+    {l:'🇺🇸 미국 아마존',s:`가장 큰 시장 · 성분 규제 · 영어 Lv.${langLv('en')}`},{l:'🇯🇵 일본 큐텐',s:`K-뷰티 최대 수입국 · 일본어 라벨 · 일본어 Lv.${langLv('jp')}`},{l:'🇸🇬 동남아 쇼피',s:`틱톡샵 바이럴 · 더위·배송 · 영어 Lv.${langLv('en')}`}]});
+  S.choice.gl=['us','jp','sea'][c];
+  await result([{comm:2,aff_sangho:4},{know:2,aff_jiyoung:3},{trend:2,aff_eunbin:4}][c],`첫 목표는 「${GL.find(g=>g.k===S.choice.gl).n}」.\n"한 나라씩 열어요. 그 나라에서 막히는 일을 풀고, 그 나라 말로 바이어를 만나면 문이 열려요."\n<span class="t">🌍 순서: ${glList().map(g=>g.n).join(' → ')} · 나라 칸이 다 차면 입점</span>`,'🌍 해외 진출 선언','sangho');
+  S.glst=S.glst||{};const g=glCur();if(g&&!glSt(g).arr){S.glst[g.k]={...glSt(g),a:S.m,arr:1};await GLT[g.k].arrive()}}
+async function glStory(){const c=glCur();if(!c||!S.choice.gl)return false;S.glst=S.glst||{};const st=S.glst[c.k];
+  if(!st||!st.arr){S.glst[c.k]={...(st||{}),a:S.m,arr:1};await GLT[c.k].arrive();return true}
+  if(!st.c&&S.m-st.a>=2){st.c=1;await GLT[c.k].crisis();return true}
+  if(!st.deal&&st.full!=null&&S.m>st.full&&st.ask!==S.m){st.ask=S.m;const l=GLC[c.k].lang;setPlace('sc_meeting');
+    const k=await ask({who:'sangho',title:`🤝 ${c.n} 계약이 멈췄어요`,text:`"준비는 다 됐는데 바이어 미팅이 안 잡혀요. 상대는 ${LANG[l].n}로만 이야기하고 싶어 해요.\n통역을 붙여서라도 계약할까요? 대신 조건은 불리해질 거예요."`,choices:[
+      {l:'🧑‍💼 통역 붙여서 계약',s:'바로 입점 · 평판↓ · 마진 양보'},{l:`📚 제가 직접 할게요`,s:`휴일 「${LANG[l].n} 회화」로 Lv.${LANG_NEED}까지 (지금 Lv.${langLv(l)})`}]});
+    if(k===0)await result({deal:1,rep:-4,aff_sangho:-2,st:4},'통역을 거치니 말이 반만 전해졌다. 계약은 했지만 마진을 꽤 양보했다.\n<span class="t">(…내가 직접 말할 수 있었으면.)</span>','🤝 통역 계약','sangho');
+    else await result({aff_sangho:3,st:3},`"좋아요, 기다릴게요. 대신 다음 달엔 직접 해요."\n<span class="t">🗣️ 휴일 📚 자기계발 「${LANG[l].n} 회화」 · Lv.${langLv(l)} → ${LANG_NEED}</span>`,'직접 하기로','sangho');
+    return true}
+  return false}
+// 고르면 판정: ok()가 참이면 fx·t, 아니면 nfx·nt
+async function glChoice(o){setPlace(o.place);if(o.intro)await say(o.intro);
+  const c=await ask({who:o.who,title:o.title,text:o.text,choices:o.ch.map(x=>({l:x.l,s:x.s}))});const x=o.ch[c],ok=x.ok();
+  await result(ok?x.fx:x.nfx||{gl:1,st:5},ok?x.t:x.nt||o.nt,ok?o.title:`${o.title} · 아쉬움`,x.w||o.who)}
+const lvS=l=>`${LANG[l].n} Lv.${langLv(l)}`,lvOK=l=>langLv(l)>=LANG_NEED;
+const GLT={
+  us:{
+    arrive:()=>glChoice({place:'sc_meeting',who:'jiyoung',title:'🇺🇸 시애틀 출장',
+      intro:{who:'sangho',title:'🇺🇸 시애틀 출장',text:'"아마존 바이어 미팅이 잡혔어요. 다음 주 시애틀이에요.\n지영 대리도 같이 가요. 성분 질문이 제일 많이 나올 테니까."'},
+      text:'공항 라운지. 지영 대리가 노트북을 열었다.\n"험쮜 님, 미팅 자료 하나만 더 챙길 수 있대요. 뭐로 할까요?"',nt:'바이어가 "Let\'s keep in touch"라고만 하고 일어났다.\n<span class="t">(…준비한 만큼 전달이 안 됐다.)</span>',
+      ch:[{l:'📑 영문 성분 자료집',s:'뷰티지식 판정',ok:()=>S.stat.know>=50,fx:{gl:3,rep:2,aff_jiyoung:4},t:'바이어가 자료집을 넘기다 멈췄다. "Ceramide… and this ratio? Interesting."\n지영 대리가 테이블 밑으로 엄지를 들었다.'},
+        {l:'🗣️ 영어로 직접 피칭',s:`${lvS('en')} 판정`,ok:()=>lvOK('en'),fx:{deal:1,gl:4,rep:3,comm:2},t:'"Stage Zero turns scratched glass back into clear glass."\n대본 없이도 말이 나왔다. 바이어가 고개를 끄덕였다.\n<span class="t">(주말마다 공부한 보람…!)</span>',nfx:{gl:1,st:8},nt:'"Sorry, could you say that again?"\n세 번째 되묻는 말에 얼굴이 빨개졌다.\n<span class="t">(…영어 회화, 더 해 둘걸.)</span>'},
+        {l:'🍪 한국 간식 선물',s:'소통력 판정',ok:()=>S.stat.comm>=50,fx:{gl:2,aff_jiyoung:3,aff_sangho:2},t:'약과 한 상자에 회의실 공기가 풀렸다. "Next time, bring two."'}]}),
+    crisis:()=>glChoice({place:'sc_lab',who:'jiyoung',title:'🚨 미국 통관 보류',
+      text:'"미국에서 연락 왔어요. 시설 등록이랑 제품 리스팅 서류가 비었대요(MoCRA).\n이대로면 물건이 항구에 묶여요."',nt:'서류는 겨우 맞췄지만 2주가 날아갔다.',
+      ch:[{l:'🧪 지영 대리와 밤새 서류 보완',s:'뷰티지식 판정 · 체력↓',ok:()=>S.stat.know>=55,fx:{gl:4,aff_jiyoung:5,hp:-8},t:'새벽 3시, 마지막 성분 코드까지 채웠다. 지영 대리: "우리 이거 논문 써도 되겠어요."',nfx:{gl:2,hp:-10,st:6}},
+        {l:'🗂️ 재민 사원에게 체크리스트 부탁',s:'계획력 판정',ok:()=>S.stat.plan>=50,fx:{gl:3,aff_jaemin:5},t:'재민 사원이 표 하나로 빠진 서류 7개를 찾아냈다. "기준만 있으면 금방이에요."'},
+        {l:'💼 현지 대행사에 맡기기',s:'느리지만 확실',ok:()=>true,fx:{gl:2,st:-2},t:'비용은 들었지만 일주일 만에 통관이 풀렸다.'}]}),
+    open:async()=>{setPlace('sc_lab');await result({aff_jiyoung:3,buzz:3},'첫 리뷰가 달렸다.\n★★★★★ "Finally, a cream that actually repairs."\n지영 대리가 리뷰를 캡처해 단톡방에 올렸다. 이모티콘이 50개 달렸다.','🇺🇸 아마존 첫 리뷰','jiyoung')}},
+  jp:{
+    arrive:()=>glChoice({place:'sc_store',who:'eunbin',title:'🇯🇵 도쿄 출장',
+      intro:{who:'sangho',title:'🇯🇵 도쿄 출장',text:'"도쿄는 은빈 씨랑 가요. 일본은 매대랑 라이브가 반이에요.\n큐텐 바이어 미팅 전에 시부야 드럭스토어부터 봐요."'},
+      text:'시부야 드럭스토어. 은빈이 매대 앞에서 눈을 반짝인다.\n"험쮜 님! 큐텐 미팅 전에 뭐부터 할까요?"',nt:'바이어가 "検討します(검토해 볼게요)"라고 했다.\n<span class="t">(…일본에서 그 말은 거절이라던데.)</span>',
+      ch:[{l:'📸 드럭스토어 매대 100장 찍기',s:'트렌드 판정',ok:()=>S.stat.trend>=50,fx:{gl:3,trend:2,aff_eunbin:4},t:'일본 언니들이 손에 드는 건 전부 「투명·수분·저자극」. 미팅 자료 첫 장이 바뀌었다.'},
+        {l:'🗣️ 일본어로 인사·피칭',s:`${lvS('jp')} 판정`,ok:()=>lvOK('jp'),fx:{deal:1,gl:4,rep:3,comm:2},t:'「はじめまして。ステージゼロです。」\n바이어가 활짝 웃었다. "日本語、上手ですね!(일본어 잘하시네요!)"',nfx:{gl:1,st:8},nt:'「えっと… すみません…」\n준비한 문장이 머릿속에서 다 날아갔다.\n<span class="t">(…일본어 회화, 진작 할걸.)</span>'},
+        {l:'📺 큐텐 라이브 리허설',s:'소통력 판정',ok:()=>S.stat.comm>=50,fx:{gl:2,buzz:4,aff_eunbin:3},t:'은빈과 즉석 리허설. 큐텐 담당자가 "이대로 메가와리 때 해요!"'}]}),
+    crisis:()=>glChoice({place:'sc_package',who:'jiyoung',title:'🚨 메가와리 D-7, 라벨 오타',
+      text:'"큐텐 메가와리(큰 세일)가 일주일 남았는데… 일본어 성분 라벨에 오타가 있어요.\n이대로 나가면 반품 폭탄이에요."',nt:'행사엔 들어갔지만 첫날 물량을 절반만 풀었다.',
+      ch:[{l:'📦 한민 과장과 스티커 전량 재부착',s:'실행력 판정 · 체력↓',ok:()=>S.stat.exec>=50,fx:{gl:4,aff_hanmin:5,hp:-10},t:'창고에서 3,000개를 밤새 다시 붙였다. 한민 과장: "끝까지 돌아가게 했습니다."',nfx:{gl:2,hp:-12,st:6}},
+        {l:'🎨 지영 대리와 라벨 새로 인쇄',s:'느리지만 깔끔',ok:()=>true,fx:{gl:2,bq:2,aff_jiyoung:3},t:'행사 첫날은 놓쳤지만, 라벨은 완벽해졌다.'},
+        {l:'📺 은빈과 「오타 사과 라이브」',s:'트렌드 판정',ok:()=>S.stat.trend>=55,fx:{gl:4,buzz:8,aff_eunbin:5},t:'"저희가 일본어를 틀렸어요…ㅠㅠ" 진심 사과 라이브가 화제가 됐다. 댓글: 「かわいい」 2,000개.',nfx:{gl:1,rep:-2,st:6},nt:'사과 라이브가 오히려 "성의 없다"는 말을 들었다.'}]}),
+    open:async()=>{setPlace('sc_studio');await result({aff_eunbin:3,buzz:4},'메가와리 첫날, 장바구니 담기 1만 건.\n은빈: "험쮜 님!! 일본 언니들이 「透明ガラスクリーム(투명 유리 크림)」이래요!"','🇯🇵 큐텐 메가와리','eunbin')}},
+  sea:{
+    arrive:()=>glChoice({place:'sc_factory',who:'hanmin',title:'🇸🇬 싱가포르 출장',
+      intro:{who:'sangho',title:'🇸🇬 싱가포르 출장',text:'"싱가포르 쇼피 물류센터 미팅이에요. 이번엔 한민 과장이 같이 가요.\n적도라 덥습니다. 크림도, 사람도요."'},
+      text:'창이 공항을 나서자 숨이 턱 막힌다. 한민 과장이 손목시계를 본다.\n"미팅까지 반나절 남았습니다. 어디부터 볼까요?"',nt:'바이어는 "가격만 맞추면 돼요"라고 했다.\n<span class="t">(…우리 이야기는 못 꺼냈다.)</span>',
+      ch:[{l:'🏭 현지 창고 견학',s:'실행력 판정',ok:()=>S.stat.exec>=50,fx:{gl:3,aff_hanmin:5},t:'에어컨 없는 창고 온도 34도. 한민 과장이 메모했다. "포장부터 바꿔야겠습니다."'},
+        {l:'🗣️ 영어로 배송 조건 협상',s:`${lvS('en')} 판정`,ok:()=>lvOK('en'),fx:{deal:1,gl:4,rep:3,data:2},t:'"Can you ship DDP within five days?" 조건이 한 번에 정리됐다.\n한민 과장: "…험쮜 님 영어 언제 늘었어요?"',nfx:{gl:1,st:8},nt:'싱글리시 억양에 "Pardon?"만 다섯 번 했다.\n<span class="t">(…영어 회화, 더 해 둘걸.)</span>'},
+        {l:'📱 틱톡샵 크리에이터 만나기',s:'트렌드 판정',ok:()=>S.stat.trend>=50,fx:{gl:2,buzz:5},t:'현지 크리에이터가 즉석에서 언박싱 영상을 찍었다. 조회수 30만.'}]}),
+    crisis:()=>glChoice({place:'sc_factory',who:'hanmin',title:'🚨 배송 중 크림이 녹았다',
+      text:'"35도에서 일주일 배송했더니 「크림이 분리됐다」는 리뷰가 달렸습니다.\n제형이랑 포장, 둘 다 봐야 합니다."',nt:'급한 불은 껐지만 별점이 0.5 내려갔다.',
+      ch:[{l:'🧪 지영 대리와 내열 처방 보완',s:'뷰티지식 판정',ok:()=>S.stat.know>=55,fx:{gl:4,bq:4,aff_jiyoung:4},t:'45도 오븐 테스트 통과. 지영 대리: "이제 사막에서도 안 녹아요."',nfx:{gl:2,st:6}},
+        {l:'📦 한민 과장과 보냉 포장·현지 창고',s:'실행력 판정',ok:()=>S.stat.exec>=55,fx:{gl:4,aff_hanmin:5},t:'싱가포르 냉장 창고 계약 완료. 배송 3일로 단축.',nfx:{gl:2,st:6}},
+        {l:'📜 할랄 인증까지 한 번에',s:'계획력 판정 · 체력↓',ok:()=>S.stat.plan>=55,fx:{gl:5,rep:3,hp:-10},t:'성분·공정 서류를 처음부터 다시 정리했다. 할랄 인증 마크가 붙자 말레이시아 주문이 따라왔다.',nfx:{gl:2,hp:-12,st:6}}]}),
+    open:async()=>{setPlace('sc_factory');await result({aff_hanmin:3,rep:3},'쇼피 11.11 세일, 오픈 2시간 만에 품절.\n한민 과장: "…끝까지 돌아갔습니다." 처음으로 웃는 얼굴을 봤다.','🇸🇬 쇼피 11.11 품절','hanmin')}}};
+
 /* ================= 이벤트 유틸 ================= */
 const OK=()=>[{l:'다음'}];
 async function result(fx,text,title,w){const chips=applyFx(fx);render();await say({who:w||'me',title:title||'결과',text,chips});await afterMs()}
@@ -1580,7 +1675,7 @@ async function afterMs(){ // 마일스톤 완료 이벤트
   while(msJustDone.length){const k=msJustDone.shift();if(MS_EV[k])await MS_EV[k]();toast(`🧩 STAGE:ZERO 조립: ${PART[k]} 장착!`);sfx('chime')}
   while(glJust.length){const g=glJust.shift();const n=glOpen();
     await showCG({img:'c_global',kick:'GLOBAL',title:`${g.n} 입점!`,sub:`STAGE:ZERO, ${n}번째 해외 시장 오픈.\n이제 매달 매출에 해외 판매가 더해져요 (×${(1+.3*n).toFixed(1)}).`,fx:'confetti'});
-    applyFx({rep:4,buzz:5,aff_sangho:3});render()}
+    applyFx({rep:4,buzz:5,aff_sangho:3});render();if(GLT[g.k])await GLT[g.k].open()}
 }
 const MS_EV={
   cat:async()=>{setPlace('sc_meeting');
@@ -1672,18 +1767,15 @@ const FIXED={
     const c=await ask({who:'hanmin',title:'용기 불량 사태',text:'"2차 생산분 공장에서 연락 왔습니다. 펌프 2만 개 중 일부가 안 눌린답니다."',choices:[{l:'전량 재생산',s:'비용↑ 제품력·평판↑'},{l:'선별 출고',s:'빠르지만 위험'}]});
     if(c===0)await result({bq:6,rep:4,aff_hanmin:5,st:8},'"끝까지 돌아가게 하겠습니다." 이한민 과장이 공장에 상주했다.','결과','hanmin');
     else{await result({aff_hanmin:-2,rep:-4,bq:-3},'일단 선별 출고로 품절은 막았다.\n…한 달 뒤, "펌프가 안 눌려요" 리뷰가 올라왔다.\n<span class="t">(…괜찮겠지?)</span>','결과','hanmin')}},
+  18:async()=>{setPlace('sc_meeting');await say({who:'sangho',title:'내년엔 바다 건너',text:`"국내가 자리 잡으면 3년차엔 해외예요. 미국·동남아는 영어, 일본은 일본어로 바이어를 직접 만나야 해요.\n통역 기다리다 계약 놓친 회사, 많이 봤어요. 휴일에 미리 공부해 둬요."\n<span class="t">🗣️ 바이어 미팅은 그 나라 말 Lv.${LANG_NEED}부터 · 지금 영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')}</span>`})},
   19:async()=>{setPlace('sc_rain');
     const c=await ask({who:'fox',title:'경쟁사의 선수',text:`"어머, 캔버스랩 ${S.choice.cat||'장벽 크림'} 잘 팔린다면서요? 우리도 똑같은 거 다음 주에 내요~ 반값에."`,choices:[{l:'이은빈 사원과 차별화 콘텐츠',s:'트렌드 판정'},{l:'이수민 사원과 데이터로 포지셔닝',s:'데이터 판정'},{l:'우리 페이스대로',s:'멘탈 관리'}]});
     if(c===0)await result(S.stat.trend>=50?{buzz:14,aff_eunbin:5}:{buzz:3,st:10},S.stat.trend>=50?'"원조는 다르다" 콘텐츠가 터졌다! 매출이 오히려 올랐다.':'콘텐츠는 냈지만 반응이 애매했다.','결과','eunbin');
     else if(c===1)await result(S.stat.data>=50?{buzz:8,bq:3,aff_sumin:5}:{st:8},S.stat.data>=50?'"재구매 의향 2배" 데이터로 정면 돌파!':'데이터가 아직 부족했다.','결과','sumin');
     else await result({st:-6},'흔들리지 않기로 했다.\n<span class="t">(…속으론 이를 갈고 있음.)</span>');},
-  24:async()=>{setPlace('sc_meeting');
-    const c=await ask({who:'sangho',title:'3막 · 첫 해외 시장은?',text:'"국내 1년, 버텼고 키웠어요. 이제 바다 건너예요. 첫 나라는 험쮜 님이 골라요."',choices:[{l:'🇺🇸 미국 아마존',s:'가장 큰 시장 · 영어 미팅'},{l:'🇯🇵 일본 큐텐',s:'K-뷰티 최대 수입국'},{l:'🇸🇬 동남아 쇼피',s:'틱톡샵 바이럴'}]});
-    S.choice.gl=['us','jp','sea'][c];
-    await result([{comm:2,aff_sangho:4},{know:2,aff_jiyoung:3},{trend:2,aff_eunbin:4}][c],`첫 목표는 「${GL.find(g=>g.k===S.choice.gl).n}」.\n"이제 어떤 회사일이든 해외 진출 진척으로도 이어져요. 영업팀 해외 바이어 미팅이 제일 빨라요."\n<span class="t">🌍 해외 진척 ${GL[0].at} → 첫 나라, ${GL[1].at} → 두 번째, ${GL[2].at} → 세 번째 오픈</span>`,'🌍 해외 진출 선언','sangho')},
   28:async()=>{setPlace('sc_meeting');
-    const c=await ask({who:'sangho',title:'라스베이거스 뷰티 박람회',text:'"세계 바이어가 다 모이는 박람회예요. 부스 3분 피칭, 험쮜 님이 해 볼래요?"',choices:[{l:'영어로 직접 피칭',s:'소통력 판정'},{l:'성분 데이터로 승부',s:'뷰티지식 판정'},{l:'숏폼 시연 영상 틀기',s:'트렌드 판정'}]});
-    const ok=[S.stat.comm,S.stat.know,S.stat.trend][c]>=55;const ch=[];addGl(ok?6:2,ch);
+    const c=await ask({who:'sangho',title:'라스베이거스 뷰티 박람회',text:'"세계 바이어가 다 모이는 박람회예요. 부스 3분 피칭, 험쮜 님이 해 볼래요?"',choices:[{l:'영어로 직접 피칭',s:`영어 Lv.${langLv('en')} · 소통력 판정`},{l:'성분 데이터로 승부',s:'뷰티지식 판정'},{l:'숏폼 시연 영상 틀기',s:'트렌드 판정'}]});
+    const ok=c===0?langLv('en')>=LANG_NEED&&S.stat.comm>=45:[0,S.stat.know,S.stat.trend][c]>=55;const ch=[];{const g=glCur();if(ok&&c===0&&g&&GLC[g.k].lang==='en'&&glDeal())ch.push({l:'🤝 바이어 계약',d:1})}addGl(ok?6:2,ch);
     await say({who:'sangho',title:ok?'박람회 대성공':'박람회 아쉬움',text:ok?'"Stage Zero… the glass that heals?" 바이어가 명함을 내밀었다.\n부스 앞에 줄이 섰다.':'바이어들이 고개를 끄덕였지만, 연락은 많지 않았다.\n<span class="t">(…다음엔 더 준비해 오자.)</span>',chips:applyFx(ok?{rep:4,aff_sangho:4}:{st:6},ch)});await afterMs()},
   21:async()=>{await yearEnd(2)},
   32:async()=>{setPlace('sc_meeting');const n=glOpen();
@@ -1986,7 +2078,7 @@ const CHAPTERS=[
   {from:0,act:1,n:'1막 · 인턴의 봄',img:'ev_arrive',sub:'론칭까지 8개월.\n평일엔 층마다 돌며 사람을 만나고 일을 돕고,\n휴일엔 나를 위해 쓴다.\n그 하루하루가 STAGE:ZERO가 된다.'},
   {from:8,act:2,n:'2막 · 매출을 만들어라',img:'sc_store',sub:'론칭은 출발선일 뿐.\n이제 회사에서 하는 모든 일이 매출로 이어진다.'},
   {from:15,act:2,n:'2막 · 위기와 반격',img:'sc_rain',sub:'투자 무산, 카피캣 등장.\n버티는 법은 하나 — 사람과 숫자로 증명하라.'},
-  {from:24,act:3,n:'3막 · 세계로',img:'c_global',sub:'입사 3년차.\n미국·일본·동남아 — 마지막 1년,\nSTAGE:ZERO를 얼마나 키울 수 있을까?'}];
+  {from:24,act:3,n:'3막 · 세계로',img:'c_global',sub:'입사 3년차. 마지막 1년.\n미국·일본·동남아 — 나라마다 막히는 곳이 다르고,\n바이어는 그 나라 말로 만나야 한다.'}];
 const chapterOf=m=>[...CHAPTERS].reverse().find(c=>m>=c.from);
 // 미션 종류: msG(체크리스트 +n) · msF(체크리스트 완료) · gain(수치 +n) · val(수치 n 이상) · core(핵심 7개) · work(회사일 n번)
 // 미션 종류: msG(체크리스트 +n) · msF(체크리스트 완료) · bp(론칭 체크 n%) · gain(수치 +n) · val(수치 n 이상) · sales(이번 달 매출 n) · glG(해외 진척 +n) · glN(해외 n곳) · brand(브랜드 점수) · work(회사일 n번)
@@ -2323,8 +2415,15 @@ function todayGoal(){const st=TEAM.filter(storyReady),out={t:'',why:'',ps:[],row
     out.why=`론칭까지 <b>${dl?dl+'개월':'이번 달!'}</b> · 론칭 체크 <b>${bpPct()}%</b> (60% 안 되면 사고!)`;
     out.ps=f?placesFor(a=>a.ms&&(a.ms[f]||a.ms.any)):[]}
   else if(S.m<GLOBAL_M){out.t='매출 만들기 · 회사일을 도우면 이번 달 매출↑';out.why=`회사일 하나하나가 그달 매출! 최고 월 매출 <b>${fmtW(S.salesBest||0)}</b>`;out.ps=['sales','mkt','studio']}
-  else{out.t='해외 진출 · 영업팀 북미 바이어 미팅';out.why=`해외 진척 <b>${S.gl||0}/${GL_TOT}</b>. 영업팀 바이어 미팅이 제일 빨라요.`;out.ps=['sales']}
+  else{const c=glCur();
+    if(c){const G=GLC[c.k],[v,n]=glSeg(c),l=G.lang,lv=langLv(l);
+      const dl=glDealt(c);const cr=!!glSt(c).c;out.t=v>=n-1&&!dl?`${c.n} · 🤝 바이어 계약만 남았어요`:v>=n-1&&!cr?`${c.n} · 🚨 월말 현지 이슈만 남았어요`:`${c.n} 진출 · ${G.block}`;out.why=`${G.city} 진척 <b>${v}/${n}</b> · 🤝 바이어 계약 ${dl?'✓':'전'} · ${G.hint}`;
+      out.ps=[...new Set(G.key.map(id=>Object.keys(PLACES).find(q=>(PLACES[q].acts||[]).includes(id))))];if(lv>=LANG_NEED)out.ps.push('sales');
+      out.lang={i:'🗣️',b:`${LANG[l].n} Lv.${lv}`,v:'',s:lv>=LANG_NEED?(dl?'계약 완료 · 바이어 미팅으로 진척 크게↑':'영업팀 바이어 미팅에 성공하면 계약 → 입점'):`입점하려면 바이어 계약 · 미팅은 Lv.${LANG_NEED}부터 · 휴일 📚 「${LANG[l].n} 회화」`}}
+    else{out.t='해외 3곳 모두 오픈! · 매출·브랜드 키우기';out.why=`해외 3곳에서 팔리는 중. 최고 월 매출 <b>${fmtW(S.salesBest||0)}</b>`;out.ps=['sales','mkt','studio']}}
+  if(S.launched&&S.m>=GLOBAL_M-8&&S.m<GLOBAL_M)out.lang={i:'🗣️',b:'해외 대비',v:`영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')}`,s:`3막 바이어 미팅은 그 나라 말 Lv.${LANG_NEED}부터 · 휴일 📚 자기계발`};
   if(out.ps.length)out.rows.push({c:'star',i:'★',b:'추천 장소',v:out.ps.map(q=>PLACES[q].n).join(' · '),s:'가서 💼 일한다 → 목표 진행'});
+  if(out.lang)out.rows.push(out.lang);
   if(st.length)out.rows.push({c:'heart',i:'♥',b:'이야기',v:st.map(k=>given(k)+' 님').join(' · '),s:'만나면 이야기 먼저, 일도 그대로'});
   {const n=nextNego();if(n!=null)out.rows.push({i:'💰',b:`연봉협상 ${n===S.m?'이번 달':monthOf(n)+'월'}`,v:`능력치 ${sumStat()} / ${negoT(n)}`,s:'휴일 📚 자기계발로 올려요'})}
   const nx=REQ[S.rank+1],w=nx&&reqWhy(nx);if(w)out.rows.push({i:'⭐',b:`${RANKS[S.rank+1]} 승진`,v:'',s:w});
@@ -2376,6 +2475,7 @@ async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('who
   if(ps.includes('daram')&&(S.flags.crush||S.flags.dating)){talkCh.push({l:'다람 주임에게 커피',s:'💘 설렘↑ · 1만원',img:dimg('coffeegive'),tag:'☕ 몰래'});talkOps.push(['act','coffee'])}
   if(ps.includes('eunbin')){talkCh.push({l:'은빈의 사내 소식',s:'커피 3만원 · 동료 취향 듣기',img:'f_eunbin',face:1,tag:'📰 소식통'});talkOps.push(['intel'])}
   const workCh=acts.map(id=>{const a=ACTS[id],m=a.mate&&ps.includes(a.mate);return {l:a.name,s:`${Object.keys(a.g).map(k=>STATS[k]).join('·')}↑${m?` · ${given(a.mate)}${wa(given(a.mate))} ♥↑`:''}`,img:clipOf(id)||a.scene}}),workOps=acts.map(id=>['work',id]);
+  {const l=(P.acts||[]).includes('global')&&glLangLock();if(l){workCh.push({l:`🔒 ${ACTS.global.name}`,s:`${LANG[l].n} Lv.${langLv(l)}/${LANG_NEED} · 휴일 📚 「${LANG[l].n} 회화」로 올려요`,img:'c_global'});workOps.push(['locked',l])}}
   const top=[],topOps=[];
   if(talkCh.length){top.push({l:'💬 대화한다',s:ps.map(k=>given(k)).join('·')});topOps.push('talk')}
   if(workCh.length){top.push({l:'💼 일한다',s:acts.map(id=>ACTS[id].name).join(' · ')});topOps.push('work')}
@@ -2388,7 +2488,7 @@ async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('who
     if(t==='note'||t==='rest'){op=t;break}
     const [c2,o2]=t==='talk'?[talkCh,talkOps]:[workCh,workOps];
     const j=await ask({...head,title:t==='talk'?'💬 누구랑 이야기할까?':'💼 어떤 일을 도울까?',text:t==='talk'?said:'그 자리 담당자와 함께하면 ♥도 올라요.',choices:[...c2,{l:'← 돌아가기',s:''}]});
-    if(j===c2.length)continue;[op,arg]=o2[j];break}
+    if(j===c2.length)continue;if(o2[j][0]==='locked'){await say({who:'sangho',title:`🔒 ${ACTS.global.name}`,text:`"바이어가 ${LANG[o2[j][1]].n}로 묻는데 통역만 기다릴 순 없어요.\n휴일 자기계발 「${LANG[o2[j][1]].n} 회화」로 Lv.${LANG_NEED}까지 올려 와요. 그동안은 다른 팀 일로 진출을 도와줘요."`});continue}[op,arg]=o2[j];break}
   const hi=ps.filter(k=>k!==arg&&!(op==='work'&&ACTS[arg].mate===k));if(hi.length)applyFx(Object.fromEntries(hi.map(k=>['aff_'+k,1])));
   if(op==='talk')await talkTo(arg);
   else if(op==='work'||op==='act')await runAct(arg,i,ps);
@@ -2423,7 +2523,7 @@ async function runAct(id,i,ps){const a=ACTS[id];let perf=null;if(id==='date')S.d
 
 /* ----- 휴일 ----- */
 const WKND={
-  self:{img:'c_lecture',n:'📚 자기계발',d:'능력치↑ → 연봉협상에 유리',ids:['lecture','ingredient','english','excel','ai','license','mba']},
+  self:{img:'c_lecture',n:'📚 자기계발',d:'능력치↑ → 연봉협상에 유리',ids:['lecture','ingredient','english','japanese','excel','ai','license','mba']},
   job:{img:'c_cafe',n:'💰 부업',d:'통장 채우기 · 횟수가 쌓이면 승급',ids:['cafe','store','shoot','blog']},
   love:{img:'c_date',n:'💘 데이트',d:'설렘 · 사내연애·소개팅·셀프 데이트',ids:['date','blind','selfdate']},
   mate:{img:'c_friends',n:'🤝 동료와 주말',d:'♥20 넘은 동료와 주말 약속 · ♥↑',ids:[]},
@@ -2432,7 +2532,7 @@ const WKND={
   shop:{img:'c_shop_mall',n:'🛍️ 쇼핑',d:'스트레스↓ · 트렌드 감각',ids:['shop_hb','shop_online','shop_mall']},
 };
 const actSub=id=>{const a=ACTS[id],l=lockReason(id),m=a.cost&&S.money<a.cost?'통장 부족':null;if(l||m)return '🔒 '+(l||m);
-  const bits=[a.d];if(a.pay)bits.push(`+${jobPay(id)}만원`);if(a.cost)bits.push(`${a.cost}만원`);if(a.leave)bits.push(`연차 ${a.leave}일`);return bits.join(' · ')};
+  const bits=[a.d];if(a.lang)bits.push(`지금 Lv.${langLv(a.lang)}`);if(a.pay)bits.push(`+${jobPay(id)}만원`);if(a.cost)bits.push(`${a.cost}만원`);if(a.leave)bits.push(`연차 ${a.leave}일`);return bits.join(' · ')};
 async function weekend(){busy=true;document.body.classList.add('running');playBgm('rest');setPlace('sc_home');
   for(;;){const ks=Object.keys(WKND);
     const c=await ask({who:'me',speaker:`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 휴일`,title:'이번 휴일엔 뭘 할까?',text:`체력 ${S.hp} · 스트레스 ${S.st} · 통장 ${S.money}만원 · 연차 ${S.leave}일`,choices:ks.map(k=>({l:WKND[k].n,s:WKND[k].d,img:WKND[k].img}))});
@@ -2491,7 +2591,8 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
   if(monthOf(S.m)===2&&!S.ending)await valentine();
   const fx=FIXED[S.m],ev=EVAL_AT[S.m];let extra=false;
   if(fx){await fx();extra=true}
-  else if(R()<.55){const pool=RANDOM_EV.filter(e=>e.w()&&!(e.id&&S.flags['ev_'+e.id]));if(pool.length){const e=pick(pool);if(e.id)S.flags['ev_'+e.id]=1;await e.run();extra=true}}
+  const gs=!S.ending&&await glStory();if(gs)extra=true;
+  if(!fx&&!gs&&R()<.55){const pool=RANDOM_EV.filter(e=>e.w()&&!(e.id&&S.flags['ev_'+e.id]));if(pool.length){const e=pick(pool);if(e.id)S.flags['ev_'+e.id]=1;await e.run();extra=true}}
   if(!S.ending&&ev)await evaluate(`${yearOf(S.m)}년차 ${monthOf(S.m)}월 ${ev}`);
   if(!S.ending&&NEGO_AT.includes(S.m))await nego();
   if(!S.ending&&!extra&&!S.flags.dating&&(!S.flags.confess&&S.love>=25||S.flags.slow&&S.flags.confess<2&&S.love>=45)){await confess();extra=true}
@@ -2506,6 +2607,7 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
   busy=false;document.body.classList.remove('running');save();monthIntro()}
 function monthIntro(){playBgm('office');render();hideActor();
   if(S.chap!==chapterOf(S.m).from){busy=true;chapterCard().then(()=>{busy=false;monthIntro()});return}
+  if(S.launched&&S.m>=GLOBAL_M&&!S.choice.gl){busy=true;glPick().then(()=>{busy=false;monthIntro()});return}
   if(!S.day||S.day.m!==S.m)newDay();
   if(S.day.phase==='weekend'){afterDay();return}
   setPlace('ev_building');showBld();
@@ -2517,7 +2619,7 @@ function advice(){
   const ev=TEAM.filter(storyReady);if(ev.length)return `"${ev.map(k=>given(k)).join('·')} 님이 험쮜 님한테 할 얘기가 있대요. 빌딩에서 ♥ 표시를 찾아가 봐요."`;
   const nx=REQ[S.rank+1];if(nx){const w=reqWhy(nx);if(w&&R()<.6)return `"다음 승진(${RANKS[S.rank+1]})까지: ${w}"`}
   if(!S.launched){const f=focusMs();if(f){const ps=[...new Set(Object.entries(PLACES).filter(([,P])=>(P.acts||[]).some(id=>ACTS[id].ms&&ACTS[id].ms[f])).map(([,P])=>P.n))];return `"론칭까지 ${Math.max(0,LAUNCH_M-S.m)}개월! 지금 제일 급한 건 「${MS[f].n}」이에요. ${ps.join('·')}에 가서 일을 도와줘요."`}}
-  if(S.m>=GLOBAL_M)return `"해외 진척 ${S.gl||0}/${GL_TOT}. 영업팀 바이어 미팅이 제일 빨라요."`;
+  {const c=glCur();if(c){const G=GLC[c.k],l=glLangLock();return l?`"${c.n} 바이어 미팅은 ${LANG[l].n}로 해야 해요. 휴일에 「${LANG[l].n} 회화」로 Lv.${LANG_NEED}까지 올려요. 그동안은 ${G.hint.split(' · ').slice(0,-1).join(' · ')}!"`:`"${c.n} 진척 ${glSeg(c).join('/')}. ${G.hint}."`}}
   return pick(['"사람을 자주 만나면 ♥가 쌓여요. ♥가 쌓이면 그 사람만의 이야기가 열려요."','"업무는 그 일을 맡은 사람이 있을 때 하면 ♥도 같이 올라요."','"평판은 업무와 대화에서 쌓여요. 승진엔 두 부장님 ♥도 중요해요."'])}
 
 /* ================= 화면 ================= */
@@ -2734,7 +2836,13 @@ const GAMES={
       {q:'"배송이 3일째 안 와요"',c:['송장 조회 후 예상 도착일 안내','"택배사에 물어보세요"','"곧 갈 거예요~"'],a:0,w:'고객이 할 일을 대신 확인해 줘요.'},
       {q:'"사용기한이 언제까지예요?"',c:['제조번호로 확인해 정확히 안내','"넉넉해요"','"상자 버리셨으면 몰라요"'],a:0,w:'제조번호로 정확한 날짜를 알 수 있어요.'},
       {q:'"경쟁사 크림이랑 뭐가 달라요?"',c:['성분·사용감 근거로 우리 장점 설명','"거긴 별로예요"','"다 비슷해요"'],a:0,w:'비방 대신 근거로 말해요.'}]},
-  english:{type:'quiz',ic:'🌎',title:'바이어 영어 미팅',rule:'북미 바이어의 질문, 무슨 뜻일까요?',
+  japanese:{type:'quiz',ic:'🗾',title:'바이어 일본어 미팅',rule:'큐텐 바이어의 질문, 무슨 뜻일까요?',
+    pool:[{q:'「卸価格はいくらですか?」',c:['도매가는 얼마인가요?','택배비는 얼마인가요?','샘플은 공짜인가요?'],a:0},
+      {q:'「最低ロットは?」',c:['최소 주문 수량은?','가장 싼 제품은?','유통기한은?'],a:0},
+      {q:'「薬機法に対応していますか?」',c:['일본 화장품 법규(약기법)에 맞췄나요?','약국에서 팔 건가요?','기계로 만들었나요?'],a:0},
+      {q:'「メガ割に参加しませんか?」',c:['큐텐 메가와리 세일에 참가할래요?','큰 사이즈도 있나요?','할인 쿠폰을 주나요?'],a:0},
+      {q:'「成分表示は日本語ですか?」',c:['성분 표시가 일본어로 되어 있나요?','성분이 일본산인가요?','표시 사이즈가 크나요?'],a:0}]},
+  english:{type:'quiz',ic:'🌎',title:'바이어 영어 미팅',rule:'해외 바이어의 질문, 무슨 뜻일까요?',
     pool:[{q:'"Is it cruelty-free?"',c:['동물실험 안 했나요?','가격이 잔인한가요?','무료인가요?'],a:0},
       {q:'"What\'s your MOQ?"',c:['최소 주문 수량','마진율','출시일'],a:0},
       {q:'"Are you MoCRA compliant?"',c:['미국 화장품 규제(시설 등록·제품 리스팅) 준수?','모델 계약 했나요?','박람회 참가하나요?'],a:0},
@@ -2939,7 +3047,7 @@ function toast(t){const e=document.createElement('div');e.className='toast';e.te
 function ring(v,col,label){const r=18,c=2*Math.PI*r;return `<svg viewBox="0 0 44 44" aria-label="${label} ${v}"><circle cx="22" cy="22" r="${r}" fill="none" stroke="#f1dccf" stroke-width="6"/><circle cx="22" cy="22" r="${r}" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c*v/100} ${c}" transform="rotate(-90 22 22)"/><text x="22" y="26.5" text-anchor="middle" font-size="12" font-weight="700" fill="#3d2a22">${v}</text></svg>`}
 function render(){
   if(!S)return;
-  document.body.classList.toggle('fem',hzFem());
+  document.body.classList.toggle('fem',hzFem());syncGlobalAct();
   const f=focusMs(),dl=LAUNCH_M-S.m,bp=bpPct();
   $('#h-date').textContent=`${yearOf(S.m)}년차 ${monthOf(S.m)}월`;
   $('#h-rank').innerHTML=`${RANKS[S.rank]} 험쮜${isGold()?'<span class="gold">✨황금막내</span>':''}`;
@@ -2975,7 +3083,9 @@ const sasuTarget=()=>{if(S.launched)return null;const M=S.mission;return (M&&(M.
 // 받침에 맞는 조사 (은/는, 이/가)
 const josa=(w,a,b)=>{const c=(w||'').trim().slice(-1).charCodeAt(0);return w+(c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?a:b)};
 // 업무마다 사수가 왜 골랐는지 한 줄
-function taskWhy(id){const a=ACTS[id],M=S.mission,tg=sasuTarget();
+function taskWhy(id){const a=ACTS[id],M=S.mission,tg=sasuTarget(),gc=glCur();
+  if(gc&&(id==='global'||GLC[gc.k].key.includes(id)))return `${glFlag(gc)} ${gc.n.split(' ').slice(1).join(' ')} 진출 핵심 · 해외 진척↑${id==='global'?'↑':''}`;
+  if(a.lang&&S.m>=GLOBAL_M-8)return `🗣️ 해외 바이어 미팅 대비 · 지금 Lv.${langLv(a.lang)}`;
   if(a.cat==='self')return M&&M.k==='edu'&&M.acts.includes(id)?'📚 이번 달 교육 미션':`📚 ${STATS[Object.keys(a.g)[0]]} 보강`;
   if(tg&&a.ms&&a.ms[tg])return `→ ${MS[tg].ic} ${PART[tg]} 진척 +${a.ms[tg]}${M&&(M.ms===tg||M.k==='bp')?' · 미션 직결':''}`;
   if(M&&M.k==='sales')return a.dept==='sales'?'📈 매출 직결 · 평판↑':a.dept==='mkt'?'📈 매출 + 화제성':'📈 매출에 조금 보탬';
@@ -2984,7 +3094,7 @@ function taskWhy(id){const a=ACTS[id],M=S.mission,tg=sasuTarget();
   if(M&&M.k==='gain'&&M.v==='bq'&&a.bq)return '🧴 제품력 미션에 보탬';
   if(a.ms&&a.ms.any)return '🧩 급한 부품을 조금씩';
   return a.mate?`♥ ${who(a.mate).name.split(' ')[0]}와 함께 · 능력치↑`:'능력치↑'}
-const taskStar=id=>{const a=ACTS[id],M=S.mission,tg=sasuTarget();return a.cat==='self'?!!(M&&M.k==='edu'&&M.acts.includes(id)):!!((M&&tg&&a.ms&&a.ms[tg]&&(M.ms===tg||M.k==='bp'))||(M&&(M.k==='glG'||M.k==='glN')&&id==='global'))};
+const taskStar=id=>{const a=ACTS[id],M=S.mission,tg=sasuTarget(),gc=glCur();if(gc&&(id==='global'||GLC[gc.k].key.includes(id)))return true;if(a.lang){const l=glLangLock();if(l===a.lang||S.m>=GLOBAL_M-8&&S.m<GLOBAL_M&&langLv(a.lang)<LANG_NEED)return true}return a.cat==='self'?!!(M&&M.k==='edu'&&M.acts.includes(id)):!!((M&&tg&&a.ms&&a.ms[tg]&&(M.ms===tg||M.k==='bp'))||(M&&(M.k==='glG'||M.k==='glN')&&id==='global'))};
 function sasuTasks(){if(S.tasks&&S.tasks.m===S.m&&S.tasks.v===2)return S.tasks.ids;
   const M=S.mission,ids=Object.entries(ACTS).filter(([id,a])=>a.cat==='work'&&!a.hidden&&id!=='overtime'&&id!=='orient'&&!lockReason(id)).map(([id])=>id);
   const tg=sasuTarget(),sc=id=>{const a=ACTS[id];let v=R()*2;if(tg&&a.ms&&a.ms[tg])v+=8+a.ms[tg];else if(a.ms&&a.ms.any)v+=1;
@@ -3071,7 +3181,7 @@ function brandHTML(){
   const salesG=S.launched?`<div class="group"><h4>📈 2막 · 월 매출</h4>${log.length?`<div class="sales">${log.map((v,i)=>`<span title="${fmtW(v)}"><i style="height:${Math.round(v/mx*100)}%"></i><small>${monthOf(LAUNCH_M+1+i)}</small></span>`).join('')}</div>`:'<p style="margin:0;font-size:12.5px;color:var(--mute)">첫 매출은 다음 달 말에 집계돼요.</p>'}
     <div class="kv"><div><small>이번 달 예상</small><b>${fmtW(salesNow())}</b></div><div><small>월 최고</small><b>${fmtW(S.salesBest||0)}</b></div><div><small>누적</small><b>${fmtW(S.salesSum||0)}</b></div><div><small>브랜드 점수</small><b>${brandScore()}</b></div><div><small>🏦 회사 자금</small><b>${S.co?wonS(S.co.cash):'-'}</b></div><div><small>누적 이익</small><b>${S.co?wonS(S.co.profitSum):'-'}</b></div></div>
     <small style="color:var(--mute);font-size:11.5px">매출 = 론칭 완성도(점점 빠짐) + 화제성 + 평판 + 그달 회사일 + 쌓인 판로(${S.chan||0}) × 해외 시장 보너스. 그달 회사일의 30%는 판로로 남아 다음 달부터 매출을 받쳐 줘요.</small></div>
-  <div class="group"><h4>🌍 3막 · 해외 진출 ${S.gl||0}/${GL_TOT}</h4>${glList().map(g=>`<div class="ms ${(S.gl||0)>=g.at?'done':''} ${S.m<GLOBAL_M?'lock':''}"><i>${(S.gl||0)>=g.at?'✓':'🌍'}</i><div><b>${g.n}</b><div class="bar"><span style="width:${Math.min(100,(S.gl||0)/g.at*100)}%"></span></div><small>${S.m<GLOBAL_M?'3막(2년차 9월)부터 열려요':`진척 ${g.at}에서 오픈`}</small></div><span class="v">${Math.min(S.gl||0,g.at)}/${g.at}</span></div>`).join('')}</div>`:'';
+  <div class="group"><h4>🌍 3막 · 해외 진출 ${glOpen()}/3곳</h4>${glList().map(g=>{const [v,n]=glSeg(g),G=GLC[g.k],dn=(S.gl||0)>=g.at,lg=`${LANG[G.lang].n} Lv.${langLv(G.lang)}/${LANG_NEED}`;return `<div class="ms ${dn?'done':''} ${S.m<GLOBAL_M?'lock':''}"><i>${dn?'✓':'🌍'}</i><div><b>${g.n}</b><div class="bar"><span style="width:${v/n*100}%"></span></div><small>${S.m<GLOBAL_M?`3막(3년차 3월)부터 · ${lg}`:dn?'입점 완료':`${G.block} · ${lg} · 🤝 계약 ${glDealt(g)?'✓':'전'}`}</small></div><span class="v">${v}/${n}</span></div>`}).join('')}</div>`:'';
   return `${buildHTML()}${salesG}<div class="group"><div class="kv"><div><small>카테고리</small><b>${S.choice.cat||'미정'}</b></div><div><small>론칭</small><b>${S.launched?`완료 · ${S.score}점`:dl>0?`D-${dl}개월`:'이번 달!'}</b></div>
   <div><small>제형 / 키 메시지</small><b style="font-size:13px">${S.choice.form||'-'} / ${S.choice.msg||'-'}</b></div><div><small>제품력 · 화제성</small><b>${S.bq} · ${S.buzz}</b></div></div></div>
   <div class="group"><h4>${S.launched?'론칭 완성도':'예상 론칭 완성도'}</h4><div class="score">${SCORE_PARTS().map(([l,v,w])=>`<div class="row"><span>${l} ×${w}</span><div class="bar"><span style="width:${Math.min(100,v)}%"></span></div><span style="text-align:right">${Math.round(v*w)}점</span></div>`).join('')}
@@ -3391,7 +3501,7 @@ function makeOrders(){if(S.orders&&S.orders.m===S.m)return S.orders.list;const A
   list.forEach((o,i)=>o.col=ORD_COL[i]);S.orders={m:S.m,list};return list}
 const recipeHTML=o=>`<span>${FILL[o.fill][0]}${FILL[o.fill][1]}</span><span>⭕</span><span>${o.label?'🏷️':'🚫🏷️'}</span>`;
 function lineTop(){const M=S.mission,A=actOf(S.m),dl=LAUNCH_M-S.m,last=(S.salesLog||[]).slice(-1)[0];
-  const k1=!S.launched?`<div class="kpi hot"><small>🧾 론칭 ${dl>0?`D-${dl}`:'D-DAY'}</small><b>체크 ${bpPct()}%</b></div>`:A===3?`<div class="kpi hot"><small>🌍 해외 진출</small><b>${glOpen()}/3곳 · ${S.gl||0}/${GL_TOT}</b></div>`:`<div class="kpi hot"><small>📈 지난달 매출</small><b>${last!=null?fmtW(last):'-'}</b></div>`;
+  const k1=!S.launched?`<div class="kpi hot"><small>🧾 론칭 ${dl>0?`D-${dl}`:'D-DAY'}</small><b>체크 ${bpPct()}%</b></div>`:A===3?`<div class="kpi hot"><small>🌍 해외 진출</small><b>${glOpen()}/3곳${glCur()?` · ${glFlag(glCur())} ${glSeg(glCur()).join('/')}`:''}</b></div>`:`<div class="kpi hot"><small>📈 지난달 매출</small><b>${last!=null?fmtW(last):'-'}</b></div>`;
   return `<div class="brand"><span class="logo">CANVAS LAB</span><b>STAGE:ZERO 1라인</b><span class="sp"></span><span>${yearOf(S.m)}년차 ${monthOf(S.m)}월 · ${RANKS[S.rank]} 험쮜</span></div>
   <div class="kpis">${k1}<div class="kpi"><small>🧴제품 · 📣화제</small><b>${S.bq} · ${S.buzz}</b></div><div class="kpi"><small>⭐ 평판</small><b>${S.rep}</b></div></div>
   <div class="mis">${ACT_NAME[A]} · ${M?`🎯 ${esc(M.t)} ${missionTxt()}`:''}</div>`}
@@ -3800,7 +3910,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-c60008';
+const BUILD='2026.10.10-79f1db';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
