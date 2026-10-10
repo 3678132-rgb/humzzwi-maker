@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=c24cb9"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=c24cb9"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=c24cb9">
+<link rel="manifest" href="manifest.json?v=240f9b"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=240f9b"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=240f9b">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -136,15 +136,18 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 .mini-title em{font-style:normal;font-size:11px;background:#e8a400;color:#fff;border-radius:99px;padding:1px 8px}
 .mini-stage{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;border:2px solid #e8a400;background:var(--mbg)}
 .mini-stage.k-work{--mbg:linear-gradient(180deg,#ffe3c2,#fff6ea)}.mini-stage.k-job{--mbg:linear-gradient(180deg,#d6f5c8,#f6fff0)}
-.mini-stage.k-self{--mbg:linear-gradient(180deg,#d9e6ff,#f6f9ff)}.mini-stage.k-rest{--mbg:linear-gradient(180deg,#eadcff,#fbf7ff)}
+.mini-stage.k-self{--mbg:linear-gradient(180deg,#d9e6ff,#f6f9ff)}.mini-stage.k-love{--mbg:linear-gradient(180deg,#ffe1ec,#fff5f9)}.mini-stage.k-rest{--mbg:linear-gradient(180deg,#eadcff,#fbf7ff)}
 .mini-stage::after{content:"";position:absolute;left:16%;right:16%;bottom:7%;height:8%;border-radius:50%;background:rgba(0,0,0,.12)}
 .mini-stage img{position:absolute;inset:8% 8% 6%;width:84%;height:86%;object-fit:contain;z-index:1;transform-origin:50% 95%;animation:bob .42s ease-in-out infinite alternate}
 .mini-stage .fx{position:absolute;z-index:2;font-size:24px;animation:fx 1.1s ease-out both;pointer-events:none}
 .mini-bar{height:10px;margin:8px 4px 4px;border-radius:99px;background:#fff;border:2px solid #e8a400;overflow:hidden}
 .mini-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9fc4,#ffb21f);transition:width .2s linear}
 .mini-day{display:flex;justify-content:space-between;font-size:12px;color:#7a4a00;padding:0 6px}
-.mini-win.done{max-width:360px;animation:none}
-.mini-win.done .mini-stage{aspect-ratio:16/11;transition:aspect-ratio .3s}
+.mini-win.done{animation:none}
+/* 그림 칸 크기와 아래 칸 높이를 진행·결과에서 똑같이 둬서 카드가 커졌다 작아졌다 하지 않게 */
+.mini-pop.sched{background:none}.mini-win.sched{max-width:340px}.mini-win.sched .mini-stage{aspect-ratio:16/11}
+.mini-low{min-height:150px;display:grid;align-content:start}
+.mini-low .mini-doing{font-family:var(--display);font-size:17px;color:#7a4a00;text-align:center;padding:18px 0 4px}
 .mini-res{display:grid;gap:4px;padding:8px 6px 2px;animation:fadein .25s both}
 .mr-who{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#8a6f63}.mr-who i{width:24px;height:24px;border-radius:50%;border:2px solid var(--pink);background-size:cover}
 .mr-h{font-family:var(--display);font-weight:400;font-size:18px;color:#2b1d17;line-height:1.3}
@@ -370,9 +373,15 @@ body.picmode-on .shade{background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,r
 /* 대화창 속 두 사람 그림 (2장 움짤) */
 .dialog.haspic{max-height:74%!important}
 /* 스케줄 그림이 나올 땐 뒤 배경(방·사무실)을 빼고, 같은 그림을 흐리게 깔아 그림 하나에만 눈이 가게 */
-.scene::after{content:"";position:absolute;inset:-40px;background:var(--clip-bg,none) center/cover no-repeat;filter:blur(26px) brightness(.62) saturate(1.15);opacity:0;transition:opacity .35s;z-index:1;pointer-events:none}
+/* 스케줄 배경 시안 — body[data-mbg]: A 활동 색 땡땡이 · B 다이어리 모눈 · C 장소를 어둡게 */
+.scene::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s;z-index:1;pointer-events:none;--c1:#ffe0cc;--c2:#ffc9a8}
+body[data-cat=self] .scene::after{--c1:#dceaff;--c2:#b8d3ff}body[data-cat=rest] .scene::after{--c1:#efe3ff;--c2:#d6c0ff}
+body[data-cat=job] .scene::after{--c1:#dff6d2;--c2:#bfe9a8}body[data-cat=love] .scene::after{--c1:#ffe1ec;--c2:#ffbfd5}
 body.clip-on .scene::after{opacity:1}
-body.clip-on #pimg{opacity:0}
+body.clip-on[data-mbg=A] .scene::after{background:radial-gradient(circle,rgba(255,255,255,.75) 0 5px,transparent 6px) 0 0/34px 34px,radial-gradient(circle,rgba(255,255,255,.75) 0 5px,transparent 6px) 17px 17px/34px 34px,linear-gradient(180deg,var(--c1),var(--c2))}
+body.clip-on[data-mbg=B] .scene::after{background:linear-gradient(90deg,transparent 54px,rgba(255,120,150,.45) 54px 56px,transparent 56px),linear-gradient(rgba(150,180,220,.35) 1px,transparent 1px) 0 0/100% 26px,linear-gradient(90deg,rgba(150,180,220,.22) 1px,transparent 1px) 0 0/26px 100%,#fffaf0}
+body.clip-on[data-mbg=C] .scene::after{background:radial-gradient(120% 80% at 50% 45%,rgba(30,20,40,.35),rgba(30,20,40,.78))}
+body.clip-on:not([data-mbg=C]) #pimg{opacity:0}
 .dpic{grid-column:1/-1;position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 10px rgba(61,42,34,.18);background:#fff3e6}
 .dpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%}
 .dpic img.b{animation:dflip 1s step-end infinite}
@@ -2527,8 +2536,9 @@ function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidd
   const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,y+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
 $('#actor-img').addEventListener('load',placeActor);
 // 대화창에 스케줄 그림이 있으면 장면 배경을 그 그림의 흐린 버전으로 바꾼다
-function syncClip(){const d=$('#dialog'),m=$('#mini'),im=(!m.hidden&&m.querySelector('#mini-stage.clip img'))||(!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img'));
-  if(im)$('#scene').style.setProperty('--clip-bg',`url("${im.getAttribute('src')}")`);document.body.classList.toggle('clip-on',!!im)}
+function syncClip(){const d=$('#dialog'),m=$('#mini'),st=!m.hidden&&m.querySelector('#mini-stage.clip'),im=st||(!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img'));
+  if(st)document.body.dataset.cat=(st.className.match(/k-(\w+)/)||[])[1]||'work';else if(im)document.body.dataset.cat='love';
+  if(!document.body.dataset.mbg)document.body.dataset.mbg='A';document.body.classList.toggle('clip-on',!!im)}
 new MutationObserver(syncClip).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
@@ -2577,18 +2587,18 @@ const CLIPS=new Set(['snack','content','keymsg','review','md','cs','global','res
 const clipOf=id=>id==='date'?dimg('ramen'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
 // 스케줄 카드: 진행이 끝나면 같은 카드 아래쪽이 결과(글·능력치 변화·다음)로 바뀐다 — 그림은 한 번만
 function miniResult(o,name){const w=$('#mini'),win=w.querySelector('.mini-win');
-  return new Promise(res=>{win.classList.add('done');win.querySelectorAll('.mini-bar,.mini-day').forEach(e=>e.remove());
+  return new Promise(res=>{win.classList.add('done');const low=win.querySelector('.mini-low');low.innerHTML='';
     const who=o.who&&o.who!=='me'?`<span class="mr-who"><i style="${faceStyle(o.who)}"></i>${esc(tagName(o.who))}</span>`:'';
     const h=o.title&&o.title!==name?`<b class="mr-h">${esc(o.title)}</b>`:'';
-    win.insertAdjacentHTML('beforeend',`<div class="mini-res">${who}${h}<div class="mr-t">${o.text||''}</div>${chipsHTML(o.chips)}<div class="next"><button class="next-btn" type="button">다음 ▶</button></div></div>`);
-    win.querySelector('.next-btn').onclick=e=>{e.stopPropagation();w.hidden=true;w.innerHTML='';syncClip();res()}})}
-function closeMini(){const w=$('#mini');if(!w.hidden&&w.querySelector('#mini-stage')){w.hidden=true;w.innerHTML='';syncClip()}}
+    low.insertAdjacentHTML('beforeend',`<div class="mini-res">${who}${h}<div class="mr-t">${o.text||''}</div>${chipsHTML(o.chips)}<div class="next"><button class="next-btn" type="button">다음 ▶</button></div></div>`);
+    win.querySelector('.next-btn').onclick=e=>{e.stopPropagation();w.hidden=true;w.innerHTML='';w.classList.remove('sched');syncClip();res()}})}
+function closeMini(){const w=$('#mini');if(!w.hidden&&w.querySelector('#mini-stage')){w.hidden=true;w.innerHTML='';w.classList.remove('sched');syncClip()}}
 function playMini(id,i){
   const a=ACTS[id],w=$('#mini'),clip=clipOf(id),fa=clip||a.mini;
-  w.innerHTML=`<div class="mini-win" role="img" aria-label="${esc(a.name)} 하는 중"><div class="mini-title"><span>${esc(a.name)}</span><em>${slotName(i)}</em></div>
-  <div class="mini-stage k-${a.cat} ${clip?'clip':''}" id="mini-stage"><img class="a" src="${IMG(fa)}" alt=""><img class="b" src="${IMG(fa+'_b')}" alt=""></div>
-  <div class="mini-bar"><i id="mini-bar"></i></div><div class="mini-day"><span id="mini-day">${monthOf(S.m)}월 ${i*10+1}일</span><span>탭하면 건너뛰기</span></div></div>`;
-  w.hidden=false;$('#dialog').hidden=true;hideActor();syncClip();
+  w.innerHTML=`<div class="mini-win sched" role="img" aria-label="${esc(a.name)} 하는 중"><div class="mini-title"><span>${esc(a.name)}</span><em>${slotName(i)}</em></div>
+  <div class="mini-stage k-${a.cat==='love'||/date|blind/.test(id)?'love':a.cat} ${clip?'clip':''}" id="mini-stage"><img class="a" src="${IMG(fa)}" alt=""><img class="b" src="${IMG(fa+'_b')}" alt=""></div>
+  <div class="mini-low"><div class="mini-doing">${esc(a.name)} 하는 중…</div><div class="mini-bar"><i id="mini-bar"></i></div><div class="mini-day"><span id="mini-day">${monthOf(S.m)}월 ${i*10+1}일</span><span>탭하면 건너뛰기</span></div></div></div>`;
+  w.classList.add('sched');w.hidden=false;$('#dialog').hidden=true;hideActor();syncClip();
   const st=$('#mini-stage');st.querySelector('img.b').onerror=()=>st.classList.add('nob');
   return new Promise(res=>{let d=0;const total=10;
     const iv=setInterval(()=>{if(d%2===0||!clip)st.classList.toggle('alt');d++;$('#mini-day').textContent=`${monthOf(S.m)}월 ${Math.min(30,i*10+d)}일`;$('#mini-bar').style.width=(d/total*100)+'%';
@@ -2719,7 +2729,7 @@ const ENGINE={
 function playGame(id,i){
   const a=ACTS[id],G=GAMES[a.game],w=$('#mini');if(!G||S.autoAll)return Promise.resolve(null);
   const p=Math.round(workP(id)*100),M=who(a.mate);
-  w.classList.add('game');w.hidden=false;$('#dialog').hidden=true;hideActor();
+  w.classList.remove('sched');w.classList.add('game');w.hidden=false;$('#dialog').hidden=true;hideActor();
   return new Promise(res=>{
     const close=()=>{w.hidden=true;w.innerHTML='';w.classList.remove('game');w.onclick=null};
     w.innerHTML=`<div class="mini-win game-win"><div class="mini-title"><span>${G.ic} ${esc(a.name)}</span><em>${slotName(i)}</em></div>
@@ -3654,7 +3664,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-c24cb9';
+const BUILD='2026.10.10-240f9b';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
