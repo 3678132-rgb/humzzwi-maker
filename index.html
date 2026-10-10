@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=8d8c72"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8d8c72"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8d8c72">
+<link rel="manifest" href="manifest.json?v=8621a3"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8621a3"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8621a3">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2404,7 +2404,7 @@ async function talkTo(k){const T=pickTalk(k);
   await say({who:k,title:['C · 다시 생각해 봐요','B · 아쉬워요','A · 바로 그거예요!'][sc],text:`험쮜: "${esc(ans)}"\n${given(k)}: "${esc(re)}"`,chips});
   await afterMs()}
 // 업무·휴일 활동 공통: 미니게임(업무) 또는 장면 → 결과
-async function runAct(id,i,ps){const a=ACTS[id];let perf=null;if(id==='date')S.dateC=pick(Object.keys(DATE_C).filter(k=>k!==S.dateC));
+async function runAct(id,i,ps){const a=ACTS[id];let perf=null;if(id==='date')S.dateC=pickDateC();
   if(a.cat==='work'&&a.game)perf=await playGame(id,i);else await playMini(id,i);
   const r=doAction(id,perf);
   if(a.cat==='work'&&!r.burn){if(ps&&a.mate&&ps.includes(a.mate))bump(r.chips,'aff_'+a.mate,2);
@@ -2630,7 +2630,17 @@ const CLIPS=new Set(['snack','content','keymsg','review','md','cs','global','res
 const DATE_C={
   popup:{n:'성수동 팝업 투어',lines:['다람: "이 브랜드 팝업, 우리 STAGE:ZERO 팝업이랑 비교해 보러 온 거예요. …라고 하면 데이트 아닌 척 되나?"\n<span class="t">(아아 두 잔에 쇼핑백 하나. 완벽한 토요일.)</span>','험쮜: "여기 향 좋다!"\n다람: "험쮜 씨한테 어울리는 건 이거요." 테스터를 손등에 톡.\n<span class="t">(…주말까지 시장조사 하는 커플.)</span>']},
   park:{n:'놀이공원',lines:['솜사탕을 반씩 나눠 먹고 회전목마를 두 번 탔다.\n다람: "관람차 꼭대기에서 회사 얘기 금지예요."\n<span class="t">(…3초 만에 매출 얘기를 했다.)</span>','다람: "자이로드롭 무서우면 손 잡아도 돼요."\n<span class="t">(정작 비명은 다람 쪽이 더 컸다.)</span>']},
+  movie:{n:'영화관',lines:['팝콘은 반반. 영화 중간에 손이 같은 데로 들어갔다.\n<span class="t">(…영화 내용은 하나도 기억 안 난다.)</span>','다람: "로맨스 영화 골랐는데… 회사 사람 나올 줄은 몰랐네요."\n<span class="t">(스크린 속 커플이 사내연애 중이었다.)</span>']},
+  exhibit:{n:'전시회',lines:['커다란 파스텔 그림 앞에서 한참 서 있었다.\n다람: "이 색, STAGE:ZERO 패키지에 쓰면 예쁘겠다."\n<span class="t">(…지영 대리님한테 보내 줘야지.)</span>','다람: "전시 설명은 잘 모르겠는데, 험쮜 씨랑 보니까 다 좋아 보여요."\n<span class="t">(작품보다 그 말이 더 오래 남았다.)</span>']},
+  bike:{n:'한강 자전거',lines:['2인용 자전거, 앞은 다람 뒤는 험쮜.\n다람: "험쮜 씨, 페달 밟고 있는 거 맞죠?"\n<span class="t">(…안 밟고 있었다.)</span>','벚꽃 아래를 달리다 편의점 앞에서 멈췄다.\n다람: "바나나우유 하나씩?"\n<span class="t">(한강엔 역시 바나나우유.)</span>']},
+  aquarium:{n:'아쿠아리움',lines:['큰 수조 앞, 거북이가 둘 사이로 천천히 지나갔다.\n다람: "저 거북이 험쮜 씨 닮았다. 느긋하고 귀여운 거."\n<span class="t">(칭찬… 맞지?)</span>','해파리 터널에서 다람이 사진을 찍어 줬다.\n<span class="t">(파란 불빛 속 둘. 바로 배경화면이 됐다.)</span>']},
+  hanok:{n:'북촌 한옥 카페',lines:['대청마루에 앉아 쌍화차와 꿀떡을 나눠 먹었다.\n다람: "주말엔 이렇게 느리게 사는 것도 좋다."\n<span class="t">(평일의 빛의 속도가 거짓말 같다.)</span>','다람: "한옥 마당 보니까, 우리 팝업도 이런 무드 어때요?"\n<span class="t">(…또 일 얘기. 근데 싫지 않다.)</span>']},
+  vacation:{n:'여름 휴가',summer:1,lines:['연차 붙여서 떠난 여름 바다! 수박을 반으로 쪼개 숟가락 두 개를 꽂았다.\n다람: "회사 메신저 끄기, 셋 둘 하나!"\n<span class="t">(파도 소리만 남았다.)</span>','파라솔 아래 낮잠. 깨어 보니 다람이 험쮜 모자를 고쳐 씌워 주고 있었다.\n<span class="t">(…올해 여름은 이걸로 충분하다.)</span>']},
 };
+// 코스 고르기: 여름(7·8월)엔 그해 첫 데이트가 여름 휴가, 나머지는 지난번과 다른 곳
+function pickDateC(){const mo=monthOf(S.m),yr=yearOf(S.m);S.flags=S.flags||{};
+  if((mo===7||mo===8)&&S.flags.vac!==yr){S.flags.vac=yr;return 'vacation'}
+  return pick(Object.keys(DATE_C).filter(k=>!DATE_C[k].summer&&k!==S.dateC))}
 const clipOf=id=>id==='date'?dimg(S.dateC||'popup'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
 // 스케줄 카드: 진행이 끝나면 같은 카드 아래쪽이 결과(글·능력치 변화·다음)로 바뀐다 — 그림은 한 번만
 function miniResult(o,name){const w=$('#mini'),win=w.querySelector('.mini-win');
@@ -3780,7 +3790,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-8d8c72';
+const BUILD='2026.10.10-8621a3';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
