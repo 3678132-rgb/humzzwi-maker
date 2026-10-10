@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=1ced74"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=1ced74"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=1ced74">
+<link rel="manifest" href="manifest.json?v=0bd910"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0bd910"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0bd910">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1349,7 +1349,11 @@ const anySlot=()=>{for(let n=1;n<=SLOTS;n++)if(slotData(n))return true;return fa
 const sumStat=()=>Object.values(S.stat).reduce((a,b)=>a+b,0);
 const avgAff=()=>{const ks=Object.keys(MATES);return Math.round(ks.reduce((a,k)=>a+(S.aff[k]||0),0)/ks.length)};
 const bossAff=()=>Math.round(BOSS.reduce((a,k)=>a+(S.aff[k]||0),0)/BOSS.length);
-const payOf=()=>S.rank===0?(S.probPay||PAY[0]):PAY[S.rank];
+const payOf=()=>(S.rank===0?(S.probPay||PAY[0]):PAY[S.rank])+(S.raise||0);
+/* 연봉협상: 6개월마다(1년차 8월부터). 그 시기 기준보다 능력치 합계가 높을수록 월급이 크게 오른다. 오른 몫은 승진해도 유지 */
+const NEGO_AT=[5,11,17,23,29];
+const negoT=m=>100+10*m;
+const nextNego=()=>NEGO_AT.find(x=>x>=S.m);
 const isGold=()=>S.rep>=55&&avgAff()>=37;
 function bump(chips,k,d){
   if(!d)return;
@@ -2228,6 +2232,7 @@ function todayGoal(){const st=TEAM.filter(storyReady),out={t:'',d:'',ps:[]};
     out.ps=f?placesFor(a=>a.ms&&(a.ms[f]||a.ms.any)):[]}
   else if(S.m<GLOBAL_M){out.t='매출 만들기 · 회사일을 도우면 이번 달 매출↑';out.d=`론칭 끝! 이제 평일에 돕는 회사일 하나하나가 그달 매출이 돼요. 영업·마케팅 일이 특히 좋아요. 최고 월 매출 ${fmtW(S.salesBest||0)}.`;out.ps=['sales','mkt','studio']}
   else{out.t='해외 진출 · 영업팀 북미 바이어 미팅';out.d=`해외 진척 ${S.gl||0}/${GL_TOT}. 영업팀 바이어 미팅이 제일 빨라요. 다른 회사일도 조금씩 보탬이 돼요.`;out.ps=['sales']}
+  {const n=nextNego();if(n!=null)out.d+=`\n💰 다음 연봉협상: ${n===S.m?'이번 달':monthOf(n)+'월'} · 능력치 합계 ${sumStat()} / 기준 ${negoT(n)} (휴일 📚 자기계발로 올려요)`}
   const nx=REQ[S.rank+1],w=nx&&reqWhy(nx);if(w)out.d+=`\n⭐ 다음 승진(${RANKS[S.rank+1]}): ${w}`;
   if(st.length){out.d+=`\n♥ ${st.map(k=>given(k)).join('·')} 님이 할 얘기가 있대요. 빌딩에서 ♥ 표시를 찾아가요.`}
   return out}
@@ -2320,13 +2325,13 @@ async function runAct(id,i,ps){const a=ACTS[id];let perf=null;
 
 /* ----- 휴일 ----- */
 const WKND={
+  self:{img:'c_lecture',n:'📚 자기계발',d:'능력치↑ → 연봉협상에 유리',ids:['lecture','ingredient','english','excel','ai','license','mba']},
   job:{img:'c_cafe',n:'💰 부업',d:'통장 채우기 · 횟수가 쌓이면 승급',ids:['cafe','store','shoot','blog']},
   love:{img:'c_date',n:'💘 데이트',d:'설렘 · 사내연애·소개팅·셀프 데이트',ids:['date','blind','selfdate']},
   mate:{img:'c_friends',n:'🤝 동료와 주말',d:'♥20 넘은 동료와 주말 약속 · ♥↑',ids:[]},
   rest:{img:'c_leave',n:'🌴 휴식',d:'체력·스트레스 회복',ids:['home','walk','run','gym','pilates','pt','snack','friends']},
   trip:{img:'c_trip',n:'✈️ 여행',d:'크게 회복 · 연차·돈이 들어요',ids:['daytrip','trip','jeju','abroad']},
   shop:{img:'c_shop_mall',n:'🛍️ 쇼핑',d:'스트레스↓ · 트렌드 감각',ids:['shop_hb','shop_online','shop_mall']},
-  self:{img:'c_lecture',n:'📚 자기계발',d:'능력치↑ · 돈이 들어요',ids:['lecture','ingredient','english','excel','ai','license','mba']},
 };
 const actSub=id=>{const a=ACTS[id],l=lockReason(id),m=a.cost&&S.money<a.cost?'통장 부족':null;if(l||m)return '🔒 '+(l||m);
   const bits=[a.d];if(a.pay)bits.push(`+${jobPay(id)}만원`);if(a.cost)bits.push(`${a.cost}만원`);if(a.leave)bits.push(`연차 ${a.leave}일`);return bits.join(' · ')};
@@ -2356,6 +2361,15 @@ async function meetup(k){const ids=Object.keys(SPOTS),kn=knows(k),L=LIKE[k];
   const text=lv?lv[1]+'\n<span class="t">(…여기 정말 좋아하는구나!)</span>':hate?pick([`${given(k)} 님이 내내 시계를 봤다.\n<span class="t">(…여긴 취향이 아닌가 보다.)</span>`,`"…저 사실 이런 데 잘 안 와요." 어색한 웃음.`]):pick([`이야기가 끊이지 않았다. "오늘 즐거웠어요!"`,`"다음에 또 와요." ${given(k)} 님이 손을 흔들었다.`,'회사 밖에서 보니 또 다른 얼굴이었다.']);
   await result(fx,`${P.n}. ${text}`,`${given(k)}${wa(given(k))} 주말 약속`,k);return true}
 
+async function nego(){setPlace('pl_boss');
+  const T=negoT(S.m),sum=sumStat(),r=sum/T,tier=r>=1.2?3:r>=1?2:r>=.85?1:0;
+  await say({who:'jaemin',title:'💰 연봉협상 시즌',text:`"험쮜 님, 연봉협상 면담이 있어요. 부장실로 가 보세요."\n<span class="t">능력치 합계 ${sum} / 이번 기준 ${T}</span>`});
+  const c=await ask({who:'sangho',title:'💰 연봉협상',text:'"요즘 험쮜 님 일하는 거 잘 보고 있어요. 원하는 걸 말해 봐요."',
+    choices:[{l:'"제가 키운 실력을 근거로 말씀드릴게요"',s:`능력치 판정 · 합계 ${sum}/${T}`},{l:'"그동안 쌓은 평판을 봐 주세요"',s:`평판 판정 · 지금 ${S.rep}`},{l:'"회사 사정도 아니까 조금만요"',s:'작게 · 확실하게'}]});
+  const t=c===0?tier:c===1?(S.rep>=70?2:S.rep>=45?1:0):1,up=c===2?6:[0,8,16,26][t];
+  S.raise=(S.raise||0)+up;sfx(up>=16?'great':up?'ok':'fail');
+  const line=c===0?['"기준에 조금 못 미치네요. 다음엔 실력으로 보여 줘요."','"성장한 게 보여요. 조금 올려 드릴게요."','"기대 이상이에요. 확실하게 올려 드리죠."','"이 정도면 붙잡아야죠. 최고 인상률이에요!"'][t]:c===1?['"평판만으로는 아직 어렵네요."','"주변 평이 좋더라고요. 반영할게요."','"다들 험쮜 님 칭찬이에요. 크게 올려 드리죠."'][t]:'"마음 써 줘서 고마워요. 조금이지만 올려 드릴게요."';
+  await say({who:'sangho',title:up?`💰 월급 +${up}만원!`:'💰 이번엔 동결…',text:`${line}\n이제 월급 <b>${payOf()}만원</b>${S.raise?` (인상분 누적 +${S.raise}만원)`:''}\n<span class="t">${(n=>n!=null?`다음 연봉협상: ${yearOf(n)}년차 ${monthOf(n)}월 · 기준 ${negoT(n)} — 자기계발로 능력치를 올려 두세요.`:'마지막 연봉협상이었어요.')(NEGO_AT.find(x=>x>S.m))}</span>`,chips:applyFx(up?{st:-8,['aff_sangho']:2}:{st:8})})}
 /* ----- 하루 끝 → 휴일 → 월말 ----- */
 const runMonth=()=>monthIntro(); // 예전 버튼 호환
 async function afterDay(){busy=true;await weekend();await monthEnd()}
@@ -2381,6 +2395,7 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
   if(fx){await fx();extra=true}
   else if(R()<.55){const pool=RANDOM_EV.filter(e=>e.w()&&!(e.id&&S.flags['ev_'+e.id]));if(pool.length){const e=pick(pool);if(e.id)S.flags['ev_'+e.id]=1;await e.run();extra=true}}
   if(!S.ending&&ev)await evaluate(`${yearOf(S.m)}년차 ${monthOf(S.m)}월 ${ev}`);
+  if(!S.ending&&NEGO_AT.includes(S.m))await nego();
   if(!S.ending&&!extra&&!S.flags.dating&&(!S.flags.confess&&S.love>=25||S.flags.slow&&S.flags.confess<2&&S.love>=45)){await confess();extra=true}
   if(!S.ending&&!extra&&S.flags.dating&&!S.flags.d_ramen){await dateRamen();extra=true}
   if(!S.ending&&!extra&&S.flags.dating&&S.flags.d_ramen&&!S.flags.d_picnic&&S.love>=55){await datePicnic();extra=true}
@@ -2860,7 +2875,7 @@ function statusHTML(){
   <div class="group"><h4>직급 · 목표는 CEO ${isGold()?'<span class="gold">✨황금막내</span>':''}</h4><div class="ladder">${RANKS.map((n,i)=>`<span class="${i<S.rank?'done':i===S.rank?'now':''}">${n}</span>`).join('')}</div>
   <p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${nx?`다음 승진(${RANKS[S.rank+1]}): ${reqText(nx)}<br>${reqWhy(nx)?`<b style="color:var(--pink-d)">부족: ${reqWhy(nx)}</b>`:'<b style="color:var(--good)">조건 충족! 다음 분기 평가를 기다려요.</b>'}<br>분기 평가: 3개월마다 (다음 평가 ${nextEval()!=null?`${yearOf(nextEval())}년차 ${monthOf(nextEval())}월`:'없음'})`:'최고 직급! 캔버스랩 CEO'}<br>황금막내 조건: 평판 55 이상 + 동료 평균 ♥37 이상</p></div>
   <div class="group"><h4>관계</h4>${m('상사 평가 (두 부장 ♥ 평균)',bossAff(),100,'#ff5c8a')}${m('동료 평균 ♥',avgAff(),100,'#ff9cc0')}<p style="margin:4px 0 0;font-size:12px;color:var(--mute)">사람별 숫자는 「관계도」에서 볼 수 있어요.</p></div>
-  <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div>
+  <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}${S.raise?` <span style="font-size:11px;color:var(--good)">연봉협상 +${S.raise}</span>`:''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div>
   ${Object.keys(JOB_RANK).some(k=>jobN(k))?`<p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${Object.keys(JOB_RANK).filter(k=>jobN(k)).map(k=>`${ACTS[k].name}: ${JOB_RANK[k][jobLv(k)]} (${jobN(k)}회)`).join(' · ')}</p>`:''}</div>`;
 }
 function buildHTML(){
@@ -3562,7 +3577,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.09-1ced74';
+const BUILD='2026.10.10-0bd910';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
