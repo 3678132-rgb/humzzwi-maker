@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=bdb400"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=bdb400"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=bdb400">
+<link rel="manifest" href="manifest.json?v=7b17c0"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7b17c0"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7b17c0">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3673,6 +3673,8 @@ const TOUR=[
   ['roof','옥상 정원! 머리 식히기 딱 좋아요. 여기서 고민을 털어놓는 사람이 많대요.','퇴근 전 노을 맛집. 여기서 고민 상담이 제일 많대요.'],
   ['wh','마지막으로 지하 물류 창고. OEM 충진부터 출고까지, 제품이 여기서 고객에게 떠나요.','충진 라인에서 막 나온 병들. 고객에게 가는 마지막 길이에요.'],
 ];
+// 그림 1장만 보여 주는 장소
+const TOUR_ONE=new Set(['boss','roof']);
 const HELLO={
   sangho:'이상호 사업부장이에요. 영업팀이랑 STAGE:ZERO TF를 맡고 있어요.\n전체 판을 읽는 법, 천천히 알려 줄게요.',
   daram:'한다람 주임입니다! 매장 돌고 바이어 만나는 게 일이에요.\n…커피는 아아파예요. 그냥 참고로요.',
@@ -3693,8 +3695,10 @@ async function officeTour(){
     // ① 서휘 안내 → ② 「둘러보기」: 장소만 담은 그림 2장을 화면 가득 → ③ 그곳 사람들
     const c0=await ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,text:`"${line}"`,choices:[{l:'👀 둘러보기',s:''},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
     if(c0===1)break;
-    await showCG({img:`tp_${q}_1`,kick:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,sub:line});
-    await showCG({img:`tp_${q}_2`,kick:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,sub:cap2+(acts.length?`\n<span>💼 하는 일: ${acts.join(' · ')}</span>`:'')});
+    const kick=`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,tail=acts.length?`\n<span>💼 하는 일: ${acts.join(' · ')}</span>`:'';
+    if(TOUR_ONE.has(q))await showCG({img:`tp_${q}_1`,kick,title:`${P.ic} ${P.n}`,sub:cap2+tail});
+    else{await showCG({img:`tp_${q}_1`,kick,title:`${P.ic} ${P.n}`,sub:line});
+      await showCG({img:`tp_${q}_2`,kick,title:`${P.ic} ${P.n}`,sub:cap2+tail})}
     if(!here.length){continue}
     const pr=ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f} ${P.n}`,title:`👥 ${P.n} 사람들`,
       text:`${here.map(k=>tagName(k)).join(', ')}${acts.length?`\n<span class="t">💼 여기서 하는 일: ${acts.join(' · ')}</span>`:''}`,
@@ -3769,7 +3773,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-bdb400';
+const BUILD='2026.10.10-7b17c0';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
