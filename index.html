@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=128b70"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=128b70"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=128b70">
+<link rel="manifest" href="manifest.json?v=0b8c2c"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0b8c2c"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0b8c2c">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2221,6 +2221,7 @@ function recordSales(){if(!S.launched||S.m<=LAUNCH_M)return null;
   S.buzz=Math.max(0,S.buzz-Math.max(3,Math.round(S.buzz*.12)));return v}
 
 /* ================= 엔딩 ================= */
+const loveEnd=()=>S.flags.vday==='daram'||S.flags.dating&&S.love>=80;
 function computeEnding(){
   if(S.ending)return S.ending;
   const sc=brandScore();
@@ -2228,12 +2229,13 @@ function computeEnding(){
   if(S.flags.bearYes&&sc<50)return 'cafe';
   if(S.flags.foxYes&&S.rep<60)return 'fox';
   // CEO가 되면 무조건 CEO 엔딩 (사내커플·2월 14일은 CEO 엔딩 안에 함께 기록)
+  // 회사 성과가 먼저: 사내 커플·2월 14일 초콜릿은 성과 엔딩에 함께 기록된다(성과가 낮을 때만 주인공)
   if(S.rank>=6)return 'gold';
-  if(S.flags.vday==='daram'||S.flags.dating&&S.love>=80&&sc<65)return 'love';
-  if(S.flags.vday)return 'vday';
   if(glOpen()>=2&&sc>=65)return 'na';
   if(sc>=50)return 'hit';
+  if(loveEnd())return 'love';
   if(sc>=36)return 'ok';
+  if(S.flags.vday)return 'vday';
   return 'delay';
 }
 // 3년 후 험쮜의 일: 가장 높은 능력치 두 개로 정해진다
@@ -2243,7 +2245,7 @@ function careerOf(){const top=Object.entries(S.stat).sort((a,b)=>b[1]-a[1]).slic
   return {title:CAREER2[key]||CAREER[top[0]][0],top,line:top.map(k=>`${CAREER[k][1]} ${STATS[k]} ${S.stat[k]}`).join(' · ')}}
 function finish(){
   const id=computeEnding();S.ending=id;const E=ENDINGS.find(e=>e.id===id);playBgm(['bankrupt','burnout','delay'].includes(id)?'blue':['quit','cafe','love'].includes(id)?'rest':'finale');
-  const both=id==='gold'?[S.flags.vday==='daram'||(S.flags.dating&&S.love>=80)?'love':null,S.flags.vday&&S.flags.vday!=='daram'?'vday':null].filter(Boolean):[];
+  const both=[id!=='love'&&loveEnd()?'love':null,id!=='vday'&&S.flags.vday&&S.flags.vday!=='daram'?'vday':null].filter(Boolean);
   const dex=ls.get(DEXKEY)||{};dex[id]=true;both.forEach(x=>dex[x]=true);ls.set(DEXKEY,dex);ls.set(slotKey(S.slot||1),null);
   const best=Object.entries(S.aff).sort((a,b)=>b[1]-a[1])[0],B=who(best[0]);
   const p=S.choice.cat?`STAGE:ZERO ${S.choice.cat}`:'STAGE:ZERO';
@@ -2266,7 +2268,7 @@ function finish(){
     burnout:`험쮜는 휴직계를 냈다.\n한 달 동안 늦잠을 자고, 돈가스를 먹고, 한강을 걸었다.\n"일보다 내가 먼저야." 험쮜는 조금 더 단단해졌다.`}[id];
   const el=$('#scr-end');
   el.innerHTML=`<div class="end-art" style="background-image:url(${IMG(id==='love'?dimg('picnic'):E.img)})"><div class="grade">${E.g}</div></div>
-  <div class="end-body"><small>ENDING · ${ENDINGS.indexOf(E)+1}/${ENDINGS.length}</small><h2>${E.t}</h2><p>${epi}</p>${both.includes('love')?`<p class="both">💘 <b>+ 사내 커플 탄생</b><br>취임식 날, 맨 앞줄에서 제일 크게 박수 친 사람은 영업팀 한다람 주임이었다.\n"대표님, 오늘 저녁은 제가 살게요."</p>`:''}${both.includes('vday')?`<p class="both">🍫 <b>+ 2월 14일의 초콜릿</b><br>${VDAY[S.flags.vday][1]}</p>`:''}
+  <div class="end-body"><small>ENDING · ${ENDINGS.indexOf(E)+1}/${ENDINGS.length}</small><h2>${E.t}</h2><p>${epi}</p>${both.includes('love')?`<p class="both">💘 <b>+ 사내 커플 탄생</b><br>${id==='gold'?'취임식 날, 맨 앞줄에서 제일 크게 박수 친 사람은 영업팀 한다람 주임이었다.\n"대표님, 오늘 저녁은 제가 살게요."':'팀 회식 자리에서 비밀연애가 들통났다.\n다람 주임: "이제 숨길 것도 없네요." 팀 전체의 축하(와 놀림)를 받았다.'}</p>`:''}${both.includes('vday')?`<p class="both">🍫 <b>+ 2월 14일의 초콜릿</b><br>${VDAY[S.flags.vday][1]}</p>`:''}
   ${(c=>`<p class="both">🧑‍💼 <b>3년 후 험쮜의 일 · ${c.title}</b><br>${RANKS[S.rank]} 험쮜는 ${c.title}로 일하고 있다.\n가장 많이 키운 능력: ${c.line}</p>`)(careerOf())}<p class="sub" style="color:var(--mute);font-size:13px">가장 가까웠던 사람: <b style="color:var(--ink)">${B.name}</b> (♥ ${best[1]} · ${relLv(best[1])[1]}) — "${B.q}"</p>
   <div class="report"><div><small>최종 직급</small><b>${RANKS[S.rank]}</b></div><div><small>론칭 완성도</small><b>${S.score??'-'} (${bpPct()}%)</b></div><div><small>브랜드 점수</small><b>${brandScore()}</b></div><div><small>월 최고 매출</small><b>${fmtW(S.salesBest||0)}</b></div><div><small>누적 매출</small><b>${fmtW(S.salesSum||0)}</b></div><div><small>해외 진출</small><b>${glOpen()}개국</b></div><div><small>누적 이익</small><b>${S.co?(S.co.profitSum<0?'−':'')+fmtW(Math.abs(S.co.profitSum)):'-'}</b></div><div><small>회사 자금</small><b>${S.co?(S.co.cash<0?'−':'')+fmtW(Math.abs(S.co.cash)):'-'}</b></div>
   <div><small>제품력</small><b>${S.bq}</b></div><div><small>화제성</small><b>${S.buzz}</b></div><div><small>평판</small><b>${S.rep}</b></div>
@@ -3913,7 +3915,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-128b70';
+const BUILD='2026.10.10-0b8c2c';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
