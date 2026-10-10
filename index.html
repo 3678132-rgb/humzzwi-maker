@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=2e4184"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2e4184"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2e4184">
+<link rel="manifest" href="manifest.json?v=d823a8"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=d823a8"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=d823a8">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -47,6 +47,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 /* ---------- 상단 상태창 ---------- */
 .hud-top{position:absolute;top:calc(10px + var(--st));left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:4}
+.life{display:grid;gap:6px;margin-top:10px}.life .lf{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:12px;background:var(--cream,#fff6ee)}.life .lf i{font-style:normal;font-size:18px;width:24px;text-align:center}.life .lf span{flex:1;min-width:0}.life .lf b{display:block;font-size:13px}.life .lf small{display:block;font-size:11px;color:var(--mute)}.life .lf em{font-style:normal;font-size:12px;color:var(--mute)}.life .lf.done{opacity:.75}.life .lf.done i{color:var(--good,#3a9)}.life .lf.lock{opacity:.5}
 .avatar{position:relative;width:58px;height:58px;flex:none;border-radius:18px;border:3px solid #fff;background:var(--sky-s) url(assets/f_hz.webp) 50% 50%/cover no-repeat;box-shadow:0 4px 0 #b9780a,0 6px 12px rgba(0,0,0,.25)}
 body.fem .avatar{background-image:url(assets/f_hz_w.webp)}
 .av-lb{position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);font-family:var(--display);font-size:10.5px;line-height:1.35;color:#fff;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);border:2px solid #fff;border-radius:99px;padding:0 7px;white-space:nowrap;box-shadow:0 2px 0 rgba(0,0,0,.25)}
@@ -1128,7 +1129,23 @@ const monthOf=m=>((m+2)%12)+1, yearOf=m=>Math.floor(m/12)+1; // 입사 연차 (3
 const RANKS=['인턴','사원','주임','대리','팀장','이사','CEO'];
 const PAY=[180,230,260,300,360,450,600];
 const LOAN=30;
-const rentOf=()=>S.m>=10?108:95;            // 2년차 재계약 때 월세 인상
+// 생활 목표: 통장이 모이면 월말에 제안. 한 번 사면 효과가 계속되고 엔딩 후일담에 남는다
+const LIFE=[
+  {k:'gear',ic:'💻',n:'노트북·장비 업그레이드',cost:200,from:8,d:'회사일 성공률 +4%',ep:'회사 노트북 대신 내 노트북으로 기획서를 쓴다. 스티커는 STAGE:ZERO.'},
+  {k:'loan',ic:'🎓',n:'학자금 조기 상환',cost:300,from:6,d:'매달 나가던 학자금 30만원 끝!',ep:'학자금 「완납」 문자는 아직도 캡처해 두었다.'},
+  {k:'move',ic:'🏢',n:'해 드는 오피스텔로 이사',cost:500,from:12,d:'월세 +15만원 · 매달 체력 +4, 스트레스 −4',ep:'반지하 원룸을 떠나 해가 드는 오피스텔로 이사했다. 창가엔 화분이 셋.'},
+  {k:'parents',ic:'🎁',n:'부모님 효도 여행',cost:400,from:16,d:'스트레스 −30 · 평생 자랑거리',ep:'부모님 단톡방 프로필 사진이 제주 여행 사진으로 바뀌었다.'},
+  {k:'dream',ic:'🌱',n:'내 브랜드 적금',cost:800,from:24,d:'언젠가 내 이름의 브랜드를 위해',ep:'통장 이름 「언젠가 험쮜 브랜드」. 잔고는 매달 늘고 있다.'}];
+const hasLife=k=>!!(S.life&&S.life[k]!=null);
+const loanOf=()=>hasLife('loan')?0:LOAN;
+async function lifeOffer(){S.life=S.life||{};S.lifeSkip=S.lifeSkip||{};
+  const L=LIFE.find(x=>!hasLife(x.k)&&S.m>=x.from&&S.money>=x.cost+60&&!((S.lifeSkip[x.k]||0)>S.m));if(!L)return;
+  setPlace('sc_home');
+  const c=await ask({who:'me',speaker:'💰 생활 목표',title:`${L.ic} ${L.n}`,text:`통장에 ${S.money}만원이 모였다.\n${L.n} — ${L.cost}만원.\n<span class="t">${L.d}</span>`,choices:[{l:`${L.ic} 지금 한다`,s:`−${L.cost}만원 · ${L.d}`},{l:'다음에 할래',s:'석 달 뒤에 다시 물어볼게요'}]});
+  if(c===1){S.lifeSkip[L.k]=S.m+3;return}
+  S.life[L.k]=S.m;const fx={money:-L.cost,...(L.k==='parents'?{st:-30,hp:6}:{st:-8})};
+  await result(fx,{gear:'새 노트북 전원을 켰다. 부팅 3초.\n<span class="t">(…이제 회의록 쓰다 멈출 일은 없다.)</span>',loan:'「학자금 대출 완납」 문자가 왔다.\n<span class="t">(…다음 달부터 월급이 30만원 늘어난 기분.)</span>',move:'이삿날. 창문을 여니 햇살이 들어왔다.\n<span class="t">(…여기서라면 잘 잘 수 있겠다.)</span>',parents:`공항에서 부모님이 손을 흔들었다. "우리 ${hzFem()?'딸':'아들'} 회사 덕분에 제주도를 다 가 보네!"\n<span class="t">(…3년 동안 일한 이유 중 하나가 이거였구나.)</span>`,dream:'적금 통장을 새로 만들었다. 이름은 「언젠가 험쮜 브랜드」.\n<span class="t">(…지금은 STAGE:ZERO지만, 언젠가는.)</span>'}[L.k],`${L.ic} ${L.n}`)}
+const rentOf=()=>(S.m>=10?108:95)+(hasLife('move')?15:0);            // 2년차 재계약 때 월세 인상 · 오피스텔은 +15
 const livingOf=()=>70+S.rank*22;              // 직급이 오를수록 씀씀이도 커진다
 const LEAVE_PER_YEAR=15;
 const STATS={plan:'기획력',trend:'트렌드',comm:'소통력',know:'뷰티지식',data:'데이터',exec:'실행력'};
@@ -1505,7 +1522,7 @@ const isFit=id=>{const f=(typeof missionMs==='function'&&S&&S.mission&&missionMs
 // 맡겼을 때 성공률: 능력치·관계(♥)·컨디션·부서 버프
 function workP(id){const a=ACTS[id],keys=Object.keys(a.g),sv=keys.reduce((s,k)=>s+S.stat[k],0)/keys.length;
   const aff=a.mate?(S.aff[a.mate]||0):20,diff=12+Math.floor(S.m/3)*3,D=(DEPTS[a.dept]||{}).fx||{};
-  return clamp(.55+(sv-diff)/90+aff/400+S.ai*.03-S.st/260+(D.p||0)+(S.buff||0)+(S.perk&&S.perk[a.mate]?.06:0),.12,.95)}
+  return clamp(.55+(sv-diff)/90+aff/400+S.ai*.03-S.st/260+(D.p||0)+(S.buff||0)+(S.perk&&S.perk[a.mate]?.06:0)+(hasLife('gear')?.04:0),.12,.95)}
 // 그 시기에 필요한 능력치(분기마다 오른다)보다 한참 모자라면 일이 잘 안 된다
 const needOf=()=>12+Math.floor(S.m/3)*3;
 const lowSkill=id=>{const a=ACTS[id];if(!a||a.cat!=='work'||!a.g)return null;const ks=Object.keys(a.g),avg=ks.reduce((t,k)=>t+S.stat[k],0)/ks.length;
@@ -2262,7 +2279,7 @@ function finish(){
   const el=$('#scr-end');
   el.innerHTML=`<div class="end-art" style="background-image:url(${IMG(id==='love'?dimg('picnic'):E.img)})"><div class="grade">${E.g}</div></div>
   <div class="end-body"><small>ENDING · ${ENDINGS.indexOf(E)+1}/${ENDINGS.length}</small><h2>${E.t}</h2><p>${epi}</p>${both.includes('love')?`<p class="both">💘 <b>+ 사내 커플 탄생</b><br>${id==='gold'?'취임식 날, 맨 앞줄에서 제일 크게 박수 친 사람은 영업팀 한다람 주임이었다.\n"대표님, 오늘 저녁은 제가 살게요."':'팀 회식 자리에서 비밀연애가 들통났다.\n다람 주임: "이제 숨길 것도 없네요." 팀 전체의 축하(와 놀림)를 받았다.'}</p>`:''}${both.includes('vday')?`<p class="both">🍫 <b>+ 2월 14일의 초콜릿</b><br>${VDAY[S.flags.vday][1]}</p>`:''}
-  ${(c=>`<p class="both">🧑‍💼 <b>3년 후 험쮜의 일 · ${c.title}</b><br>${RANKS[S.rank]} 험쮜는 ${c.title}로 일하고 있다.\n가장 많이 키운 능력: ${c.line}</p>`)(careerOf())}<p class="sub" style="color:var(--mute);font-size:13px">가장 가까웠던 사람: <b style="color:var(--ink)">${B.name}</b> (♥ ${best[1]} · ${relLv(best[1])[1]}) — "${B.q}"</p>
+  ${LIFE.some(L=>hasLife(L.k))?`<p class="both">🏡 <b>3년 후 험쮜의 생활</b><br>${LIFE.filter(L=>hasLife(L.k)).map(L=>L.ic+' '+L.ep).join('\n')}</p>`:''}${(c=>`<p class="both">🧑‍💼 <b>3년 후 험쮜의 일 · ${c.title}</b><br>${RANKS[S.rank]} 험쮜는 ${c.title}로 일하고 있다.\n가장 많이 키운 능력: ${c.line}</p>`)(careerOf())}<p class="sub" style="color:var(--mute);font-size:13px">가장 가까웠던 사람: <b style="color:var(--ink)">${B.name}</b> (♥ ${best[1]} · ${relLv(best[1])[1]}) — "${B.q}"</p>
   <div class="report"><div><small>최종 직급</small><b>${RANKS[S.rank]}</b></div><div><small>론칭 완성도</small><b>${S.score??'-'} (${bpPct()}%)</b></div><div><small>브랜드 점수</small><b>${brandScore()}</b></div><div><small>월 최고 매출</small><b>${fmtW(S.salesBest||0)}</b></div><div><small>누적 매출</small><b>${fmtW(S.salesSum||0)}</b></div><div><small>해외 진출</small><b>${glOpen()}개국</b></div><div><small>누적 이익</small><b>${S.co?(S.co.profitSum<0?'−':'')+fmtW(Math.abs(S.co.profitSum)):'-'}</b></div><div><small>회사 자금</small><b>${S.co?(S.co.cash<0?'−':'')+fmtW(Math.abs(S.co.cash)):'-'}</b></div>
   <div><small>제품력</small><b>${S.bq}</b></div><div><small>화제성</small><b>${S.buzz}</b></div><div><small>평판</small><b>${S.rep}</b></div>
   <div><small>능력치 합계</small><b>${sumStat()}</b></div><div><small>부업 / 야근</small><b>${S.jobs} / ${S.ot}</b></div><div><small>AI 스킬</small><b>Lv.${S.ai}</b></div><div><small>상사 평가</small><b>${bossAff()}</b></div><div><small>동료 평가</small><b>${peerAff()}</b></div><div><small>면접 등급</small><b>${S.ivGrade||'-'}</b></div><div><small>미션 성공</small><b>${S.missionWins||0}/${S.missionTotal||0}</b></div></div>
@@ -2577,11 +2594,12 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
   await afterMs();S.st=clamp(S.st-6);S.hp=clamp(S.hp+8);
   if(act2()&&S.mission&&S.mission.m===S.m)await missionResult();
   const sold=recordSales();
-  const pay=payOf(),RENT=rentOf(),LIVING=livingOf(),out=RENT+LIVING+LOAN;S.money+=pay-out;
-  const perkChips=[];Object.keys(S.perk||{}).forEach(k=>{const {txt,...fx}=PERK[k];applyFx(fx,perkChips)});
+  const pay=payOf(),RENT=rentOf(),LIVING=livingOf(),LOAN_=loanOf(),out=RENT+LIVING+LOAN_;S.money+=pay-out;
+  const perkChips=[];Object.keys(S.perk||{}).forEach(k=>{const {txt,...fx}=PERK[k];applyFx(fx,perkChips)});if(hasLife('move'))applyFx({hp:4,st:-4},perkChips);
   if(S.money<0)bump(perkChips,'st',6);
   setPlace('sc_home');
-  await say({who:'me',speaker:'MONTHLY',title:`${monthOf(S.m)}월 결산`,text:`${sold!=null?`📈 STAGE:ZERO 매출 <b>${fmtW(sold)}</b>\n`:''}💰 월급 ${pay} − 월세 ${RENT} − 생활비 ${LIVING} − 학자금 ${LOAN} = <b>${pay-out>=0?'+':''}${pay-out}만원</b>\n통장 ${S.money}만원${S.money<0?' (마이너스! 스트레스↑)':''}`,chips:perkChips});
+  await say({who:'me',speaker:'MONTHLY',title:`${monthOf(S.m)}월 결산`,text:`${sold!=null?`📈 STAGE:ZERO 매출 <b>${fmtW(sold)}</b>\n`:''}💰 월급 ${pay} − 월세 ${RENT} − 생활비 ${LIVING} ${LOAN_?`− 학자금 ${LOAN_} `:''}= <b>${pay-out>=0?'+':''}${pay-out}만원</b>\n통장 ${S.money}만원${S.money<0?' (마이너스! 스트레스↑)':''}`,chips:perkChips});
+  await lifeOffer();
   if(S.m===LAUNCH_M&&!S.launched)await launch();
   if(S.m===TOTAL-2){
     if(S.flags.bearYes){setPlace('sc_cafe');const c=await ask({who:'bear',title:'곰 사장님의 최종 제안',text:'"험쮜 씨, 다음 달부터 우리 가게 맡아 줄 수 있어요? 이제 답을 들어야 해서요."',choices:[{l:'"죄송해요, 저는 캔버스랩에 남을게요"',s:'제안 거절'},{l:'"네, 해 볼게요!"',s:'카페 엔딩 루트 확정'}]});
@@ -3161,7 +3179,7 @@ function statusHTML(){
   <div class="group"><h4>직급 · 목표는 CEO ${isGold()?'<span class="gold">✨황금막내</span>':''}</h4><div class="ladder">${RANKS.map((n,i)=>`<span class="${i<S.rank?'done':i===S.rank?'now':''}">${n}</span>`).join('')}</div>
   <p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${nx?`다음 승진(${RANKS[S.rank+1]}): ${reqText(nx)}<br>${reqWhy(nx)?`<b style="color:var(--pink-d)">부족: ${reqWhy(nx)}</b>`:'<b style="color:var(--good)">조건 충족! 다음 분기 평가를 기다려요.</b>'}<br>분기 평가: 3개월마다 (다음 평가 ${nextEval()!=null?`${yearOf(nextEval())}년차 ${monthOf(nextEval())}월`:'없음'})`:'최고 직급! 캔버스랩 CEO'}<br>황금막내 조건: 평판 55 이상 + 동료 평균 ♥37 이상</p></div>
   <div class="group"><h4>관계</h4>${m('상사 평가 (두 부장 ♥ 평균)',bossAff(),100,'#ff5c8a')}${m('동료 평가 (동료 7명 ♥ 평균)',peerAff(),100,'#ff9cc0')}<p style="margin:4px 0 0;font-size:12px;color:var(--mute)">사람별 숫자는 「관계도」에서 볼 수 있어요.</p></div>
-  <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}${S.raise?` <span style="font-size:11px;color:var(--good)">연봉협상 +${S.raise}</span>`:''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div>
+  <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}${S.raise?` <span style="font-size:11px;color:var(--good)">연봉협상 +${S.raise}</span>`:''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div><div class="life">${LIFE.map(L=>`<div class="lf ${hasLife(L.k)?'done':S.m<L.from?'lock':''}"><i>${hasLife(L.k)?'✓':L.ic}</i><span><b>${L.n}</b><small>${hasLife(L.k)?'완료 · '+L.d:S.m<L.from?`${yearOf(L.from)}년차 ${monthOf(L.from)}월부터`:`${L.cost}만원 · ${L.d}`}</small></span><em>${hasLife(L.k)||S.m<L.from?'':Math.min(100,Math.round(S.money/L.cost*100))+'%'}</em></div>`).join('')}</div>
   ${Object.keys(JOB_RANK).some(k=>jobN(k))?`<p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${Object.keys(JOB_RANK).filter(k=>jobN(k)).map(k=>`${ACTS[k].name}: ${JOB_RANK[k][jobLv(k)]} (${jobN(k)}회)`).join(' · ')}</p>`:''}</div>`;
 }
 function buildHTML(){
@@ -3915,7 +3933,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-2e4184';
+const BUILD='2026.10.10-d823a8';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
