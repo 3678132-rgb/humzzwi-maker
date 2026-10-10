@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=a95a50"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=a95a50"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=a95a50">
+<link rel="manifest" href="manifest.json?v=611a49"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=611a49"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=611a49">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -362,6 +362,10 @@ body.picmode-on .shade{background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,r
 
 /* 대화창 속 두 사람 그림 (2장 움짤) */
 .dialog.haspic{max-height:74%!important}
+/* 스케줄 그림이 나올 땐 뒤 배경(방·사무실)을 빼고, 같은 그림을 흐리게 깔아 그림 하나에만 눈이 가게 */
+.scene::after{content:"";position:absolute;inset:-40px;background:var(--clip-bg,none) center/cover no-repeat;filter:blur(26px) brightness(.62) saturate(1.15);opacity:0;transition:opacity .35s;z-index:1;pointer-events:none}
+body.clip-on .scene::after{opacity:1}
+body.clip-on #pimg{opacity:0}
 .dpic{grid-column:1/-1;position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 10px rgba(61,42,34,.18);background:#fff3e6}
 .dpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%}
 .dpic img.b{animation:dflip 1s step-end infinite}
@@ -2514,6 +2518,9 @@ function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidd
   im.style.height='100%';el.style.height=h+'px';el.style.bottom=(ph-y-h)+'px';
   const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,y+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
 $('#actor-img').addEventListener('load',placeActor);
+// 대화창에 스케줄 그림이 있으면 장면 배경을 그 그림의 흐린 버전으로 바꾼다
+new MutationObserver(()=>{const d=$('#dialog'),im=!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img');
+  if(im)$('#scene').style.setProperty('--clip-bg',`url("${im.getAttribute('src')}")`);document.body.classList.toggle('clip-on',!!im)}).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
 function chipsHTML(chips){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-chipRank(b));if(!chips.length)return '';
@@ -3630,7 +3637,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-a95a50';
+const BUILD='2026.10.10-611a49';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
