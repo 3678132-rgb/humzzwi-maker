@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=a84d8a"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=a84d8a"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=a84d8a">
+<link rel="manifest" href="manifest.json?v=28da45"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=28da45"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=28da45">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -560,16 +560,18 @@ body.clip-on:not([data-mbg=C]) #pimg{opacity:0}
 .fl-l{display:grid;place-content:center;text-align:center;background:#2a374c;color:#fff;border-radius:9px;line-height:1.1;padding:2px 0}
 .fl-l b{font-family:var(--display);font-weight:400;font-size:15px}.fl-l small{font-size:9px;opacity:.75;letter-spacing:-.02em}
 /* ===== 빌딩 외관(파스텔 동화 빌딩, #bld.bx-C): 분홍 세모 지붕 간판 → 층 → 1F 잔디 → 지하 B1 ===== */
-.bld[class*=bx-] .bl-floors{padding:0 18px 0;gap:0}
+/* 하늘·땅 배경이 건물과 함께 스크롤되게(local), 옆 흔들림·고무줄 튕김 막기 */
+.bld[class*=bx-] .bl-floors{padding:0 18px 0;gap:0;overflow-x:hidden;overscroll-behavior:none;background-attachment:local!important}
 .bld[class*=bx-] .bl-floors::before{content:"CANVAS LAB";flex:none;align-self:center;margin:14px 0 0;font-family:var(--display);letter-spacing:.12em}
 .bld[class*=bx-] .fl{border-width:0 6px 0}
 .bld[class*=bx-] .fl-RF{border-radius:0}
 .bld[class*=bx-] .bl-floors::after{content:"";flex:none;height:30px}
 .bld.bx-C .bl-floors{background:radial-gradient(60px 26px at 18% 60px,#fff 95%,transparent),radial-gradient(80px 30px at 82% 110px,#fff 95%,transparent),linear-gradient(180deg,#ffd9e6 0,#fff1d6 200px,#fff1d6 calc(100% - 90px),#b98a5e calc(100% - 90px))!important}
 .bld.bx-C .fl-1F{border-bottom-color:#7cc46a!important}
+.bld.bx-C .bl-floors{background-attachment:local!important}
 /* C 파스텔 동화 빌딩 */
 .bld.bx-C .bl-floors{background:radial-gradient(60px 26px at 18% 60px,#fff 95%,transparent),radial-gradient(80px 30px at 82% 110px,#fff 95%,transparent),linear-gradient(180deg,#ffd9e6 0,#fff1d6 200px,#fff1d6 calc(100% - 90px),#8fcf7a calc(100% - 90px))}
-.bld.bx-C .bl-floors::before{content:"🎀 CANVAS LAB 🎀";font-size:17px;color:#fff;background:#ff7ea6;padding:20px 26px 6px;clip-path:polygon(50% 0,100% 62%,100% 100%,0 100%,0 62%);margin-top:6px;width:calc(100% + 24px);text-align:center;border-bottom:6px solid #e0527f}
+.bld.bx-C .bl-floors::before{content:"🎀 CANVAS LAB 🎀";font-size:17px;color:#fff;background:#ff7ea6;padding:20px 26px 6px;clip-path:polygon(50% 0,100% 62%,100% 100%,0 100%,0 62%);margin-top:6px;width:calc(100% + 20px);max-width:none;margin-inline:-10px;box-sizing:border-box;text-align:center;border-bottom:6px solid #e0527f}
 .bld.bx-C .fl{background:radial-gradient(9px 9px at 50% 0,transparent 98%,transparent) ,#fff8ec;border-color:#f3b6c6;padding:7px 8px}
 .bld.bx-C .fl-RF{background:linear-gradient(180deg,#e2f6d4,#f4fbe9)}
 .bld.bx-C .fl-1F{border-bottom:12px solid #b98a5e;box-shadow:inset 0 8px 0 repeating-linear-gradient(90deg,#ff9cc0 0 14px,#fff 14px 28px)}
@@ -3722,7 +3724,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-a84d8a';
+const BUILD='2026.10.10-28da45';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
