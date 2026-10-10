@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=28da45"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=28da45"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=28da45">
+<link rel="manifest" href="manifest.json?v=ce7649"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=ce7649"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=ce7649">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3659,6 +3659,47 @@ function townWalk(){return new Promise(res=>{
     if(left<=0){pop('길을 헤매다 해가 졌다… 집 앞 영 사진관으로!');end('A')}};
   el.querySelector('.pad').addEventListener('click',e=>{const b=e.target.closest('[data-mv]');if(!b)return;const [dx,dy]=b.dataset.mv.split(',').map(Number);move(dx,dy)});
   const key=e=>{const m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(m){e.preventDefault();move(...m)}};addEventListener('keydown',key)})}
+/* ================= 입사 첫날 회사 투어 =================
+   1층 로비 카페부터 층층이 올라가며 장소(pl_ 배경)를 보여 주고, 그곳 사람들이 자기소개를 한다. 시작할 때나 장소마다 건너뛸 수 있다 */
+const TOUR=[
+  ['cafe','1층 카페예요. 출근하면 여기서 커피부터! 지친 날엔 잠깐 쉬어 가도 돼요.\n가끔 다른 팀 사람들이 쉬러 내려와서, 우연히 마주치기도 해요.'],
+  ['sales','2층 영업팀. H&B 스토어·자사몰·해외 바이어까지, 화장품이 팔리는 길을 뚫는 곳이에요.'],
+  ['ops','같은 층 경영지원팀. ERP 재고, 법인카드 정산, 예산… 회사가 흔들리지 않게 기준을 세워요.'],
+  ['mkt','3층 마케팅팀! 험쮜 님 자리가 바로 여기예요. 브랜드 메시지랑 리뷰 데이터를 다뤄요.'],
+  ['studio','옆방 스튜디오에선 숏폼이랑 제품 사진을 찍어요. 조명 선 조심하세요!'],
+  ['strat','4층 전략기획팀. 시장을 읽어 카테고리를 정하고, 용기·패키지를 설계해요.'],
+  ['lab','연구실이에요. 처방 성분을 맞추는 곳. 실험대 위 비커는 함부로 만지면 안 돼요!'],
+  ['boss','5층 부장실. 두 부장님 일정 관리랑 경영회의가 여기서 열려요. 노크는 필수!'],
+  ['roof','옥상 정원! 머리 식히기 딱 좋아요. 여기서 고민을 털어놓는 사람이 많대요.'],
+  ['wh','마지막으로 지하 물류 창고. OEM 충진부터 출고까지, 제품이 여기서 고객에게 떠나요.'],
+];
+const HELLO={
+  sangho:'이상호 사업부장이에요. 영업팀이랑 STAGE:ZERO TF를 맡고 있어요.\n전체 판을 읽는 법, 천천히 알려 줄게요.',
+  daram:'한다람 주임입니다! 매장 돌고 바이어 만나는 게 일이에요.\n…커피는 아아파예요. 그냥 참고로요.',
+  jaemin:'차재민 사원입니다. 영수증은 당일 제출, 법인카드는 정해진 곳에서만.\n그것만 지켜 주시면 금방 친해질 수 있어요.',
+  sumin:'…이수민이에요. 리뷰 데이터 담당이에요.\n숫자로 궁금한 거 있으면 언제든 물어봐요.',
+  eunbin:'이은빈이에요! 이커머스랑 숏폼 담당~\n같이 찍을 일 많을 거예요. 카메라 앞에서 웃는 연습 해 둬요!',
+  hyunsu:'김현수 기획부장이에요. 흩어진 아이디어를 현실 계획으로 엮는 게 제 일이에요.\n막히면 언제든 퍼즐 맞추러 와요.',
+  jiyoung:'김지영 대리예요. 용기·패키지 디자인 담당.\n예쁜 거 보면 정신 못 차리니까, 좋은 거 보면 꼭 알려 줘요.',
+  hanmin:'이한민 과장입니다. 만든 물건이 고객 손에 닿을 때까지 책임집니다.\n…창고 올 땐 안전화 꼭 신으세요.',
+};
+async function officeTour(){
+  setPlace('pl_cafe');
+  const c=await ask({who:'seohwi',title:'🏢 회사 한 바퀴 돌아볼까요?',text:'"첫날이니까 제가 빌딩 안내해 줄게요.\n층마다 어떤 곳인지, 누가 있는지 보여 줄게요."',choices:[{l:'🚶 같이 둘러보기',s:'장소 10곳 · 동료 소개'},{l:'⏭ 건너뛰기',s:'바로 일 시작'}]});
+  if(c===1)return;
+  const met=new Set(['seohwi']);
+  for(let n=0;n<TOUR.length;n++){const [q,line]=TOUR[n],P=PLACES[q];setPlace(P.scene);sfx('whoosh');
+    const here=TEAM.filter(k=>(HOME[k]||[]).includes(q)),acts=(P.acts||[]).map(id=>ACTS[id].name);
+    const pr=ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f} ${P.n}`,title:`${P.ic} ${P.n}`,
+      text:`"${line}"${acts.length?`\n<span class="t">💼 여기서 하는 일: ${acts.join(' · ')}</span>`:''}${here.length?`\n<span class="t">👥 ${here.map(k=>tagName(k)).join(', ')}</span>`:''}`,
+      choices:[{l:n<TOUR.length-1?'다음 ▶':'투어 끝!',s:''},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
+    if(here.length){$('#actor').hidden=true;showGroup(here)}
+    const ch=await pr;hideGroup();if(ch===1)break;
+    for(const k of here){if(met.has(k)||!HELLO[k])continue;met.add(k);
+      await say({who:k,speaker:`${P.f} ${P.n}`,title:`👋 ${tagName(k)}`,text:`"${HELLO[k]}"`})}
+    hideActor()}
+  hideActor();
+}
 async function prologue(){
   setPlace('sc_rain');
   await showClip({a:'ev_reject',b:'ev_reject_b',kick:'3주 전',title:'불합격',sub:'「[글로우앤코] 최종 면접 결과 안내」\n"…아쉽게도 이번에는 함께하지 못하게 되었습니다."\n열네 번째 불합격 메일이었다.'});
@@ -3706,10 +3747,8 @@ $('#btn-start').onclick=async()=>{
   await showClip({a:'ev_arrive',b:'ev_arrive_b',pos:'60% 45%',kick:'PROLOGUE',title:'첫 출근, 캔버스랩',sub:'마케팅팀 인턴 험쮜의 3년이 시작된다.\n목표: STAGE:ZERO 론칭, 그리고 인턴에서 CEO까지.'});
   setPlace('sc_office');document.body.classList.remove('pro');
   await say({who:'seohwi',title:'"반가워요, 사수 박서휘예요."',text:(S.prof.bm===3&&S.prof.bd<=7?'"어? 인사카드 보니까 이번 주가 생일이네요! 첫 출근이랑 생일이 같은 주라니, 다시 태어난 셈이네요.\n':'"')+'우리 회사 첫 자체 브랜드 STAGE:ZERO를 6개월 뒤에 론칭해요.\nTF는 6개 부서에서 모인 9명이에요. 먼저 사람들부터 만나 봐요."'});
-  await showCG({img:'sc_office',chapter:true,kick:`${monthOf(0)}월 · 입사 첫 달`,title:'오리엔테이션',sub:'캔버스랩을 소개합니다.\n부서와 사람들을 만나 보고,\n어디서부터 일할지 골라 보세요.'});
-  for(const [k,D] of Object.entries(DEPTS)){setPlace(D.scene);
-    const gs=[...new Set(Object.values(ACTS).filter(a=>a.dept===k).flatMap(a=>Object.keys(a.g)))].slice(0,3);
-    await say({who:D.lead,group:D.ppl,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">📍 ${[...new Set(D.ppl.flatMap(p=>HOME[p]||[]))].map(q=>`${PLACES[q].f} ${PLACES[q].n}`).join(' · ')} · 하는 일: ${[...new Set(Object.values(ACTS).filter(a=>a.dept===k&&!a.hidden).map(a=>a.name))].slice(0,3).join('·')}</span>`})}
+  await showCG({img:'sc_office',chapter:true,kick:`${monthOf(0)}월 · 입사 첫 날`,title:'회사 한 바퀴',sub:'사수 박서휘 대리와 캔버스랩 빌딩을 돌며\n층마다 장소와 사람들을 만나요.'});
+  await officeTour();
   setPlace('sc_office');hideActor();
   await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO TF 막내예요."',text:'"막내는 모든 부서 일을 다 해 봐요. 마케팅, 영업, 기획, 연구실, 물류까지.\n어느 부서 일을 하느냐에 따라 험쮜 님의 능력치가 달라질 거예요."'});
   await say({who:'sangho',title:'"3년 뒤의 험쮜 님은?"',text:'"그렇게 쌓인 능력치로 3년 뒤 험쮜 님이 어떤 일을 하게 될지 정해져요.\n마케터일지, 연구원일지, 영업왕일지… 어쩌면 대표일지도요. 기대할게요."'});
@@ -3724,7 +3763,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-28da45';
+const BUILD='2026.10.10-ce7649';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
