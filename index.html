@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=5c712c"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5c712c"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5c712c">
+<link rel="manifest" href="manifest.json?v=7d035e"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7d035e"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7d035e">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -39,7 +39,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 @media (min-width:600px) and (pointer:fine){body{background:var(--night) radial-gradient(80% 70% at 50% 30%,#5b3a55 0%,var(--night) 70%)}.phone{margin-block:12px;border-radius:28px;height:min(calc(100dvh - 24px),940px);box-shadow:0 20px 60px rgba(0,0,0,.45)}}
 .scene{position:absolute;inset:0;overflow:hidden;background:var(--night)}
 .scene::before{content:"";position:absolute;inset:-30px;background:var(--scene-bg) center/cover no-repeat;filter:blur(18px) brightness(.7) saturate(1.1)}
-.pimg{position:absolute;left:0;right:0;top:calc(96px + var(--st));width:100%;height:calc(100% - 96px - var(--st));object-fit:cover;object-position:50% 48%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);transition:height .25s ease;animation:fadein .45s ease both}
+.pimg{position:absolute;left:0;right:0;top:calc(96px + var(--st));width:100%;height:calc(100% - 96px - var(--st));object-fit:cover;object-position:50% 48%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22px);mask-image:linear-gradient(180deg,transparent 0,#000 22px);animation:fadein .45s ease both}
 @keyframes fadein{from{opacity:.3}to{opacity:1}}
 .scene-tag{position:absolute;top:calc(146px + var(--st));left:50%;transform:translateX(-50%);background:rgba(61,42,34,.72);color:#fff;font-size:12px;padding:3px 12px;border-radius:99px;z-index:2;white-space:nowrap}
 .shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,rgba(42,31,51,0) 18%,rgba(42,31,51,0) 60%,rgba(42,31,51,.5) 100%)}
@@ -2528,10 +2528,8 @@ const DLG_REF=170;
 function dlgRef(){const d=$('#dialog');return d&&!d.hidden&&d.offsetParent?d.offsetTop+d.offsetHeight-DLG_REF:null}
 function layoutScene(){
   const img=$('#pimg'),ph=$('#phone');if(!img||!ph)return;
-  const top=img.offsetTop,lim=[ph.clientHeight],r=dlgRef();if(r!=null)lim.push(r);
-  // 숨겨진(display:none) 요소는 offsetTop이 0이라 빼고 잰다
-  [$('.bottom-area'),$('.tabbar')].forEach(e=>{if(e&&!e.hidden&&e.offsetParent)lim.push(e.offsetTop)});
-  const bottom=Math.min(...lim);img.style.height=Math.max(240,bottom-top+18)+'px';
+  // 장소 배경은 늘 화면 맨 아래까지 — 대화창·선택지·카드가 그 위를 덮을 뿐 배경이 중간에서 잘리거나 크기가 바뀌지 않게
+  img.style.height=Math.max(240,ph.clientHeight-img.offsetTop)+'px';
 }
 window.addEventListener('resize',layoutScene);
 // 동료는 대화창 뒤에 선다(발끝은 대화창에 가려도 됨). ♥가 높을수록 점점 가까이 다가온다
@@ -3702,7 +3700,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-5c712c';
+const BUILD='2026.10.10-7d035e';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
