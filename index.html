@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=0b8c2c"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0b8c2c"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0b8c2c">
+<link rel="manifest" href="manifest.json?v=2e4184"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2e4184"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2e4184">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1235,7 +1235,7 @@ function addGl(v,chips){if(!S.launched||S.m<GLOBAL_M||v<=0)return;const b=glOpen
   glList().forEach((g,i)=>{if(i>=b&&S.gl>=g.at)glJust.push(g)})}
 function salesCalc(push){if(!S.launched)return 0;const since=Math.max(1,S.m-LAUNCH_M);
   const hype=(S.score||0)*Math.max(.3,1-.07*(since-1));
-  const v=hype*.5+S.buzz*.4+S.rep*.35+push*1.1+(S.chan||0);
+  const v=hype*.5+S.buzz*.4+S.rep*.35+push*1.1+(S.chan||0)+(S.lane||0);
   return Math.round(v*(1+.3*glOpen())*(S.flags.weakEcom&&since<=3?.85:1))}
 /* ===== 타이쿤 레이어: 회사 자금 · 월간 경영 회의 · 손익 =====
    직급이 오를수록 결정 권한이 생긴다. 대리=광고비, 팀장=생산·할인, 이사=집중 과제, CEO=전부.
@@ -2085,37 +2085,28 @@ const CHAPTERS=[
 const chapterOf=m=>[...CHAPTERS].reverse().find(c=>m>=c.from);
 // 미션 종류: msG(체크리스트 +n) · msF(체크리스트 완료) · gain(수치 +n) · val(수치 n 이상) · core(핵심 7개) · work(회사일 n번)
 // 미션 종류: msG(체크리스트 +n) · msF(체크리스트 완료) · bp(론칭 체크 n%) · gain(수치 +n) · val(수치 n 이상) · sales(이번 달 매출 n) · glG(해외 진척 +n) · glN(해외 n곳) · brand(브랜드 점수) · work(회사일 n번)
+// 2막(론칭 다음 달 ~ 2년차 2월, 16개월): 매달 담당자가 미션을 준다. 성공하면 판로(lane)가 넓어져 다음 달부터 매출이 계속 오른다
 const MISSIONS=[
-  {g:'seohwi',t:'첫 회의 — 카테고리 진척 +4',k:'msG',ms:'cat',n:4,why:'"첫 달은 카테고리부터예요. 카테고리가 안 정해지면 다른 부품은 절반까지만 나가요. 사람들 얘기 듣고, 회의에서 잘 판단해 줘요!"'},
-  {g:'sangho',t:'첫 제품 카테고리 확정',k:'msF',ms:'cat',why:'"론칭 D-5개월. 카테고리가 정해져야 연구소도, 디자인도, 물류도 움직여요. 판을 읽어 와요."'},
-  {g:'jiyoung',t:'제형 샘플 테스트',k:'msG',ms:'form',n:4,why:'"연구소 1차 샘플이 왔어요. 이번 달에 사용감 잡아야 론칭 때 \'밀려요\' 리뷰 안 달려요."'},
-  {g:'jiyoung',t:'유리 용기 시안 확정',k:'msG',ms:'pkg',n:4,why:'"「긁힌 유리 → 투명한 유리」를 용기로 보여 줘야 해요. 용기부터 확정해야 펌프 불량이 안 나요."'},
-  {g:'eunbin',t:'자사몰·채널 오픈 준비',k:'msG',ms:'ecom',n:4,why:'"론칭 D-60! 상세페이지가 비어 있으면 아무리 홍보해도 안 팔려요."'},
-  {g:'sangho',t:'론칭 D-DAY — 체크 85% 이상',k:'bp',n:85,why:'"이번 달 말이 론칭이에요. 연기는 없습니다. 지금 채운 만큼이 STAGE:ZERO의 첫인상이에요."'},
-  {g:'daram',t:'론칭 첫 달 매출 1억',k:'sales',n:100,why:'"론칭 효과 있을 때 밀어야 해요! MD 미팅, CS, 콘텐츠… 회사일이 전부 매출로 이어져요."'},
-  {g:'daram',t:'첫 리뷰 관리 — 평판 +4',k:'gain',v:'rep',n:4,why:'"론칭하자마자 리뷰랑 문의가 쏟아져요. CS·리뷰 칸을 비워 두면 큰일 나요!"'},
-  {g:'sangho',t:'H&B 입점 확대 — 월 매출 1.2억',k:'sales',n:120,why:'"H&B 스토어 매대 하나 더 따 왔어요. 이번 달 숫자로 보여 줍시다."'},
-  {g:'seohwi',t:'연말 기획전 — 월 매출 1.3억',k:'sales',n:130,why:'"연말 선물 세트 시즌이에요. 기획전 하나로 1년 장사가 갈려요."'},
-  {g:'hyunsu',t:'무결점 라인 — 정확도 85%',k:'qc',n:85,why:'"연말 기획전에서 불량 클레임이 들어왔어요. 이번 달은 속도보다 정확도. 불량 없이 가요."'},
-  {g:'hyunsu',t:'연간 보고 — 월 매출 1.4억',k:'sales',n:140,why:'"이사회 보고예요. 월 1.4억이면 투자 얘기를 다시 꺼낼 수 있어요."'},
-  {g:'jaemin',t:'부도 위기! 월 매출 1.5억',k:'sales',n:150,why:'"자금이 석 달 치예요. 매출 1.5억이 찍혀야 은행이 우리를 믿어요."'},
-  {g:'eunbin',t:'라이브커머스 — 화제성 +6',k:'gain',v:'buzz',n:6,why:'"라방 한 번에 하루 매출이 바뀌어요. 이번 달은 화제성!"'},
-  {g:'hanmin',t:'2차 생산 — 제품력 +4',k:'gain',v:'bq',n:4,why:'"2차 생산분은 1차보다 좋아야 합니다. 품질로 재구매를 지킵시다."'},
-  {g:'eunbin',t:'카피캣 반격 — 월 매출 1.65억',k:'sales',n:165,why:'"폭스뷰티가 우리 거랑 똑같은 크림을 냈어요! 원조는 숫자로 말해요."'},
-  {g:'sangho',t:'뷰티 어워즈 후보 — 평판 60',k:'val',v:'rep',n:60,why:'"어워즈 후보에 오르려면 평판 60은 돼야 해요."'},
-  {g:'sangho',t:'국내 1위 — 월 매출 1.8억',k:'sales',n:180,why:'"카테고리 1위까지 한 걸음이에요. 이 숫자면 해외 바이어도 우리를 봅니다."'},
-  {g:'sangho',t:'해외 시장 리서치 — 진출 +6',k:'glG',n:6,why:'"국내는 자리 잡았어요. 이제 바다 건너예요. 바이어 미팅부터 잡읍시다."'},
-  {g:'sangho',t:'첫 해외 입점',k:'glN',n:1,why:'"이번 달 안에 첫 나라를 열면, 매출 구조가 달라져요."'},
-  {g:'sangho',t:'바이어 미팅 — 해외 진출 +6',k:'glG',n:6,why:'"다음 달 바이어 미팅이 줄줄이예요. 해외 영업 칸에 잘 맞는 사람을 몰아줘요."'},
-  {g:'hanmin',t:'해외 물류 — 진출 +8',k:'glG',n:8,why:'"해외 출고가 막히면 다 소용없습니다. 끝까지 돌아가게 합시다."'},
-  {g:'sangho',t:'두 번째 나라 오픈',k:'glN',n:2,why:'"한 나라는 운, 두 나라는 실력이에요."'},
-  {g:'sangho',t:'최종 보고 — 브랜드 점수 70',k:'brand',n:70,why:'"2년의 마지막 보고예요. 론칭, 매출, 해외 — 브랜드가 얼마나 컸는지 보여 줘요."'}];
-function missionFor(m){
-  let M={...MISSIONS[Math.min(m,MISSIONS.length-1)]};
-  if((M.k==='msG'||M.k==='msF')&&(msDone(M.ms)||!msOpen(M.ms))){const f=focusMs();
-    M=f?{g:M.g,t:`${MS[f].n} 진척 올리기`,k:'msG',ms:f,n:4,why:`"「${MS[M.ms].n}」은 상황이 바뀌었어요. 대신 「${MS[f].n}」을 이번 달에 밀어 봐요."`}
-      :{g:M.g,t:'론칭 체크 100%',k:'bp',n:100,why:'"그 부품은 끝났어요! 남은 부품까지 다 채워서 구멍 없이 론칭해요."'}}
-  return M}
+  {g:'daram',t:'론칭 첫 달 — 월 매출 6천만',k:'sales',n:60,lane:6,why:'"론칭 효과 있을 때 밀어야 해요! MD 미팅, CS, 콘텐츠… 회사일이 전부 매출로 이어져요."',ok:'"첫 달 1억! 영업팀 단톡방이 난리 났어요." 다람 주임이 하이파이브를 내밀었다.',no:'"론칭 효과가 생각보다 빨리 식네요…" 다람 주임이 그래프를 오래 들여다봤다.'},
+  {g:'seohwi',t:'연말 기획전 — 월 매출 7천만',k:'sales',n:70,lane:6,why:'"연말 선물 세트 시즌이에요. 기획전 하나로 1년 장사가 갈려요."',ok:'선물 세트가 품절됐다. 서휘 대리: "내년 기획전도 험쮜 님이랑 해요."',no:'선물 세트가 창고에 쌓였다. 서휘 대리: "구성은 좋았는데, 알리는 게 부족했어요."'},
+  {g:'eunbin',t:'새해 리뷰 이벤트 — 평판 +3',k:'gain',v:'rep',n:3,lane:4,why:'"새해엔 리뷰가 다시 쏟아져요. CS랑 리뷰 칸을 비워 두면 별점이 무너져요!"',ok:'별점이 4.8로 올랐다. 은빈: "리뷰 캡처해서 상세페이지에 박았어요!"',no:'답 못 한 리뷰가 쌓여 별점이 4.3으로 떨어졌다.'},
+  {g:'hanmin',t:'클레임 대응 — 제품력 +3',k:'gain',v:'bq',n:3,lane:4,why:'"펌프 불량 클레임이 들어왔습니다. 이번 달은 속도보다 품질입니다."',ok:'2차 출고분 불량률 0%. 한민 과장: "끝까지 돌아가게 했습니다."',no:'클레임이 한 번 더 들어왔다. 한민 과장이 말없이 생산 일지를 다시 폈다.'},
+  {g:'sangho',t:'H&B 입점 확대 — 월 매출 8천만',k:'sales',n:80,lane:8,why:'"H&B 스토어 매대 하나 더 따 왔어요. 이번 달 숫자로 보여 줍시다."',ok:'매대가 두 칸으로 늘었다. 사업부장: "MD가 다음 분기 행사 자리도 줬어요."',no:'MD가 "다음 분기에 다시 보죠"라고 했다. 매대는 한 칸 그대로다.'},
+  {g:'eunbin',t:'라이브커머스 — 화제성 +5',k:'gain',v:'buzz',n:5,lane:5,why:'"라방 한 번에 하루 매출이 바뀌어요. 이번 달은 화제성!"',ok:'라방 동시 접속 3천 명! 은빈: "댓글이 너무 빨라서 못 읽었어요!"',no:'라방 동시 접속 87명. 은빈: "…다음엔 시간대부터 바꿔 봐요."'},
+  {g:'seohwi',t:'선케어 시즌 — 월 매출 9천만',k:'sales',n:90,lane:7,why:'"선케어 시즌이라 매대 싸움이 치열해요. 우리 크림도 「선 전 보습」으로 끼워 넣어요."',ok:'「선크림 전에 바르는 크림」 키워드가 먹혔다. 서휘 대리: "카피 하나로 시즌을 탔네요."',no:'선케어 매대에 밀려 크림이 안쪽으로 들어갔다.'},
+  {g:'jaemin',t:'부도 위기! 월 매출 1억',k:'sales',n:100,lane:8,why:'"자금이 석 달 치예요. 매출 1억이 찍혀야 은행이 우리를 믿어요."',ok:'은행 담당자가 대출 연장 서류에 도장을 찍었다. 재민 사원이 처음으로 크게 웃었다.',no:'은행이 "다음 달 실적 보고 다시 봅시다"라고 했다. 재민 사원이 밤새 엑셀을 돌렸다.'},
+  {g:'hanmin',t:'2차 생산 — 제품력 +4',k:'gain',v:'bq',n:4,lane:5,why:'"2차 생산분은 1차보다 좋아야 합니다. 품질로 재구매를 지킵시다."',ok:'재구매율 38%. 한민 과장: "숫자가 품질을 말해 줍니다."',no:'"전보다 묽어졌어요" 리뷰가 달렸다. 한민 과장: "…원인 찾겠습니다."'},
+  {g:'hyunsu',t:'품질 회복 — 평판 +3',k:'gain',v:'rep',n:3,lane:5,why:'"용기 불량 사태로 믿음이 깎였어요. 사과보다 행동으로 회복해야 해요."',ok:'공식 사과문과 무상 교환에 "오히려 믿음 간다"는 댓글이 달렸다.',no:'사과문이 늦었다는 말이 돌았다. 기획부장: "다음엔 먼저 말합시다."'},
+  {g:'sangho',t:'추석 선물 세트 — 월 매출 1.1억',k:'sales',n:110,lane:8,why:'"추석 선물 세트예요. 이 숫자 넘기면 팀장 얘기 나올 수 있어요."',ok:'선물 세트 완판. 사업부장: "이번 분기 평가, 기대해도 좋아요."',no:'선물 세트가 반쯤 남았다. 사업부장: "구성은 좋았어요. 타이밍이 아쉬웠죠."'},
+  {g:'eunbin',t:'카피캣 반격 — 월 매출 1.2억',k:'sales',n:120,lane:8,why:'"폭스뷰티가 우리 거랑 똑같은 크림을 냈어요! 원조는 숫자로 말해요."',ok:'「원조는 STAGE:ZERO」 해시태그가 돌았다. 은빈: "카피캣이 우리 광고를 해 줬네요!"',no:'카피캣이 더 싸게 팔았다. 은빈: "가격 말고 이야기로 이겨야 해요…"'},
+  {g:'sangho',t:'뷰티 어워즈 후보 — 평판 55',k:'val',v:'rep',n:55,lane:6,why:'"어워즈 후보에 오르려면 평판 55는 돼야 해요."',ok:'뷰티 어워즈 「올해의 보습」 후보에 올랐다! 사무실에 꽃바구니가 왔다.',no:'후보 명단에 STAGE:ZERO는 없었다. 사업부장: "내년엔 꼭."'},
+  {g:'seohwi',t:'연말 기획전 2 — 월 매출 1.3억',k:'sales',n:130,lane:8,why:'"작년엔 배웠고, 올해는 증명할 차례예요."',ok:'작년보다 두 배 팔렸다. 서휘 대리: "험쮜 님, 이제 사수 안 해도 되겠어요."',no:'작년만큼은 팔렸다. 서휘 대리: "제자리걸음도 버틴 거예요."'},
+  {g:'sangho',t:'국내 1위 — 월 매출 1.4억',k:'sales',n:140,lane:8,why:'"카테고리 1위까지 한 걸음이에요. 이 숫자면 해외 바이어도 우리를 봅니다."',ok:'H&B 보습 크림 카테고리 1위! 매대 맨 앞줄에 STAGE:ZERO가 섰다.',no:'2위. 1위와의 차이는 리뷰 수 300개였다.'},
+  {g:'sangho',t:'해외 준비 — 외국어 Lv.3',k:'lang',n:3,lane:4,why:'"다음 달부터 해외예요. 바이어는 통역 안 기다려요. 영어든 일본어든, 하나는 Lv.3까지!"',ok:'"좋아요, 첫 미팅은 험쮜 님이 직접 해요." 사업부장이 출장 일정을 보여 줬다.',no:'"첫 미팅은 통역이랑 같이 가야겠네요…" 사업부장이 출장비 표를 고쳤다.'}];
+function missionFor(m){return {...MISSIONS[Math.max(0,Math.min(MISSIONS.length-1,m-LAUNCH_M-1))]}}
+const act2=()=>S&&S.launched&&S.m>LAUNCH_M&&S.m<GLOBAL_M;
+async function missionIntro(){const M=S.mission;setPlace('sc_meeting');
+  await say({who:M.g,title:`🎯 ${monthOf(S.m)}월 미션 · ${M.t}`,text:`${M.why}\n<span class="t">성공하면 🛒 판로 +${M.lane}(다음 달부터 매달 매출↑)·평판·보너스 · 지금 ${missionTxt()}</span>`})}
 function newMission(){const M=missionFor(S.m);S.mission={...M,m:S.m,s0:{ms:{...S.ms},bq:S.bq,buzz:S.buzz,rep:S.rep,gl:S.gl||0},work:0,done:false}}
 function missionProg(){const M=S.mission;if(!M)return [0,1];
   if(M.k==='work')return [M.work,M.n];
@@ -2130,6 +2121,7 @@ function missionProg(){const M=S.mission;if(!M)return [0,1];
   if(M.k==='glG')return [Math.max(0,(S.gl||0)-(M.s0.gl||0)),M.n];
   if(M.k==='glN')return [glOpen(),M.n];
   if(M.k==='brand')return [brandScore(),M.n];
+  if(M.k==='lang')return [Math.max(langLv('en'),langLv('jp')),M.n];
   if(M.k==='core'){const ks=Object.keys(MS).filter(k=>MS[k].core);return [ks.filter(msDone).length,ks.length]}
   return [0,1]}
 const missionOK=()=>{const [a,b]=missionProg();return a>=b};
@@ -2151,17 +2143,18 @@ async function chapterCard(){const C=chapterOf(S.m);if(S.chap===C.from)return;S.
 async function missionResult(){const M=S.mission;if(!M||M.done||M.m!==S.m)return;M.done=true;const ok=missionOK(),[a,b]=missionProg(),G=who(M.g);
   setPlace(ok?'sc_office':'sc_meeting');
   S.missionWins=(S.missionWins||0)+(ok?1:0);S.missionTotal=(S.missionTotal||0)+1;
-  const fx=ok?{rep:3,money:10,st:-5,['aff_'+M.g]:4}:{rep:-2,st:7,['aff_'+M.g]:-1};
+  const fx=ok?{rep:3,money:10,st:-5,['aff_'+M.g]:4}:{rep:-1,st:3,['aff_'+M.g]:-1};
+  const ch=applyFx(fx);if(ok&&M.lane){S.lane=(S.lane||0)+M.lane;ch.push({l:'🛒 판로',d:M.lane})}
   const lines=ok?[S.launched?'"숫자가 말해 주네요. 이번 달 최고예요."':'"완벽해요. 이 속도면 론칭 일정 문제없겠어요."','"역시 험쮜 님한테 맡기길 잘했네요."','"오, 기대 이상인데요? 성과급 조금 챙겨 둘게요."']
     :['"…이번 달은 아쉽네요. 다음 달엔 꼭 부탁해요."','"일정이 밀리면 다른 팀도 다 밀려요. 다시 계획 세워 봐요."','"괜찮아요, 다음엔 우선순위부터 같이 봐요."'];
   sfx(ok?'great':'fail');
-  await say({who:M.g,title:ok?`🎯 미션 성공! ${M.t}`:`💦 미션 실패… ${M.t}`,text:`${G.name}: ${pick(lines)}\n<span class="t">${missionTxt()} · 이번 시즌 미션 ${S.missionWins}/${S.missionTotal} 성공</span>`,chips:applyFx(fx)});
+  await say({who:M.g,title:ok?`🎯 미션 성공! ${M.t}`:`💦 미션 실패… ${M.t}`,text:`${(ok?M.ok:M.no)||G.name+': '+pick(lines)}\n<span class="t">${missionTxt()} · 2막 미션 ${S.missionWins}/${S.missionTotal} 성공${ok&&M.lane?` · 🛒 판로 ${S.lane} (다음 달부터 매출↑)`:''}</span>`,chips:ch});
   render();await afterMs()}
 
 /* ================= 승진 평가 =================
    3개월마다 분기 평가(8번). 한 번에 한 단계씩, 인턴 → 사원 → 주임 → 대리 → 팀장 → 이사 → CEO */
 const EVAL_AT={2:'수습 평가',5:'1분기 평가',8:'2분기 평가',11:'연간 평가',14:'1분기 평가',17:'2분기 평가',20:'3분기 평가',23:'연간 평가',26:'1분기 평가',29:'2분기 평가',32:'3분기 평가',35:'최종 평가 · 대표 선임'};
-const REQ=[null,{rep:10,boss:12,peer:12},{rep:22,bp:30,boss:18,peer:20},{rep:35,launch:1,boss:26,peer:28},{rep:50,sales:150,boss:36,peer:36},{rep:70,sales:230,boss:50,peer:46},{rep:90,gl:2,brand:75,boss:65,peer:55}];
+const REQ=[null,{rep:10,boss:12,peer:12},{rep:22,bp:30,boss:18,peer:20},{rep:35,launch:1,boss:26,peer:28},{rep:50,sales:110,boss:36,peer:36},{rep:70,sales:180,boss:50,peer:46},{rep:90,gl:2,brand:75,boss:65,peer:55}];
 function reqWhy(r){
   if(S.rep<r.rep)return `평판이 ${r.rep} 이상 필요해요 (지금 ${S.rep}).`;
   if(r.sum&&sumStat()<r.sum)return `능력치 합계가 ${r.sum} 이상 필요해요 (지금 ${sumStat()}).`;
@@ -2213,7 +2206,7 @@ async function launch(){
   if(holes.length){setPlace('sc_rain');const fx={};holes.forEach(k=>{const [,,f,flag]=HOLE[k];Object.entries(f).forEach(([a,b])=>fx[a]=(fx[a]||0)+b);if(flag)S.flags[flag]=true});
     await say({who:'hyunsu',title:`론칭 첫 주 · 구멍 ${holes.length}개`,text:holes.map(k=>`${MS[k].ic} ${HOLE[k][1]}`).join('\n')+'\n"…준비 안 된 부분은 시장이 정확히 알아보네요."',chips:applyFx(fx)})}
   else await say({who:'sangho',title:'구멍 없는 론칭',text:'"부품 하나 빠진 데가 없네요. 막내가 이걸 다 챙겼다고요?"\n<span class="t">(…뿌듯해서 눈물 날 것 같다.)</span>',chips:applyFx({rep:5,aff_sangho:4,aff_hyunsu:4})});
-  await say({who:'sangho',title:'2막 · 이제 매출이다',text:'"론칭은 출발선이에요. 지금부터 1년, 매달 매출 목표가 내려갑니다.\n이제 매달 매출 목표가 내려와요. MD 협상, 라이브, 리뷰 대응… 업무 회의의 판단이 그대로 매출이 돼요."\n<span class="t">📈 매달 말 매출과 손익이 집계돼요. 회사 자금 1.5억으로 시작해요.\n🌍 3막엔 해외 바이어와의 판단이 해외 진출을 열어요.</span>'});
+  await say({who:'sangho',title:'2막 · 이제 매출이다',text:'"론칭은 출발선이에요. 지금부터 2년차 2월까지, 매달 미션이 내려와요.\nMD 협상, 라이브, 리뷰 대응… 미션에 성공하면 🛒 판로가 넓어져서 다음 달부터 매출이 계속 올라요."\n<span class="t">📈 매달 말 매출과 손익이 집계돼요. 회사 자금 1.5억으로 시작해요.\n🌍 3막엔 해외 바이어와의 판단이 해외 진출을 열어요.</span>'});
 }
 function recordSales(){if(!S.launched||S.m<=LAUNCH_M)return null;
   const v=salesNow();S.salesLog=S.salesLog||[];S.salesLog.push(v);S.salesSum=(S.salesSum||0)+v;S.salesBest=Math.max(S.salesBest||0,v);
@@ -2419,7 +2412,11 @@ function todayGoal(){const st=TEAM.filter(storyReady),out={t:'',why:'',ps:[],row
     out.t=f?`론칭 준비 · 「${MS[f].n}」 일을 도와요`:'론칭 준비 · 아무 일이나 도와요';
     out.why=`론칭까지 <b>${dl?dl+'개월':'이번 달!'}</b> · 론칭 체크 <b>${bpPct()}%</b> (60% 안 되면 사고!)`;
     out.ps=f?placesFor(a=>a.ms&&(a.ms[f]||a.ms.any)):[]}
-  else if(S.m<GLOBAL_M){out.t='매출 만들기 · 회사일을 도우면 이번 달 매출↑';out.why=`회사일 하나하나가 그달 매출! 최고 월 매출 <b>${fmtW(S.salesBest||0)}</b>`;out.ps=['sales','mkt','studio']}
+  else if(S.m<GLOBAL_M){const M=S.mission&&S.mission.m===S.m?S.mission:null;
+    if(M){out.t=`${monthOf(S.m)}월 미션 · ${M.t}`;out.why=`${who(M.g).name.split(' ')[0]}: ${M.why.replace(/^"|"$/g,'')} · 지금 <b>${missionTxt()}</b>`;
+      out.ps=M.k==='sales'?['sales','mkt','studio']:M.v==='buzz'?['studio','mkt']:M.v==='bq'?['lab','wh','strat']:M.v==='rep'?['sales','mkt']:[];
+      if(M.k==='lang')out.lang={i:'🗣️',b:`영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')}`,v:'',s:'휴일 📚 자기계발 「영어 회화」·「일본어 회화」'}}
+    else{out.t='매출 만들기 · 회사일을 도우면 이번 달 매출↑';out.why=`회사일 하나하나가 그달 매출! 최고 월 매출 <b>${fmtW(S.salesBest||0)}</b>`;out.ps=['sales','mkt','studio']}}
   else{const c=glCur();
     if(c){const G=GLC[c.k],[v,n]=glSeg(c),l=G.lang,lv=langLv(l);
       const dl=glDealt(c);const cr=!!glSt(c).c;out.t=v>=n-1&&!dl?`${c.n} · 🤝 바이어 계약만 남았어요`:v>=n-1&&!cr?`${c.n} · 🚨 월말 현지 이슈만 남았어요`:`${c.n} 진출 · ${G.block}`;out.why=`${G.city} 진척 <b>${v}/${n}</b> · 🤝 바이어 계약 ${dl?'✓':'전'} · ${G.hint}`;
@@ -2578,6 +2575,7 @@ const runMonth=()=>monthIntro(); // 예전 버튼 호환
 async function afterDay(){busy=true;await weekend();await monthEnd()}
 async function monthEnd(){busy=true;document.body.classList.add('running');
   await afterMs();S.st=clamp(S.st-6);S.hp=clamp(S.hp+8);
+  if(act2()&&S.mission&&S.mission.m===S.m)await missionResult();
   const sold=recordSales();
   const pay=payOf(),RENT=rentOf(),LIVING=livingOf(),out=RENT+LIVING+LOAN;S.money+=pay-out;
   const perkChips=[];Object.keys(S.perk||{}).forEach(k=>{const {txt,...fx}=PERK[k];applyFx(fx,perkChips)});
@@ -2612,6 +2610,8 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
   busy=false;document.body.classList.remove('running');save();monthIntro()}
 function monthIntro(){playBgm('office');render();hideActor();
   if(S.chap!==chapterOf(S.m).from){busy=true;chapterCard().then(()=>{busy=false;monthIntro()});return}
+  if(act2()&&(!S.mission||S.mission.m!==S.m)){newMission();busy=true;missionIntro().then(()=>{busy=false;monthIntro()});return}
+  if(S.m>=GLOBAL_M&&S.mission)S.mission=null;
   if(S.launched&&S.m>=GLOBAL_M&&!S.choice.gl){busy=true;glPick().then(()=>{busy=false;monthIntro()});return}
   if(!S.day||S.day.m!==S.m)newDay();
   if(S.day.phase==='weekend'){afterDay();return}
@@ -3915,7 +3915,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-0b8c2c';
+const BUILD='2026.10.10-2e4184';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
