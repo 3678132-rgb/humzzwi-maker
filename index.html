@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=8f306a"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8f306a"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8f306a">
+<link rel="manifest" href="manifest.json?v=746b24"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=746b24"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=746b24">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1095,7 +1095,10 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const KEY='humzzwi.maker.v2',DEXKEY='humzzwi.maker.dex2',SLOTS=4;
 const slotKey=n=>'humzzwi.maker.slot'+n; // 슬롯마다 {S, at}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const IMG=k=>k==='hz'?'assets/hz.png':`assets/${k}.webp`;
+// 험쮜가 여성이면 넥타이 대신 리본 블라우스 버전(_w) 그림을 쓴다
+const hzFem=()=>{try{return !!(S&&S.prof&&S.prof.gender==='여성')}catch(e){return false}};
+const FEM_IMG=new Set(['c_ev_ceo','c_ev_ceo_b','c_mba','c_mba_b','c_settle','c_settle_b','c_cafe','c_cafe_b','s_ceo']);
+const IMG=k=>k==='hz'?'assets/hz.png':`assets/${k}${FEM_IMG.has(k)&&hzFem()?'_w':''}.webp`;
 const BRAND='STAGE:ZERO';
 
 /* ================= 험쮜 프로필 ================= */
@@ -3795,7 +3798,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-8f306a';
+const BUILD='2026.10.10-746b24';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
