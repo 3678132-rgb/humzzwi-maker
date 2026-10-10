@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=62e123"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=62e123"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=62e123">
+<link rel="manifest" href="manifest.json?v=86ae40"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=86ae40"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=86ae40">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -47,6 +47,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 /* ---------- 상단 상태창 ---------- */
 .hud-top{position:absolute;top:calc(10px + var(--st));left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:4}
+.menu-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.fs1 .dialog .text{font-size:17.5px}body.fs1 .dialog .text .t{font-size:16px}body.fs1 .choice{font-size:17px}body.fs1 .choice small{font-size:14px}
+body.fs2 .dialog .text{font-size:19.5px;line-height:1.5}body.fs2 .dialog .text .t{font-size:17.5px}body.fs2 .choice{font-size:18.5px}body.fs2 .choice small{font-size:15px}
+.ff-btn{margin-right:8px;border:0;border-radius:999px;padding:9px 14px;background:rgba(61,42,34,.12);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.link-btn{background:none;border:0;color:var(--mute);font:inherit;font-size:13px;text-decoration:underline;padding:6px;margin-top:4px;cursor:pointer}
 .ig-btn{display:inline-block;margin:8px 0 2px;padding:9px 16px;border-radius:16px;background:linear-gradient(45deg,#f58529,#dd2a7b 55%,#8134af);color:#fff!important;font-weight:700;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.15)}
 .life{display:grid;gap:6px;margin-top:10px}.life .lf{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:12px;background:var(--cream,#fff6ee)}.life .lf i{font-style:normal;font-size:18px;width:24px;text-align:center}.life .lf span{flex:1;min-width:0}.life .lf b{display:block;font-size:13px}.life .lf small{display:block;font-size:11px;color:var(--mute)}.life .lf em{font-style:normal;font-size:12px;color:var(--mute)}.life .lf.done{opacity:.75}.life .lf.done i{color:var(--good,#3a9)}.life .lf.lock{opacity:.5}
 .avatar{position:relative;width:58px;height:58px;flex:none;border-radius:18px;border:3px solid #fff;background:var(--sky-s) url(assets/f_hz.webp) 50% 50%/cover no-repeat;box-shadow:0 4px 0 #b9780a,0 6px 12px rgba(0,0,0,.25)}
@@ -1052,7 +1057,9 @@ body.running .mission{display:none}
     <div class="sheet-head"><b>메뉴</b><button class="sheet-x" data-close aria-label="닫기">×</button></div>
     <div class="menu-list">
       <button class="btn ghost snd" type="button" aria-pressed="true">🔊 소리 켜짐</button>
-      <button class="btn" id="btn-save">저장하기</button>
+      <div class="menu-pair"><button class="btn ghost" id="btn-bgm" type="button">🎵 배경음 켜짐</button><button class="btn ghost" id="btn-sfx" type="button">🔔 효과음 켜짐</button></div>
+      <button class="btn ghost" id="btn-fs" type="button">🔠 글자 크기 · 보통</button>
+      <button class="btn" id="btn-save">💾 지금 저장</button>
       <button class="btn ghost" id="btn-title">타이틀로</button>
     </div>
     <p class="build-code" id="build-menu" style="text-align:center;color:var(--mute)"></p>
@@ -1066,7 +1073,8 @@ body.running .mission{display:none}
     <h1 class="wordmark">험쮜 메이커<small>인턴에서 CEO까지</small></h1>
     <p class="hook">면접 87:1 뚫은 인턴 험쮜.<br>겉으론 <b>"넵!"</b> 속으론 <b>"뻥~"</b><br>3년 안에 <b>CEO</b> 될 수 있을까?</p>
     <div class="tags"><span>🏢 인턴의 하루</span><span>💞 동료 이야기</span><span>💘 사내연애</span><span>👑 엔딩 12종</span></div>
-    <div class="btn-row"><button class="btn" id="btn-new">새로 시작</button><button class="btn ghost" id="btn-cont" hidden>불러오기</button><button class="btn ghost" id="btn-dex" type="button">📖 엔딩 도감</button></div>
+    <div class="btn-row"><button class="btn" id="btn-new">새로 시작</button><button class="btn ghost" id="btn-cont" hidden>▶ 이어하기</button><button class="btn ghost" id="btn-dex" type="button">📖 엔딩 도감</button></div>
+    <button class="link-btn" id="btn-load" type="button" hidden>다른 저장 불러오기</button>
     <p class="build-code" id="build-title"></p>
     <p class="disclaimer">등장인물은 실제 동료를 모티프로 한 가상 캐릭터이며, 사건은 모두 허구예요.</p>
   </section>
@@ -1464,6 +1472,10 @@ function newGame(originId,prof){
 const save=()=>{if(S&&!S.ending)ls.set(slotKey(S.slot||1),{S,at:Date.now()})};
 const slotData=n=>ls.get(slotKey(n));
 const anySlot=()=>{for(let n=1;n<=SLOTS;n++)if(slotData(n))return true;return false};
+// 가장 최근에 저장된 칸 / 첫 빈 칸 (저장 칸을 직접 고르지 않아도 되게)
+const lastSlot=()=>{let b=0,t=-1;for(let n=1;n<=SLOTS;n++){const d=slotData(n);if(d&&(d.at||0)>t){t=d.at||0;b=n}}return b};
+const freeSlot=()=>{for(let n=1;n<=SLOTS;n++)if(!slotData(n))return n;return 0};
+const slotCount=()=>{let c=0;for(let n=1;n<=SLOTS;n++)if(slotData(n))c++;return c};
 // 예전 단일 저장은 1번 슬롯으로 옮긴다
 {const old=ls.get(KEY);if(old&&!slotData(1)){old.slot=1;ls.set(slotKey(1),{S:old,at:Date.now()})}if(old)ls.set(KEY,null)}
 const sumStat=()=>Object.values(S.stat).reduce((a,b)=>a+b,0);
@@ -2572,7 +2584,8 @@ $('#bl-bot').addEventListener('click',e=>{const t=e.target.closest('[data-bsheet
 /* ----- 평일: 고른 곳을 차례로 들른다 ----- */
 async function workday(){busy=true;hideBld();document.body.classList.add('running');playBgm('work');
   const picks=[...S.day.pick];
-  for(let i=0;i<picks.length;i++){if(S.ending)break;await visit(picks[i],i)}
+  // 방문 한 곳이 끝날 때마다 저장 → 앱을 닫았다 열어도 남은 방문부터 이어서
+  for(let i=S.day.done||0;i<picks.length;i++){if(S.ending)break;await visit(picks[i],i);S.day.done=i+1;save()}
   hideActor();if(S.ending)return finish();
   setPlace('sc_home');
   S.day.phase='weekend';save();await afterDay()}
@@ -2727,7 +2740,8 @@ function monthIntro(){playBgm('office');render();hideActor();
   if(S.launched&&S.m>=GLOBAL_M&&!S.choice.gl){busy=true;glPick().then(()=>{busy=false;monthIntro()});return}
   if(!S.day||S.day.m!==S.m)newDay();
   if(S.day.phase==='weekend'){afterDay();return}
-  setPlace('ev_building');showBld();
+  if(S.day.done&&S.day.pick.length){toast(`이어서: ${S.day.done+1}번째 방문부터`);workday();return}
+  setPlace('ev_building');showBld();save();
   if(!S.seenNews||S.seenNews!==S.m){S.seenNews=S.m;toast(`📰 ${NEWS[monthOf(S.m)]}`)}}
 function advice(){
   if(S.st>=75)return '"험쮜 님, 얼굴이 말이 아니에요. 휴일엔 꼭 쉬어요. 연차를 써도 돼요."';
@@ -2821,17 +2835,26 @@ function dialogHTML(o,inner){
   return `${pic?`<div class="dpic"><img src="${IMG(pic)}" alt=""><img class="b" src="${IMG(pic+'_b')}" alt="" onerror="this.remove()"></div>`:''}<div class="face" style="${faceStyle(o.who)}"></div><div><div class="speaker">${esc(sp)}${relChip(o.who)}</div>${o.title?`<div class="head">${esc(o.title)}</div>`:''}<div class="text">${o.text||''}</div>${chipsHTML(o.chips)}${inner||''}</div>`;
 }
 function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic','picmode','tall');document.body.classList.remove('picmode-on');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
+// 다회차 편의: 한 번 본 대사·장면은 기기에 기록해 두고, ⏩를 누르면 다음 선택지나 처음 보는 장면까지 빨리 넘긴다
+const SEEN_KEY='humzzwi.maker.seen';let SEEN=null,FF=false;
+const seenSet=()=>SEEN||(SEEN=new Set(ls.get(SEEN_KEY)||[]));
+const sceneKey=o=>{const t=((o.title||'')+'|'+(o.text||o.sub||'')).replace(/<[^>]*>/g,'').replace(/[0-9]/g,'');let h=5381;for(let i=0;i<t.length;i++)h=(h*33+t.charCodeAt(i))|0;return (h>>>0).toString(36)};
+const flushSeen=()=>{if(SEEN){clearTimeout(markSeen.t);ls.set(SEEN_KEY,[...SEEN].slice(-5000))}};
+addEventListener('pagehide',flushSeen);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushSeen()});
+function markSeen(k){const st=seenSet();if(st.has(k))return true;st.add(k);clearTimeout(markSeen.t);markSeen.t=setTimeout(()=>ls.set(SEEN_KEY,[...st].slice(-5000)),500);return false}
 function say(o){
-  return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall','picmode');d.classList.toggle('keepbg',!!o.bg);document.body.classList.remove('picmode-on');d.classList.toggle('haspic',!!(o.pic||PIC));
+  return new Promise(res=>{const was=markSeen(sceneKey(o));if(!was)FF=false;const d=$('#dialog');d.classList.remove('tall','picmode');d.classList.toggle('keepbg',!!o.bg);document.body.classList.remove('picmode-on');d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.group){hideActor();}else if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
-    d.innerHTML=dialogHTML(o,`<div class="next"><button class="next-btn">다음 ▶</button></div>`);d.hidden=false;d.scrollTop=0;
-    if(o.group)showGroup(o.group);placeActor();d.querySelector('.next-btn').onclick=e=>{e.stopPropagation();res()};});
+    d.innerHTML=dialogHTML(o,`<div class="next">${was?'<button class="ff-btn" type="button" aria-label="본 장면 빨리 넘기기">⏩ 빨리</button>':''}<button class="next-btn">다음 ▶</button></div>`);d.hidden=false;d.scrollTop=0;
+    if(o.group)showGroup(o.group);placeActor();d.querySelector('.next-btn').onclick=e=>{e.stopPropagation();res()};
+    const ff=d.querySelector('.ff-btn');if(ff)ff.onclick=e=>{e.stopPropagation();FF=true;res()};
+    if(FF&&was)setTimeout(res,90);});
 }
 // 선택지에 img가 있으면 그림 카드로 고른다 (장소·활동·사람)
 function picChoices(o){const n=o.choices.filter(c=>c.img).length,col=n>4?3:2;
   return `<div class="choices pics c${col} ${o.cls||''}">${o.choices.map((c,i)=>c.img?`<button class="choice pic" data-i="${i}"><span class="ci ${c.face?'fc':''}" style="background-image:url(${IMG(c.img)})">${c.tag?`<em>${esc(c.tag)}</em>`:''}</span><b>${esc(c.l)}</b>${c.s?`<small>${esc(c.s)}</small>`:''}</button>`:`<button class="choice back" data-i="${i}">${esc(c.l)}</button>`).join('')}</div>`}
 function ask(o){
-  return new Promise(res=>{const d=$('#dialog'),pics=o.choices.some(c=>c.img);d.classList.toggle('keepbg',!!o.bg);d.classList.toggle('tall',o.choices.length>4||pics);d.classList.toggle('picmode',pics);document.body.classList.toggle('picmode-on',pics);d.classList.toggle('haspic',!!(o.pic||PIC));
+  return new Promise(res=>{FF=false;markSeen(sceneKey(o));const d=$('#dialog'),pics=o.choices.some(c=>c.img);d.classList.toggle('keepbg',!!o.bg);d.classList.toggle('tall',o.choices.length>4||pics);d.classList.toggle('picmode',pics);document.body.classList.toggle('picmode-on',pics);d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
     d.innerHTML=dialogHTML(o,pics?picChoices(o):`<div class="choices ${o.cls||''}">${o.choices.map((c,i)=>`<button class="choice" data-i="${i}">${esc(c.l)}${c.s?`<small>${esc(c.s)}</small>`:''}</button>`).join('')}</div>`);d.hidden=false;d.scrollTop=0;
     placeActor();d.querySelectorAll('.choice').forEach(b=>b.onclick=e=>{e.stopPropagation();res(+b.dataset.i)});});
@@ -2845,6 +2868,8 @@ function showCG(o){
     if(o.fx){const cols=['#ff7ea6','#ffd86b','#5aa9f5','#9be87a','#c3a2ff'];for(let i=0;i<34;i++){const e=document.createElement('i');e.style.left=R()*100+'%';e.style.animationDelay=(-R()*4)+'s';e.style.setProperty('--dx',(R()*80-40)+'px');e.style.setProperty('--rot',(R()*720)+'deg');if(o.fx==='confetti')e.style.background=pick(cols);fx.appendChild(e)}}
     cg.hidden=false;$('#dialog').hidden=true;hideActor();sfx(/PROMOTION|LAUNCH|합격/.test(o.kick||'')?'fanfare':o.fx==='petal'?'chime':'whoosh');
     const go=()=>{cg.hidden=true;cg.onclick=null;cg.onkeydown=null;res()};
+    const was=markSeen(sceneKey({title:o.title,text:o.sub}));if(!was)FF=false;
+    if(FF&&was){setTimeout(go,250);return}
     setTimeout(()=>{cg.onclick=go;cg.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')go()}},500);
   });
 }
@@ -3119,6 +3144,9 @@ function playGame(id,i){
    곡은 8분음표 한 칸씩, 한 마디 8칸. '.'은 쉼표. */
 const AU={ctx:null,on:true,want:null,cur:null,step:0,next:0,timer:null,noise:null};
 try{const v=localStorage.getItem('humzzwi.sound');if(v==='0')AU.on=false}catch(e){}
+// 배경음·효과음 따로 끄기, 글자 크기 3단계 (기기에 기억)
+const prefGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}},prefSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+AU.bgmOn=prefGet('humzzwi.bgm','1')!=='0';AU.sfxOn=prefGet('humzzwi.sfx','1')!=='0';
 const NOTE={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
 const hz=n=>{const m=/^([A-G])(#|b)?(\d)$/.exec(n);if(!m)return 0;const midi=12*(+m[3]+1)+NOTE[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0);return 440*Math.pow(2,(midi-69)/12)};
 const seq=str=>str.replace(/\|/g,' ').trim().split(/\s+/);
@@ -3151,8 +3179,8 @@ function auInit(){
   try{AU.ctx=new C()}catch(e){return}
   const c=AU.ctx;AU.master=c.createGain();AU.master.gain.value=AU.on?1:0;
   const comp=c.createDynamicsCompressor();AU.master.connect(comp);comp.connect(c.destination);
-  AU.bgmBus=c.createGain();AU.bgmBus.gain.value=.4;AU.bgmBus.connect(AU.master);
-  AU.sfxBus=c.createGain();AU.sfxBus.gain.value=.45;AU.sfxBus.connect(AU.master);
+  AU.bgmBus=c.createGain();AU.bgmBus.gain.value=AU.bgmOn?.4:0;AU.bgmBus.connect(AU.master);
+  AU.sfxBus=c.createGain();AU.sfxBus.gain.value=AU.sfxOn?.45:0;AU.sfxBus.connect(AU.master);
   const nb=c.createBuffer(1,c.sampleRate*.5,c.sampleRate),d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;AU.noise=nb;
   AU.timer=setInterval(auTick,30);
   if(AU.want){const w=AU.want;AU.want=null;playBgm(w)}
@@ -3772,7 +3800,7 @@ document.addEventListener('click',e=>{if(!S||busy)return;
    새로 시작 → 빈 슬롯(또는 덮어쓸 슬롯) 고르기, 불러오기 → 저장된 슬롯, 메뉴 저장하기 → 지금 게임을 원하는 슬롯에.
    덮어쓰기·지우기는 같은 칸을 한 번 더 눌러야 실행돼요. 게임은 진행 중인 슬롯에 매달 자동 저장. */
 let slotMode='load',slotArm=null,newSlot=1;
-const SLOT_TXT={new:['새로 시작','어느 슬롯에서 시작할까요? 저장된 슬롯을 고르면 덮어써요.'],load:['불러오기','이어서 할 슬롯을 골라요.'],save:['저장하기','지금 게임을 저장할 슬롯을 골라요. 이후 자동 저장도 그 슬롯에 돼요.']};
+const SLOT_TXT={new:['새로 시작','저장 칸 4개가 모두 찼어요. 지우고 새로 시작할 칸을 골라요.'],load:['불러오기','이어서 할 게임을 골라요.'],save:['저장하기','지금 게임을 저장할 슬롯을 골라요. 이후 자동 저장도 그 슬롯에 돼요.']};
 function slotLine(d){const s=d.S,t=new Date(d.at),p=n=>String(n).padStart(2,'0');
   const prog=s.launched?(s.m>=GLOBAL_M?'3막 해외 진출':'2막 매출'):'1막 론칭 준비';
   return {t:`${yearOf(s.m)}년차 ${monthOf(s.m)}월 · ${RANKS[s.rank]} 험쮜`,d:`${prog} · ${s.prof?s.prof.mbti+' · ':''}통장 ${s.money}만원${s.co?` · 회사 ${(s.co.cash<0?'−':'')+fmtW(Math.abs(s.co.cash))}`:''}\n${t.getMonth()+1}/${t.getDate()} ${p(t.getHours())}:${p(t.getMinutes())} 저장`}}
@@ -3785,7 +3813,7 @@ function slotsHTML(){let h='';for(let n=1;n<=SLOTS;n++){const d=slotData(n),arm=
 function openSlots(mode){slotMode=mode;slotArm=null;const [t,sub]=SLOT_TXT[mode];$('#slots-title').textContent=t;$('#slots-sub').textContent=sub;$('#slots4').innerHTML=slotsHTML();closeSheets();$('#sheet-slots').hidden=false}
 $('#slots4').addEventListener('click',e=>{
   const del=e.target.closest('[data-slotdel]');
-  if(del){e.stopPropagation();const n=+del.dataset.slotdel;if(slotArm&&slotArm.n===n&&slotArm.what==='del'){ls.set(slotKey(n),null);slotArm=null;toast(`슬롯 ${n}을 지웠어요`);$('#btn-cont').hidden=!anySlot()}else slotArm={n,what:'del'};$('#slots4').innerHTML=slotsHTML();return}
+  if(del){e.stopPropagation();const n=+del.dataset.slotdel;if(slotArm&&slotArm.n===n&&slotArm.what==='del'){ls.set(slotKey(n),null);slotArm=null;toast(`슬롯 ${n}을 지웠어요`);$('#btn-cont').hidden=!anySlot();$('#btn-load').hidden=slotCount()<2}else slotArm={n,what:'del'};$('#slots4').innerHTML=slotsHTML();return}
   const c=e.target.closest('[data-slot4]');if(!c||c.disabled)return;const n=+c.dataset.slot4,d=slotData(n);
   if(slotMode==='load'){if(!d)return;closeSheets();loadGame(n);return}
   const sameCur=slotMode==='save'&&S&&S.slot===n;
@@ -3882,7 +3910,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-dex]');if(
   if(!dex[E.id]){toast('🔒 힌트: '+E.hint);return}
   const src=dexImg(E),two=/^(c_|d_)/.test(src);(two?showClip({a:src,b:src+'_b',kick:`ENDING ${ENDINGS.indexOf(E)+1} · ${E.g}`,title:E.t,sub:E.sub}):showCG({img:src,kick:`ENDING ${ENDINGS.indexOf(E)+1} · ${E.g}`,title:E.t,sub:E.sub}))},true);
 $('#mission').onclick=()=>{if(!S||busy)return;const G=todayGoal();note(G.d,'🎯 '+G.t);$('#dialog').classList.add('tall');placeActor()};
-$('#btn-save').onclick=()=>openSlots('save');
+$('#btn-save').onclick=()=>{if(!S)return;S.slot=S.slot||freeSlot()||1;save();closeSheets();toast('💾 저장했어요 · 매달·방문마다 자동 저장도 돼요')};
 $('#btn-title').onclick=()=>{save();closeSheets();showTitle()};
 
 /* ================= 타이틀·면접 ================= */
@@ -3908,16 +3936,17 @@ document.addEventListener('click',e=>{
   renderProfile();
 });
 document.addEventListener('change',e=>{if(e.target.id==='pf-bm'){PF.bm=+e.target.value;renderProfile()}else if(e.target.id==='pf-bd'){PF.bd=+e.target.value;renderProfile()}});
-function showTitle(){if(window.__swUpdate){location.reload();return}playBgm('title');$('#scr-title').hidden=false;$('#btn-cont').hidden=!anySlot()}
+function showTitle(){if(window.__swUpdate){location.reload();return}playBgm('title');$('#scr-title').hidden=false;$('#btn-cont').hidden=!anySlot();$('#btn-load').hidden=slotCount()<2}
 function openSetup(){
   $('#scr-title').hidden=true;$('#scr-setup').hidden=false;renderProfile();
   $('#origins').innerHTML=ORIGINS.map(o=>`<button class="origin" data-o="${o.id}" aria-pressed="${o.id===originSel}"><b>${o.name}</b><span>${o.d}</span><em>${Object.entries(o.bonus).map(([k,v])=>`${STATS[k]}+${v}`).join(' · ')} · 통장 ${o.money}만원</em></button>`).join('');
   $$('.origin').forEach(b=>b.onclick=()=>{originSel=b.dataset.o;$$('.origin').forEach(x=>x.setAttribute('aria-pressed',x.dataset.o===originSel))});
 }
-$('#btn-new').onclick=()=>openSlots('new');
+$('#btn-new').onclick=()=>{const n=freeSlot();if(n){newSlot=n;openSetup()}else openSlots('new')};
 $('#btn-dex').onclick=()=>openSheet('dex');
 $('#btn-back').onclick=()=>{$('#scr-setup').hidden=true;showTitle()};
-$('#btn-cont').onclick=()=>openSlots('load');
+$('#btn-cont').onclick=()=>{const n=lastSlot();if(n)loadGame(n)};
+$('#btn-load').onclick=()=>openSlots('load');
 function loadGame(n){const d=slotData(n);if(!d)return;S=d.S;S.slot=n;if(AFTER()&&S.plan.length!==1)S.plan=[null];S.prof=S.prof||{gender:'여성',mbti:'ISFJ',bm:3,bd:2,major:'화장품과학과'};$('#scr-title').hidden=true;busy=false;document.body.classList.remove('running');S.story=S.story||{};S.perk=S.perk||{};S.snap=S.snap||{bp:0,rep:0,bq:0,buzz:0};REL_KEYS.forEach(k=>{if(S.aff[k]==null)S.aff[k]=5});if(!(S.m===0&&DEPTS[S.firstDept]&&S.plan.every(p=>p&&ACTS[p])))S.plan=Array(planSize()).fill(null);S.runIdx=-1;monthIntro()};
 
 /* ================= 프롤로그: 탈락 → 다시 도전 → 증명사진 ================= */
@@ -4053,6 +4082,8 @@ async function prologue(){
 
 $('#btn-start').onclick=async()=>{
   S=newGame(originSel,{...PF});S.slot=newSlot;$('#scr-setup').hidden=true;render();busy=true;document.body.classList.add('running');
+  // 2회차 보너스: 모은 엔딩 수만큼(최대 5) 시작 능력치·통장
+  {const dex=ls.get(DEXKEY)||{},k=Object.keys(dex).filter(x=>dex[x]).length;if(k){const b=Math.min(5,k);Object.keys(S.stat).forEach(x=>S.stat[x]+=b);S.money+=10*b;S.ng=k;setTimeout(()=>toast(`🎁 엔딩 ${k}개를 본 선배 험쮜! 능력치 전부 +${b} · 통장 +${10*b}만원 · 본 장면은 ⏩로 빨리`),900)}}
   document.body.classList.add('pro');
   await prologue();
   setPlace('sc_meeting');
@@ -4087,11 +4118,19 @@ $('#btn-start').onclick=async()=>{
 };
 ['sc_office','sc_meeting','a_seohwi','a_sangho','a_hyunsu','ev_pass','ev_pass_b','ev_subway','ev_subway_b','ev_arrive','ev_arrive_b'].forEach(k=>{const i=new Image();i.src=IMG(k)});
 setSound(AU.on);
+function applyMix(){if(AU.ctx){AU.bgmBus.gain.setTargetAtTime(AU.bgmOn?.4:0,AU.ctx.currentTime,.05);AU.sfxBus.gain.setTargetAtTime(AU.sfxOn?.45:0,AU.ctx.currentTime,.05)}
+  $('#btn-bgm').textContent=`🎵 배경음 ${AU.bgmOn?'켜짐':'꺼짐'}`;$('#btn-sfx').textContent=`🔔 효과음 ${AU.sfxOn?'켜짐':'꺼짐'}`}
+const FS_N=['보통','크게','아주 크게'];let fsLv=+prefGet('humzzwi.fs','0')||0;
+function applyFs(){document.body.classList.remove('fs1','fs2');if(fsLv)document.body.classList.add('fs'+fsLv);$('#btn-fs').textContent=`🔠 글자 크기 · ${FS_N[fsLv]}`}
+$('#btn-bgm').onclick=()=>{auInit();AU.bgmOn=!AU.bgmOn;prefSet('humzzwi.bgm',AU.bgmOn?'1':'0');applyMix()};
+$('#btn-sfx').onclick=()=>{auInit();AU.sfxOn=!AU.sfxOn;prefSet('humzzwi.sfx',AU.sfxOn?'1':'0');applyMix();sfx('tap')};
+$('#btn-fs').onclick=()=>{fsLv=(fsLv+1)%3;prefSet('humzzwi.fs',String(fsLv));applyFs();try{placeActor();syncClip()}catch(e){}};
+applyMix();applyFs();
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-62e123';
+const BUILD='2026.10.10-86ae40';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
