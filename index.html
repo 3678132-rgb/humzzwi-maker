@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=f7a336"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=f7a336"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=f7a336">
+<link rel="manifest" href="manifest.json?v=b2643f"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=b2643f"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=b2643f">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2499,10 +2499,11 @@ const nearOf=k=>{if(!S||!isRel(k))return .25;return Math.min(80,Math.max(0,S.aff
 function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidden)return;const d=$('#dialog'),P=$('#phone'),ph=P.clientHeight,pw=P.clientWidth;const top=d.hidden?ph-210:d.offsetTop;
   const head=108,room=top-head;el.style.visibility=room<110?'hidden':'visible';
   const im=$('#actor-img'),asp=im.naturalWidth&&im.naturalHeight?im.naturalWidth/im.naturalHeight:.42,t=nearOf(el.dataset.k);
-  const f=.9-.36*t;                                   // 대화창 위로 보이는 몸의 비율 (0.9 무릎 아래 → 0.54 허리)
-  let h=room/f;h=Math.min(h,pw*(SIDECUT[el.dataset.k]||1.04)/asp);h=Math.max(h,240);
-  im.style.height='100%';el.style.height=h+'px';el.style.bottom=(ph-head-h)+'px';
-  const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,head+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
+  // 어색할 땐 멀리서 작게(전신, 대화창 위에 발끝) → 친해질수록 다가와 단짝이면 허리 위 상반신이 꽉 차게
+  let h=room*(.72+1.13*Math.pow(t,1.3));h=Math.min(h,pw*(SIDECUT[el.dataset.k]||1.04)/asp);h=Math.max(h,240);
+  const y=Math.max(head,top-.95*h);
+  im.style.height='100%';el.style.height=h+'px';el.style.bottom=(ph-y-h)+'px';
+  const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,y+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
 $('#actor-img').addEventListener('load',placeActor);
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
@@ -3620,7 +3621,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-f7a336';
+const BUILD='2026.10.10-b2643f';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
