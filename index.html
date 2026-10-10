@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=b2643f"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=b2643f"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=b2643f">
+<link rel="manifest" href="manifest.json?v=5ff66a"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5ff66a"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5ff66a">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2474,8 +2474,12 @@ const BODY_T={"sangho":597,"hyunsu":533,"hanmin":581,"seohwi":536,"jiyoung":493,
 const sprOf=k=>imgOf(k);
 const bodyT=k=>BODY_T[imgOf(k).slice(2)]||T_MAX;
 function placeGroup(){const g=$('#group');if(!g||g.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight,top=d.hidden?ph-200:d.offsetTop;
-  const h=Math.max(160,Math.min(340,top-118));g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px';
-  g.querySelectorAll('figure').forEach(f=>{f.querySelector('img').style.height=((h-26)*(+f.dataset.t)/T_MAX)+'px'})}
+  // 한 명이면 혼자 서 있을 때(어색한 사이)와 같은 크기로, 여러 명이면 화면 폭에 다 들어오게 줄인다
+  const pw=$('#phone').clientWidth,fs=[...g.querySelectorAll('figure')];let h=Math.max(160,(top-112)*.92);
+  const wOf=hh=>fs.reduce((w,f)=>{const im=f.querySelector('img'),a=im.naturalWidth&&im.naturalHeight?im.naturalWidth/im.naturalHeight:.38;return w+(hh-26)*(+f.dataset.t)/T_MAX*a-12},0);
+  const fit=pw*.96;if(wOf(h)>fit)h=26+(h-26)*fit/wOf(h);h=Math.max(160,h);
+  g.style.height=h+'px';g.style.bottom=(ph-top-4)+'px';
+  fs.forEach(f=>{const im=f.querySelector('img');im.style.height=((h-26)*(+f.dataset.t)/T_MAX)+'px';if(!im.complete)im.onload=placeGroup})}
 function hideGroup(){const g=$('#group');if(g){g.hidden=true;g.innerHTML=''}}
 function hideActor(){hideGroup();const el=$('#actor');el.hidden=true;el.dataset.k=''}
 function faceStyle(w){
@@ -3621,7 +3625,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-b2643f';
+const BUILD='2026.10.10-5ff66a';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
