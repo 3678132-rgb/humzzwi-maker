@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=5511c1"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5511c1"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5511c1">
+<link rel="manifest" href="manifest.json?v=128b70"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=128b70"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=128b70">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1211,7 +1211,7 @@ const GL_TOT=56;
 const glList=()=>{const o=S.choice.gl;return o?[GL.find(g=>g.k===o),...GL.filter(g=>g.k!==o)].map((g,i)=>({...g,at:GL[i].at})):GL};
 const glOpen=()=>glList().filter(g=>(S.gl||0)>=g.at).length;
 // 3막은 나라별로: S.gl 누적을 나라 칸(10·10·12)으로 나눠 쓰고, 나라마다 막히는 곳·핵심 업무·바이어 언어가 다르다
-const LANG={en:{n:'영어',ic:'🇬🇧'},jp:{n:'일본어',ic:'🇯🇵'}},LANG_NEED=3;
+const LANG={en:{n:'영어',ic:'🇬🇧'},jp:{n:'일본어',ic:'🇯🇵'}},LANG_NEED=3,LANG_FROM=13; // 2년차 4월에 해외 예고 → 3막까지 휴일 10번
 const langLv=l=>(S&&S.lang&&S.lang[l])||0;
 const GLC={
   us:{lang:'en',city:'시애틀',key:['formula','keymsg'],buyer:'아마존 바이어와 영어 미팅',game:'english',block:'성분 규제 · 영문 상세페이지',hint:'🧪 연구실 처방 · 📣 마케팅 카피 · 🤝 영업 바이어 미팅'},
@@ -1768,7 +1768,9 @@ const FIXED={
     const c=await ask({who:'hanmin',title:'용기 불량 사태',text:'"2차 생산분 공장에서 연락 왔습니다. 펌프 2만 개 중 일부가 안 눌린답니다."',choices:[{l:'전량 재생산',s:'비용↑ 제품력·평판↑'},{l:'선별 출고',s:'빠르지만 위험'}]});
     if(c===0)await result({bq:6,rep:4,aff_hanmin:5,st:8},'"끝까지 돌아가게 하겠습니다." 이한민 과장이 공장에 상주했다.','결과','hanmin');
     else{await result({aff_hanmin:-2,rep:-4,bq:-3},'일단 선별 출고로 품절은 막았다.\n…한 달 뒤, "펌프가 안 눌려요" 리뷰가 올라왔다.\n<span class="t">(…괜찮겠지?)</span>','결과','hanmin')}},
-  18:async()=>{setPlace('sc_meeting');await say({who:'sangho',title:'내년엔 바다 건너',text:`"국내가 자리 잡으면 3년차엔 해외예요. 미국·동남아는 영어, 일본은 일본어로 바이어를 직접 만나야 해요.\n통역 기다리다 계약 놓친 회사, 많이 봤어요. 휴일에 미리 공부해 둬요."\n<span class="t">🗣️ 바이어 미팅은 그 나라 말 Lv.${LANG_NEED}부터 · 지금 영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')}</span>`})},
+  13:async()=>{setPlace('sc_meeting');await say({who:'sangho',title:'내년 3월엔 바다 건너',text:`"국내 매출이 자리 잡으면, 내년 3월부터는 해외예요. 미국·동남아는 영어, 일본은 일본어로 바이어를 직접 만나야 해요.\n통역 기다리다 계약 놓친 회사, 많이 봤어요. 휴일에 지금부터 조금씩 공부해 둬요."\n<span class="t">🗣️ 바이어 미팅은 그 나라 말 Lv.${LANG_NEED}부터 · 지금 영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')} · 3막까지 휴일 약 10번</span>`});toast('🗣️ 휴일 📚 자기계발에 「영어 회화」·「일본어 회화」')},
+  18:async()=>{setPlace('sc_meeting');const e=langLv('en'),j=langLv('jp'),ok=Math.max(e,j)>=LANG_NEED;
+    await say({who:'sangho',title:'외국어 중간 점검',text:`"해외까지 반년 남았어요. 공부는 잘 되고 있어요?"\n${ok?'"오, 바이어 미팅 바로 해도 되겠는데요? 남은 언어도 조금씩 해 둬요."':Math.max(e,j)>0?'"조금만 더! 첫 나라 말 하나만이라도 Lv.'+LANG_NEED+'까지 올려 와요."':'"…아직 시작도 안 했어요? 휴일 다섯 번이면 빠듯해요."'}\n<span class="t">🗣️ 영어 Lv.${e} · 일본어 Lv.${j} (바이어 미팅 Lv.${LANG_NEED}부터)</span>`})},
   19:async()=>{setPlace('sc_rain');
     const c=await ask({who:'fox',title:'경쟁사의 선수',text:`"어머, 캔버스랩 ${S.choice.cat||'장벽 크림'} 잘 팔린다면서요? 우리도 똑같은 거 다음 주에 내요~ 반값에."`,choices:[{l:'이은빈 사원과 차별화 콘텐츠',s:'트렌드 판정'},{l:'이수민 사원과 데이터로 포지셔닝',s:'데이터 판정'},{l:'우리 페이스대로',s:'멘탈 관리'}]});
     if(c===0)await result(S.stat.trend>=50?{buzz:14,aff_eunbin:5}:{buzz:3,st:10},S.stat.trend>=50?'"원조는 다르다" 콘텐츠가 터졌다! 매출이 오히려 올랐다.':'콘텐츠는 냈지만 반응이 애매했다.','결과','eunbin');
@@ -2422,7 +2424,7 @@ function todayGoal(){const st=TEAM.filter(storyReady),out={t:'',why:'',ps:[],row
       out.ps=[...new Set(G.key.map(id=>Object.keys(PLACES).find(q=>(PLACES[q].acts||[]).includes(id))))];if(lv>=LANG_NEED)out.ps.push('sales');
       out.lang={i:'🗣️',b:`${LANG[l].n} Lv.${lv}`,v:'',s:lv>=LANG_NEED?(dl?'계약 완료 · 바이어 미팅으로 진척 크게↑':'영업팀 바이어 미팅에 성공하면 계약 → 입점'):`입점하려면 바이어 계약 · 미팅은 Lv.${LANG_NEED}부터 · 휴일 📚 「${LANG[l].n} 회화」`}}
     else{out.t='해외 3곳 모두 오픈! · 매출·브랜드 키우기';out.why=`해외 3곳에서 팔리는 중. 최고 월 매출 <b>${fmtW(S.salesBest||0)}</b>`;out.ps=['sales','mkt','studio']}}
-  if(S.launched&&S.m>=GLOBAL_M-8&&S.m<GLOBAL_M)out.lang={i:'🗣️',b:'해외 대비',v:`영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')}`,s:`3막 바이어 미팅은 그 나라 말 Lv.${LANG_NEED}부터 · 휴일 📚 자기계발`};
+  if(S.launched&&S.m>=LANG_FROM&&S.m<GLOBAL_M)out.lang={i:'🗣️',b:'해외 대비',v:`영어 Lv.${langLv('en')} · 일본어 Lv.${langLv('jp')}`,s:`3막 바이어 미팅은 그 나라 말 Lv.${LANG_NEED}부터 · 휴일 📚 자기계발`};
   if(out.ps.length)out.rows.push({c:'star',i:'★',b:'추천 장소',v:out.ps.map(q=>PLACES[q].n).join(' · '),s:'가서 💼 일한다 → 목표 진행'});
   if(out.lang)out.rows.push(out.lang);
   if(st.length)out.rows.push({c:'heart',i:'♥',b:'이야기',v:st.map(k=>given(k)+' 님').join(' · '),s:'만나면 이야기 먼저, 일도 그대로'});
@@ -3086,7 +3088,7 @@ const josa=(w,a,b)=>{const c=(w||'').trim().slice(-1).charCodeAt(0);return w+(c>
 // 업무마다 사수가 왜 골랐는지 한 줄
 function taskWhy(id){const a=ACTS[id],M=S.mission,tg=sasuTarget(),gc=glCur();
   if(gc&&(id==='global'||GLC[gc.k].key.includes(id)))return `${glFlag(gc)} ${gc.n.split(' ').slice(1).join(' ')} 진출 핵심 · 해외 진척↑${id==='global'?'↑':''}`;
-  if(a.lang&&S.m>=GLOBAL_M-8)return `🗣️ 해외 바이어 미팅 대비 · 지금 Lv.${langLv(a.lang)}`;
+  if(a.lang&&S.m>=LANG_FROM)return `🗣️ 해외 바이어 미팅 대비 · 지금 Lv.${langLv(a.lang)}`;
   if(a.cat==='self')return M&&M.k==='edu'&&M.acts.includes(id)?'📚 이번 달 교육 미션':`📚 ${STATS[Object.keys(a.g)[0]]} 보강`;
   if(tg&&a.ms&&a.ms[tg])return `→ ${MS[tg].ic} ${PART[tg]} 진척 +${a.ms[tg]}${M&&(M.ms===tg||M.k==='bp')?' · 미션 직결':''}`;
   if(M&&M.k==='sales')return a.dept==='sales'?'📈 매출 직결 · 평판↑':a.dept==='mkt'?'📈 매출 + 화제성':'📈 매출에 조금 보탬';
@@ -3095,7 +3097,7 @@ function taskWhy(id){const a=ACTS[id],M=S.mission,tg=sasuTarget(),gc=glCur();
   if(M&&M.k==='gain'&&M.v==='bq'&&a.bq)return '🧴 제품력 미션에 보탬';
   if(a.ms&&a.ms.any)return '🧩 급한 부품을 조금씩';
   return a.mate?`♥ ${who(a.mate).name.split(' ')[0]}와 함께 · 능력치↑`:'능력치↑'}
-const taskStar=id=>{const a=ACTS[id],M=S.mission,tg=sasuTarget(),gc=glCur();if(gc&&(id==='global'||GLC[gc.k].key.includes(id)))return true;if(a.lang){const l=glLangLock();if(l===a.lang||S.m>=GLOBAL_M-8&&S.m<GLOBAL_M&&langLv(a.lang)<LANG_NEED)return true}return a.cat==='self'?!!(M&&M.k==='edu'&&M.acts.includes(id)):!!((M&&tg&&a.ms&&a.ms[tg]&&(M.ms===tg||M.k==='bp'))||(M&&(M.k==='glG'||M.k==='glN')&&id==='global'))};
+const taskStar=id=>{const a=ACTS[id],M=S.mission,tg=sasuTarget(),gc=glCur();if(gc&&(id==='global'||GLC[gc.k].key.includes(id)))return true;if(a.lang){const l=glLangLock();if(l===a.lang||S.m>=LANG_FROM&&S.m<GLOBAL_M&&langLv(a.lang)<LANG_NEED)return true}return a.cat==='self'?!!(M&&M.k==='edu'&&M.acts.includes(id)):!!((M&&tg&&a.ms&&a.ms[tg]&&(M.ms===tg||M.k==='bp'))||(M&&(M.k==='glG'||M.k==='glN')&&id==='global'))};
 function sasuTasks(){if(S.tasks&&S.tasks.m===S.m&&S.tasks.v===2)return S.tasks.ids;
   const M=S.mission,ids=Object.entries(ACTS).filter(([id,a])=>a.cat==='work'&&!a.hidden&&id!=='overtime'&&id!=='orient'&&!lockReason(id)).map(([id])=>id);
   const tg=sasuTarget(),sc=id=>{const a=ACTS[id];let v=R()*2;if(tg&&a.ms&&a.ms[tg])v+=8+a.ms[tg];else if(a.ms&&a.ms.any)v+=1;
@@ -3911,7 +3913,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-5511c1';
+const BUILD='2026.10.10-128b70';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
