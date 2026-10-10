@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=a4d752"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=a4d752"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=a4d752">
+<link rel="manifest" href="manifest.json?v=357f46"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=357f46"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=357f46">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -48,6 +48,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 /* ---------- 상단 상태창 ---------- */
 .hud-top{position:absolute;top:calc(10px + var(--st));left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:4}
 .avatar{position:relative;width:58px;height:58px;flex:none;border-radius:18px;border:3px solid #fff;background:var(--sky-s) url(assets/f_hz.webp) 50% 50%/cover no-repeat;box-shadow:0 4px 0 #b9780a,0 6px 12px rgba(0,0,0,.25)}
+body.fem .avatar{background-image:url(assets/f_hz_w.webp)}
 .av-lb{position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);font-family:var(--display);font-size:10.5px;line-height:1.35;color:#fff;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);border:2px solid #fff;border-radius:99px;padding:0 7px;white-space:nowrap;box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .hud-center{flex:1;min-width:0;background:rgba(61,42,34,.62);color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:16px;padding:6px 12px;backdrop-filter:blur(4px)}
 .hud-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;min-width:0}
@@ -1097,8 +1098,8 @@ const slotKey=n=>'humzzwi.maker.slot'+n; // 슬롯마다 {S, at}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // 험쮜가 여성이면 넥타이 대신 리본 블라우스 버전(_w) 그림을 쓴다
 const hzFem=()=>{try{return !!(S&&S.prof&&S.prof.gender==='여성')}catch(e){return false}};
-const FEM_IMG=new Set(['c_ev_ceo','c_ev_ceo_b','c_mba','c_mba_b','c_settle','c_settle_b','c_cafe','c_cafe_b','s_ceo']);
-const IMG=k=>k==='hz'?'assets/hz.png':`assets/${k}${FEM_IMG.has(k)&&hzFem()?'_w':''}.webp`;
+const FEM_IMG=new Set(['a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','v_short','v_short_b']);
+const IMG=k=>k==='hz'?`assets/hz${hzFem()?'_w':''}.png`:`assets/${k}${FEM_IMG.has(k)&&hzFem()?'_w':''}.webp`;
 const BRAND='STAGE:ZERO';
 
 /* ================= 험쮜 프로필 ================= */
@@ -2938,6 +2939,7 @@ function toast(t){const e=document.createElement('div');e.className='toast';e.te
 function ring(v,col,label){const r=18,c=2*Math.PI*r;return `<svg viewBox="0 0 44 44" aria-label="${label} ${v}"><circle cx="22" cy="22" r="${r}" fill="none" stroke="#f1dccf" stroke-width="6"/><circle cx="22" cy="22" r="${r}" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c*v/100} ${c}" transform="rotate(-90 22 22)"/><text x="22" y="26.5" text-anchor="middle" font-size="12" font-weight="700" fill="#3d2a22">${v}</text></svg>`}
 function render(){
   if(!S)return;
+  document.body.classList.toggle('fem',hzFem());
   const f=focusMs(),dl=LAUNCH_M-S.m,bp=bpPct();
   $('#h-date').textContent=`${yearOf(S.m)}년차 ${monthOf(S.m)}월`;
   $('#h-rank').innerHTML=`${RANKS[S.rank]} 험쮜${isGold()?'<span class="gold">✨황금막내</span>':''}`;
@@ -3798,7 +3800,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-a4d752';
+const BUILD='2026.10.10-357f46';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
