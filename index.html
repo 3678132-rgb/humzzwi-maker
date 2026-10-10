@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=23dcaf"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=23dcaf"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=23dcaf">
+<link rel="manifest" href="manifest.json?v=a1d0d3"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=a1d0d3"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=a1d0d3">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -45,7 +45,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 /* ---------- 상단 상태창 ---------- */
 .hud-top{position:absolute;top:calc(10px + var(--st));left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:4}
-.avatar{width:58px;height:58px;flex:none;border-radius:18px;border:3px solid #fff;background:var(--sky-s) url(assets/f_hz.webp) 50% 50%/cover no-repeat;box-shadow:0 4px 0 #b9780a,0 6px 12px rgba(0,0,0,.25)}
+.avatar{position:relative;width:58px;height:58px;flex:none;border-radius:18px;border:3px solid #fff;background:var(--sky-s) url(assets/f_hz.webp) 50% 50%/cover no-repeat;box-shadow:0 4px 0 #b9780a,0 6px 12px rgba(0,0,0,.25)}
+.av-lb{position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);font-family:var(--display);font-size:10.5px;line-height:1.35;color:#fff;background:linear-gradient(180deg,#ff9cc0,#ff5c8a);border:2px solid #fff;border-radius:99px;padding:0 7px;white-space:nowrap;box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .hud-center{flex:1;min-width:0;background:rgba(61,42,34,.62);color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:16px;padding:6px 12px;backdrop-filter:blur(4px)}
 .hud-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;min-width:0}
 .hud-line b{font-family:var(--display);font-weight:400;font-size:17px;white-space:nowrap}
@@ -863,7 +864,7 @@ body.running .mission{opacity:.85}
   <div class="shade" aria-hidden="true"></div>
 
   <header class="hud-top">
-    <button class="avatar" data-sheet="status" aria-label="험쮜 상태 보기"></button>
+    <button class="avatar" data-sheet="status" aria-label="내 프로필 보기"><span class="av-lb">내 프로필</span></button>
     <div class="hud-center">
       <div class="hud-line"><b id="h-date"></b><span id="h-rank"></span></div>
       <div class="hud-bar" aria-hidden="true"><i id="h-bp"></i></div>
@@ -903,7 +904,7 @@ body.running .mission{opacity:.85}
   <section class="bld" id="bld" hidden aria-label="캔버스랩 빌딩">
     <div class="bl-top" id="bl-top"></div>
     <div class="bl-floors" id="bl-floors"></div>
-    <div class="bl-bot" id="bl-bot"><button class="mini" data-bsheet="status" type="button">🐭 능력치</button><button class="mini" data-bsheet="mates" type="button">💞 관계도</button><button class="mini" id="bl-leave" type="button">🌴 연차</button><button class="cta" id="bl-go" type="button">출근 ▶</button></div>
+    <div class="bl-bot" id="bl-bot"><button class="mini" data-bsheet="status" type="button">🐭 내 프로필</button><button class="mini" data-bsheet="mates" type="button">💞 관계도</button><button class="mini" id="bl-leave" type="button">🌴 연차</button><button class="cta" id="bl-go" type="button">출근 ▶</button></div>
   </section>
   <button class="fab c-orange btn-office" id="btn-office" hidden><span class="ic">🏢</span><span class="lb">사무실</span></button>
 
@@ -3531,6 +3532,8 @@ async function prologue(){
   await say({who:'me',title:'📢 [캔버스랩] 마케팅팀 인턴 모집',text:'신규 브랜드 STAGE:ZERO와 함께할 막내를 찾습니다.\n"긁힌 하루를, 투명하게."\n<span class="t">(긁혔다가 다시 투명해지는 거… 지금 내 얘기잖아.)</span>'});
   await result({rep:1},'지원 버튼을 눌렀다. 일주일 뒤 — "서류 합격. 최종 면접에 증명사진을 지참해 주세요."\n<span class="t">(…증명사진? 3년 전 사진은 볼살이 지금의 두 배다.)</span>','다시 도전!');
   // 사진관 고르기
+  const sk=await ask({who:'me',title:'📸 증명사진, 어떻게 할까?',text:'사진관을 찾아가 직접 찍으면 인생샷(면접 +1점)이 나올 수도 있어요.',choices:[{l:'📍 직접 찾아가서 찍기',s:'동네 지도 + 촬영 미니게임'},{l:'⏭ 건너뛰기',s:'가까운 사진관에서 무난하게 · 2만원'}]});
+  if(sk===1){S.idPhoto='ok';applyFx({money:-2});await showCG({img:'id_ok',kick:'증명사진 완성',title:'무난한 증명사진',sub:'가까운 사진관에서 후다닥. 긴장한 게 살짝 보이지만… 증명사진이 다 그렇지.'});return}
   await say({who:'me',title:'📍 사진관 찾아가기',text:`면접은 사흘 뒤. 통장 ${S.money}만원.\n동네 사진관은 세 곳. 가까운 데는 싸고, 먼 데는 비싸지만 잘 찍어 준대.\n<span class="t">방향키(▲◀▼▶)로 험쮜를 움직여 사진관에 들어가요. 걸음 수는 18걸음!</span>`});
   const {si,got}=await townWalk();
   const st=STUDIOS[si];applyFx({money:-st.cost+(got.c?1:0),...(got.k?{st:-3}:{}),...(st.trend?{trend:st.trend}:{})});
@@ -3583,7 +3586,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-23dcaf';
+const BUILD='2026.10.10-a1d0d3';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
