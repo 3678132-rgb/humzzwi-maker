@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=392b34"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=392b34"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=392b34">
+<link rel="manifest" href="manifest.json?v=8f306a"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8f306a"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8f306a">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2351,7 +2351,8 @@ $('#bl-leave').onclick=async()=>{if(busy||!S)return;if(S.leave<1){toast('남은 
   busy=true;hideBld();const c=await ask({who:'me',title:'🌴 오늘 연차 쓸까요?',text:`남은 연차 ${S.leave}일. 오늘은 회사에 안 가고 푹 쉬어요.\n<span class="t">(사람도 일도 못 만나지만, 체력·스트레스가 크게 회복돼요.)</span>`,choices:[{l:'연차 쓰고 집콕',s:'연차 −1 · 체력↑↑ 스트레스↓↓'},{l:'아니, 출근할래',s:'빌딩으로'}]});
   if(c===1){busy=false;showBld();return}
   await runAct('leave',0);S.day.phase='weekend';save();await afterDay()};
-$('#bl-bot').addEventListener('click',e=>{const t=e.target.closest('[data-bsheet]');if(t&&!busy)openSheet(t.dataset.bsheet)});
+// 빌딩 하단: 내 프로필 / 관계도 — 다른 클릭 처리로 새지 않게 여기서 끝낸다
+$('#bl-bot').addEventListener('click',e=>{const t=e.target.closest('[data-bsheet]');if(!t)return;e.preventDefault();e.stopPropagation();if(!busy)openSheet(t.dataset.bsheet)});
 
 /* ----- 평일: 고른 곳을 차례로 들른다 ----- */
 async function workday(){busy=true;hideBld();document.body.classList.add('running');playBgm('work');
@@ -3094,7 +3095,7 @@ function openSheet(k){
   if(k==='brand'){if(!S)return;$('#brand').innerHTML=brandHTML()}
   if(k==='meet'){if(!S||!S.launched)return;S.meetDraft=S.meetDraft&&S.meetDraft.m===S.m?S.meetDraft:{...meet()};$('#meet').innerHTML=meetHTML()}
   if(k==='acts'&&!S)return;
-  if(k==='mates')$('#mates').innerHTML=matesHTML();
+  if(k==='mates'){try{$('#mates').innerHTML=matesHTML()}catch(err){$('#mates').innerHTML=Object.keys(MATES).concat(['daram']).map(x=>{try{return relCard(x)}catch(e){return ''}}).join('')}}
   if(k==='dex')$('#dex').innerHTML=dexHTML();
   $('#sheet-'+k).hidden=false;
 }
@@ -3794,7 +3795,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-392b34';
+const BUILD='2026.10.10-8f306a';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
