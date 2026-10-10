@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=41f0e4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=41f0e4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=41f0e4">
+<link rel="manifest" href="manifest.json?v=3abc61"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3abc61"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3abc61">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -387,6 +387,8 @@ body.picmode-on .shade{background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,r
 
 /* 대화창 속 두 사람 그림 (2장 움짤) */
 .dialog.haspic{max-height:74%!important}
+/* 그림이 든 대화창은 상태창 아래 남은 공간의 가운데에 */
+.dialog.haspic.mid{bottom:calc(18px + var(--sb));height:-webkit-fit-content;height:fit-content;margin-block:auto}
 /* 스케줄 그림이 나올 땐 뒤 배경(방·사무실)을 빼고, 같은 그림을 흐리게 깔아 그림 하나에만 눈이 가게 */
 /* 스케줄 배경 시안 — body[data-mbg]: A 활동 색 땡땡이 · B 다이어리 모눈 · C 장소를 어둡게 */
 /* 배경은 늘 분홍 땡땡이 */
@@ -557,6 +559,41 @@ body.clip-on:not([data-mbg=C]) #pimg{opacity:0}
 .fl-B1{background:#e6ddd0;border-bottom:4px solid #c9a27c;border-radius:0 0 10px 10px}
 .fl-l{display:grid;place-content:center;text-align:center;background:#2a374c;color:#fff;border-radius:9px;line-height:1.1;padding:2px 0}
 .fl-l b{font-family:var(--display);font-weight:400;font-size:15px}.fl-l small{font-size:9px;opacity:.75;letter-spacing:-.02em}
+/* ===== 빌딩 외관 시안 (#bld.bx-A/B/C): 옥상 간판 → 층 → 1F 입구·인도 → 지하 B1 ===== */
+.bld[class*=bx-] .bl-floors{padding:0 18px 0;gap:0}
+.bld[class*=bx-] .bl-floors::before{content:"CANVAS LAB";flex:none;align-self:center;margin:14px 0 0;font-family:var(--display);letter-spacing:.12em}
+.bld[class*=bx-] .fl{border-width:0 6px 0}
+.bld[class*=bx-] .fl-RF{border-radius:0}
+.bld[class*=bx-] .bl-floors::after{content:"";flex:none;height:30px}
+.bld.bx-C .bl-floors{background:radial-gradient(60px 26px at 18% 60px,#fff 95%,transparent),radial-gradient(80px 30px at 82% 110px,#fff 95%,transparent),linear-gradient(180deg,#ffd9e6 0,#fff1d6 200px,#fff1d6 calc(100% - 90px),#b98a5e calc(100% - 90px))!important}
+.bld.bx-C .fl-1F{border-bottom-color:#7cc46a!important}
+/* A 핑크 벽돌 오피스 */
+.bld.bx-A .bl-floors{background:linear-gradient(180deg,#bfe0ff 0,#e9f4ff 160px,#e9f4ff calc(100% - 90px),#9c8b7c calc(100% - 90px))}
+.bld.bx-A .bl-floors::before{font-size:20px;color:#fff;background:#3d2a33;padding:4px 18px;border-radius:10px 10px 0 0;border:3px solid #ff9cc0;border-bottom:0;text-shadow:0 0 8px #ff7ea6,0 0 2px #ff7ea6}
+.bld.bx-A .fl{background:repeating-linear-gradient(0deg,#f6d9d9 0 11px,#efc9c9 11px 12px),#f6d9d9;border-color:#c96f86;padding:7px 8px}
+.bld.bx-A .fl-RF{background:linear-gradient(180deg,#d6f0c4,#eef8e6);border-top:8px solid #c96f86;box-shadow:0 -4px 0 #a9506a}
+.bld.bx-A .fl-1F{border-bottom:12px solid #c96f86;box-shadow:inset 0 6px 0 #ff9cc0}
+.bld.bx-A .fl-1F .fl-l{background:linear-gradient(90deg,#9fd3ff 0 48%,#7a5a40 48% 52%,#9fd3ff 52%);color:#22324a;border:3px solid #7a5a40}
+.bld.bx-A .fl-B1{background:#8f7d6c;border-color:#6d5c4d;border-radius:0;filter:saturate(.8)}
+.bld.bx-A .fl-l{background:#4a3540;box-shadow:inset 0 0 0 2px #ffcfdc}
+/* B 글래스 타워 */
+.bld.bx-B .bl-floors{background:linear-gradient(180deg,#7ec3ff 0,#d8efff 220px,#d8efff calc(100% - 90px),#5e6670 calc(100% - 90px))}
+.bld.bx-B .bl-floors::before{font-size:18px;color:#22324a;background:#fff;padding:3px 16px;border-radius:6px;border:3px solid #22324a;box-shadow:0 10px 0 -6px #22324a}
+.bld.bx-B .fl{background:linear-gradient(115deg,rgba(255,255,255,.55) 0 18%,transparent 18% 30%,rgba(255,255,255,.35) 30% 34%,transparent 34%),linear-gradient(180deg,#9fd0f5,#7fb6e3);border-color:#5d6b7c;border-bottom:3px solid #5d6b7c;padding:7px 8px}
+.bld.bx-B .fl-RF{background:linear-gradient(180deg,#e6edf3,#cfd9e2);border-top:6px solid #5d6b7c}
+.bld.bx-B .fl-1F{background:linear-gradient(180deg,#e9f5ff,#cfe6f8);border-bottom:12px solid #3b434c}
+.bld.bx-B .fl-B1{background:#58616b;border-color:#3b434c}
+.bld.bx-B .fl-l{background:#22324a;box-shadow:inset 0 0 0 2px #9fd0f5}
+/* C 파스텔 동화 빌딩 */
+.bld.bx-C .bl-floors{background:radial-gradient(60px 26px at 18% 60px,#fff 95%,transparent),radial-gradient(80px 30px at 82% 110px,#fff 95%,transparent),linear-gradient(180deg,#ffd9e6 0,#fff1d6 200px,#fff1d6 calc(100% - 90px),#8fcf7a calc(100% - 90px))}
+.bld.bx-C .bl-floors::before{content:"🎀 CANVAS LAB 🎀";font-size:17px;color:#fff;background:#ff7ea6;padding:20px 26px 6px;clip-path:polygon(50% 0,100% 62%,100% 100%,0 100%,0 62%);margin-top:6px;width:calc(100% + 24px);text-align:center;border-bottom:6px solid #e0527f}
+.bld.bx-C .fl{background:radial-gradient(9px 9px at 50% 0,transparent 98%,transparent) ,#fff8ec;border-color:#f3b6c6;padding:7px 8px}
+.bld.bx-C .fl-RF{background:linear-gradient(180deg,#e2f6d4,#f4fbe9)}
+.bld.bx-C .fl-1F{border-bottom:12px solid #b98a5e;box-shadow:inset 0 8px 0 repeating-linear-gradient(90deg,#ff9cc0 0 14px,#fff 14px 28px)}
+.bld.bx-C .fl-1F{background:linear-gradient(180deg,#ffb3c9 0 8px,#fff8ec 8px),#fff8ec}
+.bld.bx-C .fl-B1{background:#d9c3a5;border-color:#b98a5e}
+.bld.bx-C .fl-l{background:#ff9cc0;border-radius:14px 14px 6px 6px;box-shadow:inset 0 0 0 2px #fff}
+
 .fl-ps{display:grid;gap:6px;grid-template-columns:1fr 1fr;min-width:0}.fl-ps.n1{grid-template-columns:1fr}
 .fl-ps.n1 .bp{align-items:center}.fl-ps.n1 .bp small{white-space:normal}
 .bp{position:relative;display:grid;gap:2px;align-content:start;text-align:left;background:#fff;border:2px solid #e6d3bd;border-radius:12px;padding:4px 7px 5px;min-width:0;box-shadow:0 2px 0 #e2c9ab;font:inherit;color:var(--ink);cursor:pointer}
@@ -2555,7 +2592,8 @@ $('#actor-img').addEventListener('load',placeActor);
 // 대화창에 스케줄 그림이 있으면 장면 배경을 그 그림의 흐린 버전으로 바꾼다
 function syncClip(){const d=$('#dialog'),m=$('#mini'),st=!m.hidden&&m.querySelector('#mini-stage.clip'),im=st||(!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img'));
   if(st)document.body.dataset.cat=(st.className.match(/k-(\w+)/)||[])[1]||'work';else if(im)document.body.dataset.cat='love';
-  if(!document.body.dataset.mbg)document.body.dataset.mbg='A';document.body.classList.toggle('clip-on',!!im)}
+  if(!document.body.dataset.mbg)document.body.dataset.mbg='A';document.body.classList.toggle('clip-on',!!im);
+  const mid=!d.hidden&&d.classList.contains('haspic')&&!d.classList.contains('picmode');d.classList.toggle('mid',mid);d.style.top=mid?hudBottom()+'px':'';}
 new MutationObserver(syncClip).observe($('#dialog'),{attributes:true,attributeFilter:['class','hidden'],childList:true});
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
@@ -3701,7 +3739,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-41f0e4';
+const BUILD='2026.10.10-3abc61';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
