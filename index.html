@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=2153bc"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2153bc"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2153bc">
+<link rel="manifest" href="manifest.json?v=ea1973"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=ea1973"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=ea1973">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -47,6 +47,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 /* ---------- 상단 상태창 ---------- */
 .hud-top{position:absolute;top:calc(10px + var(--st));left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:4}
+.ig-btn{display:inline-block;margin:8px 0 2px;padding:9px 16px;border-radius:16px;background:linear-gradient(45deg,#f58529,#dd2a7b 55%,#8134af);color:#fff!important;font-weight:700;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.15)}
 .life{display:grid;gap:6px;margin-top:10px}.life .lf{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:12px;background:var(--cream,#fff6ee)}.life .lf i{font-style:normal;font-size:18px;width:24px;text-align:center}.life .lf span{flex:1;min-width:0}.life .lf b{display:block;font-size:13px}.life .lf small{display:block;font-size:11px;color:var(--mute)}.life .lf em{font-style:normal;font-size:12px;color:var(--mute)}.life .lf.done{opacity:.75}.life .lf.done i{color:var(--good,#3a9)}.life .lf.lock{opacity:.5}
 .avatar{position:relative;width:58px;height:58px;flex:none;border-radius:18px;border:3px solid #fff;background:var(--sky-s) url(assets/f_hz.webp) 50% 50%/cover no-repeat;box-shadow:0 4px 0 #b9780a,0 6px 12px rgba(0,0,0,.25)}
 body.fem .avatar{background-image:url(assets/f_hz_w.webp)}
@@ -2131,6 +2132,12 @@ const MISSIONS=[
   {g:'sangho',t:'해외 준비 — 외국어 Lv.3',k:'lang',n:3,lane:4,why:'"다음 달부터 해외예요. 바이어는 통역 안 기다려요. 영어든 일본어든, 하나는 Lv.3까지!"',ok:'"좋아요, 첫 미팅은 험쮜 님이 직접 해요." 사업부장이 출장 일정을 보여 줬다.',no:'"첫 미팅은 통역이랑 같이 가야겠네요…" 사업부장이 출장비 표를 고쳤다.'}];
 function missionFor(m){return {...MISSIONS[Math.max(0,Math.min(MISSIONS.length-1,m-LAUNCH_M-1))]}}
 const act2=()=>S&&S.launched&&S.m>LAUNCH_M&&S.m<GLOBAL_M;
+// 론칭 두 달 뒤: 은빈이 실제 험쮜 인스타그램(@hum_sawon)을 발견한다
+const INSTA='https://www.instagram.com/hum_sawon/';
+async function instaEvent(){S.flags.insta=1;setPlace('sc_studio');
+  await say({who:'eunbin',title:'📸 이 계정 뭐예요?',text:'"험쮜 님!! 이 인스타 봤어요? 「@hum_sawon」… 화장품 회사 막내 인턴의 하루래요.\n출근길, 회의록, 야근 돈가스까지… 어? 잠깐만. 이거 험쮜 님 아니에요?!"'});
+  await say({who:'eunbin',title:'📸 @hum_sawon',text:`"팔로워가 계속 늘고 있어요! 저 벌써 팔로우했어요. 험쮜 님도 맞팔해 줘요~"\n<a class="ig-btn" href="${INSTA}" target="_blank" rel="noopener">📸 @hum_sawon 팔로우하러 가기</a>\n<span class="t">(실제 험쮜 인스타그램이 새 창으로 열려요)</span>`});
+  await result({buzz:3,aff_eunbin:3,st:-4},'은빈: "STAGE:ZERO 공식 계정보다 험쮜 님 계정이 더 핫한 거 아니에요? ㅋㅋ"\n<span class="t">(…들켰다. 그래도 기분은 좋다.)</span>','📸 험쮜 인스타 발견','eunbin')}
 async function missionIntro(){const M=S.mission;setPlace('sc_meeting');
   await say({who:M.g,title:`🎯 ${monthOf(S.m)}월 미션 · ${M.t}`,text:`${M.why}\n<span class="t">성공하면 🛒 판로 +${M.lane}(다음 달부터 매달 매출↑)·평판·보너스 · 지금 ${missionTxt()}</span>`})}
 function newMission(){const M=missionFor(S.m);S.mission={...M,m:S.m,s0:{ms:{...S.ms},bq:S.bq,buzz:S.buzz,rep:S.rep,gl:S.gl||0},work:0,done:false}}
@@ -2638,6 +2645,7 @@ async function monthEnd(){busy=true;document.body.classList.add('running');
 function monthIntro(){playBgm('office');render();hideActor();
   if(S.chap!==chapterOf(S.m).from){busy=true;chapterCard().then(()=>{busy=false;monthIntro()});return}
   if(act2()&&(!S.mission||S.mission.m!==S.m)){newMission();busy=true;missionIntro().then(()=>{busy=false;monthIntro()});return}
+  if(S.launched&&S.m>=LAUNCH_M+2&&!S.flags.insta){busy=true;instaEvent().then(()=>{busy=false;monthIntro()});return}
   if(S.m>=GLOBAL_M&&S.mission)S.mission=null;
   if(S.launched&&S.m>=GLOBAL_M&&!S.choice.gl){busy=true;glPick().then(()=>{busy=false;monthIntro()});return}
   if(!S.day||S.day.m!==S.m)newDay();
@@ -3942,7 +3950,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-2153bc';
+const BUILD='2026.10.10-ea1973';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
