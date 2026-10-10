@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=224773"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=224773"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=224773">
+<link rel="manifest" href="manifest.json?v=f7a336"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=f7a336"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=f7a336">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -21,7 +21,8 @@
   --pink:#ff7ea6;--pink-d:#e0527f;--pink-s:#ffe3ec;--sky:#5aa9f5;--sky-s:#e3f1ff;--butter:#ffd86b;--butter-d:#e8a400;--fur:#e8c9a8;
   --good:#2f9e6e;--bad:#e0525a;--night:#2a1f33;
   --display:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  /* 본문은 또렷한 고딕(아이폰 Apple SD 산돌고딕 Neo · 안드로이드 Noto Sans KR). 제목·버튼만 둥근 주아체 */
+  --body:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -99,24 +100,33 @@ body.running .bottom-area,body.running .side-l,body.running .side-r{display:none
 body.running .tabbar{pointer-events:none;filter:saturate(.6)}
 
 /* ---------- 대화창 ---------- */
-.dialog{position:absolute;left:10px;right:10px;bottom:calc(var(--dlg-bottom) + var(--sb));z-index:5;max-height:34%;overflow:auto;background:rgba(255,255,255,.93);border:2px solid #fff;border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,.3);padding:9px 12px;display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;backdrop-filter:blur(4px)}
+.dialog{position:absolute;left:10px;right:10px;bottom:calc(var(--dlg-bottom) + var(--sb));z-index:5;max-height:34%;overflow:auto;background:rgba(255,255,255,.97);border:2px solid #fff;border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,.3);padding:9px 12px;display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;backdrop-filter:blur(4px)}
 body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 .dialog .face{width:42px;height:42px;border-radius:50%;border:2px solid var(--pink);background:var(--sky-s) center/cover no-repeat}
-.dialog .speaker{font-size:11px;letter-spacing:.06em;color:var(--mute)}
-.dialog .head{font-family:var(--display);font-size:17px;margin:0 0 2px;line-height:1.3}
-.dialog .text{white-space:pre-line;font-size:13.5px}
-.dialog .text .t{color:var(--mute);font-style:italic}
+.dialog .speaker{font-size:12px;font-weight:600;letter-spacing:.02em;color:#8a6f63}
+.dialog .head{font-family:var(--display);font-size:18px;margin:0 0 3px;line-height:1.3;color:#2b1d17}
+.dialog .text{white-space:pre-line;font-size:15.5px;line-height:1.55;font-weight:500;color:#2b1d17;letter-spacing:-.01em}
+.dialog .text b{font-weight:800;color:var(--pink-d)}
+.dialog .text .t{color:#7b6257;font-weight:500;font-size:14.5px}
+/* 목표 안내: 줄마다 아이콘 + 굵은 키워드 */
+.gl{display:grid;gap:4px;white-space:normal}
+.gl p{margin:0}
+.gl-row{display:grid;grid-template-columns:20px minmax(0,1fr);gap:5px;align-items:start;background:#fbf4ef;border-radius:10px;padding:4px 8px;line-height:1.45}
+.gl-row>i{font-style:normal;text-align:center;font-size:16px;line-height:1.5}
+.gl-row small{display:block;font-size:12.5px;color:#7b6257;font-weight:500;line-height:1.4}
+.gl-row.star{background:#fff3c4}.gl-row.star>i{color:#e09a00}
+.gl-row.heart{background:var(--pink-s)}.gl-row.heart>i{color:var(--pink-d)}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.chip{font-size:11.5px;padding:1px 8px;border-radius:99px;border:1px solid var(--line);background:#fff;font-variant-numeric:tabular-nums;animation:pop .35s ease both}
+.chip{font-size:12.5px;font-weight:600;padding:1px 8px;border-radius:99px;border:1px solid var(--line);background:#fff;font-variant-numeric:tabular-nums;animation:pop .35s ease both}
 .chip.up{color:var(--good);border-color:#bfe5d2}.chip.down{color:var(--bad);border-color:#f6c6c8}
 @keyframes pop{from{transform:translateY(4px);opacity:.2}to{transform:none;opacity:1}}
 .choices{display:grid;gap:5px;margin-top:6px}
-.choice{border:2px solid var(--pink);background:#fff;border-radius:12px;padding:5px 10px;text-align:left;font-family:var(--display);font-size:14.5px;line-height:1.3}
-.choice small{display:inline;margin-left:6px;font-family:var(--body);font-size:11.5px;color:var(--mute)}
+.choice{border:2px solid var(--pink);background:#fff;border-radius:12px;padding:6px 10px;text-align:left;font-family:var(--display);font-size:15.5px;line-height:1.3;color:#2b1d17}
+.choice small{display:inline;margin-left:6px;font-family:var(--body);font-size:12.5px;font-weight:500;color:#7b6257}
 .choice:hover:not(:disabled){background:var(--pink-s)}
 .choice:disabled{opacity:.45;cursor:not-allowed}
 .next{grid-column:1/-1;display:flex;justify-content:flex-end;position:sticky;bottom:0}
-.next-btn{border:0;background:var(--ink);color:#fff;border-radius:99px;padding:5px 16px;font-family:var(--display);font-size:14px}
+.next-btn{border:0;background:var(--ink);color:#fff;border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:15px}
 
 /* ---------- 미니 화면(스케줄 진행) ---------- */
 .mini-pop{position:absolute;inset:0;z-index:7;display:grid;place-items:center;padding:0 12%;background:rgba(42,31,51,.3);animation:fadein .2s both}
@@ -497,6 +507,13 @@ body.picmode-on .shade{background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,r
 .bl-top .tgoal small{color:#a0702a;white-space:nowrap}
 .bp-h .rec{font-style:normal;margin-left:auto;flex:none;font-size:10.5px;background:#ffd86b;color:#7a4a00;border-radius:99px;padding:1px 6px;font-family:var(--body)}
 .bp.recd{border-color:#ffd86b}
+.bp-h .rec.ev{background:var(--pink-s);color:var(--pink-d)}
+.bp-h .rec.both{background:linear-gradient(90deg,#ffd86b,#ff9cc0);color:#5a2a10;font-weight:700}
+.bp.evd:not(.recd){border-color:#ffb3cb}
+.bl-top .howto{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:12.5px;color:#dbe7f5;line-height:1.35}
+.bl-top .howto .k{font-style:normal;font-weight:700;border-radius:99px;padding:0 7px;margin-right:4px;font-size:11.5px}
+.bl-top .howto .k.star{background:#ffd86b;color:#7a4a00}.bl-top .howto .k.heart{background:#ff9cc0;color:#fff}
+.bl-top .howto b{flex-basis:100%;font-weight:700;color:#ffe9a8}
 .bl-top .r2{font-size:12.5px;color:#cfe0f5;line-height:1.35}.bl-top .r2 b{color:#ffd86b;font-weight:400;font-family:var(--display)}.bl-top .r2 .hot{color:#ff9cc0}
 .bl-floors{overflow:auto;padding:8px 10px 6px;display:flex;flex-direction:column}
 .fl{flex:1 0 auto;display:grid;grid-template-columns:36px minmax(0,1fr);gap:6px;padding:5px 6px;background:#f8eddf;border:solid #c9a27c;border-width:0 4px 2px;border-bottom-color:#e2c9ab}
@@ -2236,38 +2253,40 @@ const ga=w=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0x
 const placeActs=p=>(PLACES[p].acts||[]).filter(id=>!lockReason(id));
 
 // 오늘의 목표: 지금 시기에 무엇을 하면 되는지 한 줄로 + 가면 좋은 곳
-function todayGoal(){const st=TEAM.filter(storyReady),out={t:'',d:'',ps:[]};
+function todayGoal(){const st=TEAM.filter(storyReady),out={t:'',why:'',ps:[],rows:[],st};
   const placesFor=f=>Object.keys(PLACES).filter(q=>(PLACES[q].acts||[]).some(id=>!lockReason(id)&&f(ACTS[id])));
   if(!S.launched){const f=focusMs(),dl=Math.max(0,LAUNCH_M-S.m);
     out.t=f?`론칭 준비 · 「${MS[f].n}」 일을 도와요`:'론칭 준비 · 아무 일이나 도와요';
-    out.d=`STAGE:ZERO 론칭까지 ${dl?dl+'개월':'이번 달!'} 지금 론칭 체크 ${bpPct()}%. 회사일을 도울수록 제품이 완성돼요. 60%가 안 된 부분은 론칭 날 사고가 나요.`;
+    out.why=`론칭까지 <b>${dl?dl+'개월':'이번 달!'}</b> · 론칭 체크 <b>${bpPct()}%</b> (60% 안 되면 사고!)`;
     out.ps=f?placesFor(a=>a.ms&&(a.ms[f]||a.ms.any)):[]}
-  else if(S.m<GLOBAL_M){out.t='매출 만들기 · 회사일을 도우면 이번 달 매출↑';out.d=`론칭 끝! 이제 평일에 돕는 회사일 하나하나가 그달 매출이 돼요. 영업·마케팅 일이 특히 좋아요. 최고 월 매출 ${fmtW(S.salesBest||0)}.`;out.ps=['sales','mkt','studio']}
-  else{out.t='해외 진출 · 영업팀 북미 바이어 미팅';out.d=`해외 진척 ${S.gl||0}/${GL_TOT}. 영업팀 바이어 미팅이 제일 빨라요. 다른 회사일도 조금씩 보탬이 돼요.`;out.ps=['sales']}
-  {const n=nextNego();if(n!=null)out.d+=`\n💰 다음 연봉협상: ${n===S.m?'이번 달':monthOf(n)+'월'} · 능력치 합계 ${sumStat()} / 기준 ${negoT(n)} (휴일 📚 자기계발로 올려요)`}
-  const nx=REQ[S.rank+1],w=nx&&reqWhy(nx);if(w)out.d+=`\n⭐ 다음 승진(${RANKS[S.rank+1]}): ${w}`;
-  if(st.length){out.d+=`\n♥ ${st.map(k=>given(k)).join('·')} 님이 할 얘기가 있대요. 빌딩에서 ♥ 표시를 찾아가요.`}
-  return out}
+  else if(S.m<GLOBAL_M){out.t='매출 만들기 · 회사일을 도우면 이번 달 매출↑';out.why=`회사일 하나하나가 그달 매출! 최고 월 매출 <b>${fmtW(S.salesBest||0)}</b>`;out.ps=['sales','mkt','studio']}
+  else{out.t='해외 진출 · 영업팀 북미 바이어 미팅';out.why=`해외 진척 <b>${S.gl||0}/${GL_TOT}</b>. 영업팀 바이어 미팅이 제일 빨라요.`;out.ps=['sales']}
+  if(out.ps.length)out.rows.push({c:'star',i:'★',b:'추천 장소',v:out.ps.map(q=>PLACES[q].n).join(' · '),s:'가서 💼 일한다 → 목표 진행'});
+  if(st.length)out.rows.push({c:'heart',i:'♥',b:'이야기',v:st.map(k=>given(k)+' 님').join(' · '),s:'만나면 이야기 먼저, 일도 그대로'});
+  {const n=nextNego();if(n!=null)out.rows.push({i:'💰',b:`연봉협상 ${n===S.m?'이번 달':monthOf(n)+'월'}`,v:`능력치 ${sumStat()} / ${negoT(n)}`,s:'휴일 📚 자기계발로 올려요'})}
+  const nx=REQ[S.rank+1],w=nx&&reqWhy(nx);if(w)out.rows.push({i:'⭐',b:`${RANKS[S.rank+1]} 승진`,v:'',s:w});
+  out.d=goalHTML(out);return out}
+function goalHTML(G){return `<div class="gl"><p>${G.why}</p>${G.rows.map(r=>`<div class="gl-row ${r.c||''}"><i>${r.i}</i><span><b>${r.b}</b> ${esc(r.v)}<small>${esc(r.s)}</small></span></div>`).join('')}</div>`}
 /* ----- 빌딩 화면 ----- */
 function showBld(){if(!S)return;hideActor();$('#dialog').hidden=true;$('#bld').hidden=false;document.body.classList.add('in-bld');renderBld()}
 function hideBld(){$('#bld').hidden=true;document.body.classList.remove('in-bld')}
-function placeCard(p){const P=PLACES[p],ps=ppl(p),n=S.day.pick.indexOf(p),acts=placeActs(p),rec=todayGoal().ps.includes(p);
+function placeCard(p){const P=PLACES[p],ps=ppl(p),n=S.day.pick.indexOf(p),acts=placeActs(p),rec=todayGoal().ps.includes(p),ev=ps.some(storyReady);
   const faces=ps.map(k=>`<span class="bf ${storyReady(k)?'ev':''}" style="${faceStyle(k)}" title="${esc(tagName(k))}">${storyReady(k)?'<i>♥</i>':''}</span>`).join('')||'<span class="none">비어 있음</span>';
   const sub=P.brk?'💬 대화 · ☕ 휴식':acts.map(id=>ACTS[id].name).join(' · ');
-  return `<button class="bp ${n>=0?'on':''} ${P.brk?'brk':''} ${rec?'recd':''}" data-place="${p}" type="button" ><span class="bp-n">${n>=0?n+1:''}</span>
-    <span class="bp-h"><i>${P.ic}</i><b>${P.n}</b>${rec?'<em class="rec">★ 추천</em>':''}</span><span class="bp-f">${faces}</span><small>${esc(sub)}</small></button>`}
+  return `<button class="bp ${n>=0?'on':''} ${P.brk?'brk':''} ${rec?'recd':''} ${ev?'evd':''}" data-place="${p}" type="button" ><span class="bp-n">${n>=0?n+1:''}</span>
+    <span class="bp-h"><i>${P.ic}</i><b>${P.n}</b>${rec&&ev?'<em class="rec both">★♥</em>':rec?'<em class="rec">★ 추천</em>':ev?'<em class="rec ev">♥ 이야기</em>':''}</span><span class="bp-f">${faces}</span><small>${esc(sub)}</small></button>`}
 function renderBld(){if($('#bld').hidden)return;const D=S.day,left=VISITS-D.pick.length,evs=TEAM.filter(k=>storyReady(k)).length;
   $('#bl-top').innerHTML=`<div class="r1"><b>${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 평일</b><span class="sp"></span><span class="pill">💪 ${S.hp}</span><span class="pill ${S.st>=70?'hot':''}">😵 ${S.st}</span><span class="pill">💰 ${S.money}만</span></div>
     <div class="goal ${left?'':'done'}"><b>${left?`📍 오늘 갈 곳 ${VISITS}곳 고르기`:'✅ 준비 완료! 출근해요'}</b><span class="steps">${[0,1,2].map(n=>{const q=D.pick[n];return `<i class="${q?'on':''}">${q?`${n+1} ${PLACES[q].n}`:n+1}</i>`}).join('')}</span></div>
     <button class="tgoal" id="bl-goal" type="button">🎯 <b>${esc(todayGoal().t)}</b><small>자세히 ›</small></button>
-    ${evs?'<div class="r2"><span class="hot">♥ 표시 = 이야기가 기다리는 사람</span></div>':''}`;
+    <div class="howto"><span><em class="k star">★ 추천</em>목표 일</span><span><em class="k heart">♥ 이야기</em>친해지기 · 일도 OK</span><b>${evs?'💡 ★♥ 둘 다 있는 곳 → ★ → ♥ 순서로 골라요':'💡 ★ 추천부터 고르면 돼요'}</b></div>`;
   $('#bl-floors').innerHTML=FLOORS.map(([f,l])=>{const ps=Object.keys(PLACES).filter(p=>PLACES[p].f===f);
     return `<div class="fl fl-${f}"><span class="fl-l"><b>${f}</b><small>${l}</small></span><div class="fl-ps n${ps.length}">${ps.map(placeCard).join('')}</div></div>`}).join('');
   const go=$('#bl-go');go.textContent=left?`출근 ▶ ${D.pick.length}/${VISITS}`:'출근 ▶';go.classList.toggle('ready',!left)}
 $('#bl-floors').addEventListener('click',e=>{const b=e.target.closest('[data-place]');if(!b||busy||!S)return;const p=b.dataset.place,D=S.day,i=D.pick.indexOf(p);
   if(i>=0)D.pick.splice(i,1);else if(D.pick.length>=VISITS){toast(`하루에 ${VISITS}곳까지예요. 고른 곳을 다시 누르면 빠져요`);return}else{D.pick.push(p);sfx('tap')}
   renderBld()});
-$('#bl-top').addEventListener('click',e=>{if(!e.target.closest('#bl-goal')||busy)return;const G=todayGoal();hideBld();busy=true;say({who:'seohwi',title:'🎯 '+G.t,text:G.d+(G.ps.length?`\n<span class="t">★ 추천 장소: ${G.ps.map(q=>PLACES[q].f+' '+PLACES[q].n).join(' · ')}</span>`:'')}).then(()=>{busy=false;hideActor();$('#dialog').hidden=true;showBld()})});
+$('#bl-top').addEventListener('click',e=>{if(!e.target.closest('#bl-goal')||busy)return;const G=todayGoal();hideBld();busy=true;(p=>{$('#dialog').classList.add('tall');placeActor();return p})(say({who:'seohwi',title:'🎯 '+G.t,text:G.d})).then(()=>{busy=false;hideActor();$('#dialog').hidden=true;showBld()})});
 $('#bl-go').onclick=()=>{if(busy||!S)return;if(S.day.pick.length<VISITS){toast(`${VISITS-S.day.pick.length}곳 더 골라 주세요`);return}workday()};
 $('#bl-leave').onclick=async()=>{if(busy||!S)return;if(S.leave<1){toast('남은 연차가 없어요');return}
   busy=true;hideBld();const c=await ask({who:'me',title:'🌴 오늘 연차 쓸까요?',text:`남은 연차 ${S.leave}일. 오늘은 회사에 안 가고 푹 쉬어요.\n<span class="t">(사람도 일도 못 만나지만, 체력·스트레스가 크게 회복돼요.)</span>`,choices:[{l:'연차 쓰고 집콕',s:'연차 −1 · 체력↑↑ 스트레스↓↓'},{l:'아니, 출근할래',s:'빌딩으로'}]});
@@ -2286,7 +2305,7 @@ async function visit(p,i){const P=PLACES[p],ps=ppl(p);setPlace(P.scene);sfx('who
   // ♥가 쌓인 사람이 있으면 그 사람의 이야기가 먼저 열린다
   const sk=ps.find(storyReady);
   if(sk){await say({who:sk,speaker:`${P.f} ${P.n}`,title:`${i+1}번째 방문 · ♥ 이야기`,text:`${tagName(sk)}${ga(tagName(sk))} 험쮜를 보고 손을 흔든다.\n<span class="t">(…뭔가 할 얘기가 있는 얼굴이다.)</span>`});
-    await playStory(sk);hideActor();render();return}
+    await playStory(sk);hideActor();render();if(S.ending)return;setPlace(P.scene)}
   const acts=placeActs(p),noteOK=TEAM.some(k=>LIKE[k]&&HOME[k].includes(p)&&!(S.day.noted||{})[k]);
   const talkCh=[],talkOps=[];
   ps.forEach(k=>{const v=S.aff[k]||0;talkCh.push({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${v} ${relLv(v)[1]}${hasTalk(k)?'':' · 수다'}`,img:imgOf(k).replace('a_','f_'),face:1});talkOps.push(['talk',k])});
@@ -2496,7 +2515,7 @@ function dialogHTML(o,inner){
   const sp=o.speaker||(o.who&&o.who!=='me'?tagName(o.who):'험쮜'),pic=o.pic||PIC;
   return `${pic?`<div class="dpic"><img src="${IMG(pic)}" alt=""><img class="b" src="${IMG(pic+'_b')}" alt=""></div>`:''}<div class="face" style="${faceStyle(o.who)}"></div><div><div class="speaker">${esc(sp)}${relChip(o.who)}</div>${o.title?`<div class="head">${esc(o.title)}</div>`:''}<div class="text">${o.text||''}</div>${chipsHTML(o.chips)}${inner||''}</div>`;
 }
-function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic','picmode');document.body.classList.remove('picmode-on');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
+function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic','picmode','tall');document.body.classList.remove('picmode-on');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
 function say(o){
   return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall','picmode');document.body.classList.remove('picmode-on');d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.group){hideActor();}else if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
@@ -3442,7 +3461,7 @@ document.addEventListener('click',e=>{if(e.target.closest('.snd')){auInit();setS
 document.addEventListener('click',e=>{const t=e.target.closest('[data-dex]');if(!t)return;e.stopPropagation();const E=ENDINGS.find(x=>x.id===t.dataset.dex),dex=ls.get(DEXKEY)||{};
   if(!dex[E.id]){toast('🔒 힌트: '+E.hint);return}
   const src=dexImg(E),two=/^(c_|d_)/.test(src);(two?showClip({a:src,b:src+'_b',kick:`ENDING ${ENDINGS.indexOf(E)+1} · ${E.g}`,title:E.t,sub:E.sub}):showCG({img:src,kick:`ENDING ${ENDINGS.indexOf(E)+1} · ${E.g}`,title:E.t,sub:E.sub}))},true);
-$('#mission').onclick=()=>{if(!S||busy)return;const G=todayGoal();note(G.d+(G.ps.length?`\n<span class="t">★ 추천 장소: ${G.ps.map(q=>PLACES[q].f+' '+PLACES[q].n).join(' · ')}</span>`:''),'🎯 '+G.t)};
+$('#mission').onclick=()=>{if(!S||busy)return;const G=todayGoal();note(G.d,'🎯 '+G.t);$('#dialog').classList.add('tall');placeActor()};
 $('#btn-save').onclick=()=>openSlots('save');
 $('#btn-title').onclick=()=>{save();closeSheets();showTitle()};
 
@@ -3601,7 +3620,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-224773';
+const BUILD='2026.10.10-f7a336';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
