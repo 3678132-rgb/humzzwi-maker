@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=79f1db"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=79f1db"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=79f1db">
+<link rel="manifest" href="manifest.json?v=5511c1"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5511c1"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5511c1">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1098,7 +1098,7 @@ const slotKey=n=>'humzzwi.maker.slot'+n; // 슬롯마다 {S, at}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // 험쮜가 여성이면 넥타이 대신 리본 블라우스 버전(_w) 그림을 쓴다
 const hzFem=()=>{try{return !!(S&&S.prof&&S.prof.gender==='여성')}catch(e){return false}};
-const FEM_IMG=new Set(['a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','v_short','v_short_b']);
+const FEM_IMG=new Set(['gt_air','gt_air_b','gt_us','gt_us_b','gt_jp','gt_jp_b','gt_sea','gt_sea_b','a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','v_short','v_short_b']);
 const IMG=k=>k==='hz'?`assets/hz${hzFem()?'_w':''}.png`:`assets/${k}${FEM_IMG.has(k)&&hzFem()?'_w':''}.webp`;
 const BRAND='STAGE:ZERO';
 
@@ -1610,6 +1610,7 @@ async function glPick(){setPlace('sc_meeting');
     {l:'🇺🇸 미국 아마존',s:`가장 큰 시장 · 성분 규제 · 영어 Lv.${langLv('en')}`},{l:'🇯🇵 일본 큐텐',s:`K-뷰티 최대 수입국 · 일본어 라벨 · 일본어 Lv.${langLv('jp')}`},{l:'🇸🇬 동남아 쇼피',s:`틱톡샵 바이럴 · 더위·배송 · 영어 Lv.${langLv('en')}`}]});
   S.choice.gl=['us','jp','sea'][c];
   await result([{comm:2,aff_sangho:4},{know:2,aff_jiyoung:3},{trend:2,aff_eunbin:4}][c],`첫 목표는 「${GL.find(g=>g.k===S.choice.gl).n}」.\n"한 나라씩 열어요. 그 나라에서 막히는 일을 풀고, 그 나라 말로 바이어를 만나면 문이 열려요."\n<span class="t">🌍 순서: ${glList().map(g=>g.n).join(' → ')} · 나라 칸이 다 차면 입점</span>`,'🌍 해외 진출 선언','sangho');
+  await showClip({a:'gt_air',b:'gt_air_b',kick:'✈️ DEPARTURE',title:'첫 해외 출장',sub:`여권, 샘플, 사원증. 그리고 연습한 ${LANG[GLC[S.choice.gl].lang].n} 한 마디.`});
   S.glst=S.glst||{};const g=glCur();if(g&&!glSt(g).arr){S.glst[g.k]={...glSt(g),a:S.m,arr:1};await GLT[g.k].arrive()}}
 async function glStory(){const c=glCur();if(!c||!S.choice.gl)return false;S.glst=S.glst||{};const st=S.glst[c.k];
   if(!st||!st.arr){S.glst[c.k]={...(st||{}),a:S.m,arr:1};await GLT[c.k].arrive();return true}
@@ -1628,12 +1629,12 @@ async function glChoice(o){setPlace(o.place);if(o.intro)await say(o.intro);
 const lvS=l=>`${LANG[l].n} Lv.${langLv(l)}`,lvOK=l=>langLv(l)>=LANG_NEED;
 const GLT={
   us:{
-    arrive:()=>glChoice({place:'sc_meeting',who:'jiyoung',title:'🇺🇸 시애틀 출장',
+    arrive:async()=>{await showClip({a:'gt_us',b:'gt_us_b',kick:'🇺🇸 SEATTLE',title:'시애틀 출장',sub:'지영 대리와 함께, 아마존 바이어를 만나러'});return glChoice({place:'gt_us',who:'jiyoung',title:'🇺🇸 시애틀 출장',
       intro:{who:'sangho',title:'🇺🇸 시애틀 출장',text:'"아마존 바이어 미팅이 잡혔어요. 다음 주 시애틀이에요.\n지영 대리도 같이 가요. 성분 질문이 제일 많이 나올 테니까."'},
       text:'공항 라운지. 지영 대리가 노트북을 열었다.\n"험쮜 님, 미팅 자료 하나만 더 챙길 수 있대요. 뭐로 할까요?"',nt:'바이어가 "Let\'s keep in touch"라고만 하고 일어났다.\n<span class="t">(…준비한 만큼 전달이 안 됐다.)</span>',
       ch:[{l:'📑 영문 성분 자료집',s:'뷰티지식 판정',ok:()=>S.stat.know>=50,fx:{gl:3,rep:2,aff_jiyoung:4},t:'바이어가 자료집을 넘기다 멈췄다. "Ceramide… and this ratio? Interesting."\n지영 대리가 테이블 밑으로 엄지를 들었다.'},
         {l:'🗣️ 영어로 직접 피칭',s:`${lvS('en')} 판정`,ok:()=>lvOK('en'),fx:{deal:1,gl:4,rep:3,comm:2},t:'"Stage Zero turns scratched glass back into clear glass."\n대본 없이도 말이 나왔다. 바이어가 고개를 끄덕였다.\n<span class="t">(주말마다 공부한 보람…!)</span>',nfx:{gl:1,st:8},nt:'"Sorry, could you say that again?"\n세 번째 되묻는 말에 얼굴이 빨개졌다.\n<span class="t">(…영어 회화, 더 해 둘걸.)</span>'},
-        {l:'🍪 한국 간식 선물',s:'소통력 판정',ok:()=>S.stat.comm>=50,fx:{gl:2,aff_jiyoung:3,aff_sangho:2},t:'약과 한 상자에 회의실 공기가 풀렸다. "Next time, bring two."'}]}),
+        {l:'🍪 한국 간식 선물',s:'소통력 판정',ok:()=>S.stat.comm>=50,fx:{gl:2,aff_jiyoung:3,aff_sangho:2},t:'약과 한 상자에 회의실 공기가 풀렸다. "Next time, bring two."'}]})},
     crisis:()=>glChoice({place:'sc_lab',who:'jiyoung',title:'🚨 미국 통관 보류',
       text:'"미국에서 연락 왔어요. 시설 등록이랑 제품 리스팅 서류가 비었대요(MoCRA).\n이대로면 물건이 항구에 묶여요."',nt:'서류는 겨우 맞췄지만 2주가 날아갔다.',
       ch:[{l:'🧪 지영 대리와 밤새 서류 보완',s:'뷰티지식 판정 · 체력↓',ok:()=>S.stat.know>=55,fx:{gl:4,aff_jiyoung:5,hp:-8},t:'새벽 3시, 마지막 성분 코드까지 채웠다. 지영 대리: "우리 이거 논문 써도 되겠어요."',nfx:{gl:2,hp:-10,st:6}},
@@ -1641,12 +1642,12 @@ const GLT={
         {l:'💼 현지 대행사에 맡기기',s:'느리지만 확실',ok:()=>true,fx:{gl:2,st:-2},t:'비용은 들었지만 일주일 만에 통관이 풀렸다.'}]}),
     open:async()=>{setPlace('sc_lab');await result({aff_jiyoung:3,buzz:3},'첫 리뷰가 달렸다.\n★★★★★ "Finally, a cream that actually repairs."\n지영 대리가 리뷰를 캡처해 단톡방에 올렸다. 이모티콘이 50개 달렸다.','🇺🇸 아마존 첫 리뷰','jiyoung')}},
   jp:{
-    arrive:()=>glChoice({place:'sc_store',who:'eunbin',title:'🇯🇵 도쿄 출장',
+    arrive:async()=>{await showClip({a:'gt_jp',b:'gt_jp_b',kick:'🇯🇵 TOKYO',title:'도쿄 출장',sub:'은빈과 함께, 시부야에서 큐텐까지'});return glChoice({place:'gt_jp',who:'eunbin',title:'🇯🇵 도쿄 출장',
       intro:{who:'sangho',title:'🇯🇵 도쿄 출장',text:'"도쿄는 은빈 씨랑 가요. 일본은 매대랑 라이브가 반이에요.\n큐텐 바이어 미팅 전에 시부야 드럭스토어부터 봐요."'},
       text:'시부야 드럭스토어. 은빈이 매대 앞에서 눈을 반짝인다.\n"험쮜 님! 큐텐 미팅 전에 뭐부터 할까요?"',nt:'바이어가 "検討します(검토해 볼게요)"라고 했다.\n<span class="t">(…일본에서 그 말은 거절이라던데.)</span>',
       ch:[{l:'📸 드럭스토어 매대 100장 찍기',s:'트렌드 판정',ok:()=>S.stat.trend>=50,fx:{gl:3,trend:2,aff_eunbin:4},t:'일본 언니들이 손에 드는 건 전부 「투명·수분·저자극」. 미팅 자료 첫 장이 바뀌었다.'},
         {l:'🗣️ 일본어로 인사·피칭',s:`${lvS('jp')} 판정`,ok:()=>lvOK('jp'),fx:{deal:1,gl:4,rep:3,comm:2},t:'「はじめまして。ステージゼロです。」\n바이어가 활짝 웃었다. "日本語、上手ですね!(일본어 잘하시네요!)"',nfx:{gl:1,st:8},nt:'「えっと… すみません…」\n준비한 문장이 머릿속에서 다 날아갔다.\n<span class="t">(…일본어 회화, 진작 할걸.)</span>'},
-        {l:'📺 큐텐 라이브 리허설',s:'소통력 판정',ok:()=>S.stat.comm>=50,fx:{gl:2,buzz:4,aff_eunbin:3},t:'은빈과 즉석 리허설. 큐텐 담당자가 "이대로 메가와리 때 해요!"'}]}),
+        {l:'📺 큐텐 라이브 리허설',s:'소통력 판정',ok:()=>S.stat.comm>=50,fx:{gl:2,buzz:4,aff_eunbin:3},t:'은빈과 즉석 리허설. 큐텐 담당자가 "이대로 메가와리 때 해요!"'}]})},
     crisis:()=>glChoice({place:'sc_package',who:'jiyoung',title:'🚨 메가와리 D-7, 라벨 오타',
       text:'"큐텐 메가와리(큰 세일)가 일주일 남았는데… 일본어 성분 라벨에 오타가 있어요.\n이대로 나가면 반품 폭탄이에요."',nt:'행사엔 들어갔지만 첫날 물량을 절반만 풀었다.',
       ch:[{l:'📦 한민 과장과 스티커 전량 재부착',s:'실행력 판정 · 체력↓',ok:()=>S.stat.exec>=50,fx:{gl:4,aff_hanmin:5,hp:-10},t:'창고에서 3,000개를 밤새 다시 붙였다. 한민 과장: "끝까지 돌아가게 했습니다."',nfx:{gl:2,hp:-12,st:6}},
@@ -1654,12 +1655,12 @@ const GLT={
         {l:'📺 은빈과 「오타 사과 라이브」',s:'트렌드 판정',ok:()=>S.stat.trend>=55,fx:{gl:4,buzz:8,aff_eunbin:5},t:'"저희가 일본어를 틀렸어요…ㅠㅠ" 진심 사과 라이브가 화제가 됐다. 댓글: 「かわいい」 2,000개.',nfx:{gl:1,rep:-2,st:6},nt:'사과 라이브가 오히려 "성의 없다"는 말을 들었다.'}]}),
     open:async()=>{setPlace('sc_studio');await result({aff_eunbin:3,buzz:4},'메가와리 첫날, 장바구니 담기 1만 건.\n은빈: "험쮜 님!! 일본 언니들이 「透明ガラスクリーム(투명 유리 크림)」이래요!"','🇯🇵 큐텐 메가와리','eunbin')}},
   sea:{
-    arrive:()=>glChoice({place:'sc_factory',who:'hanmin',title:'🇸🇬 싱가포르 출장',
+    arrive:async()=>{await showClip({a:'gt_sea',b:'gt_sea_b',kick:'🇸🇬 SINGAPORE',title:'싱가포르 출장',sub:'한민 과장과 함께, 적도의 물류센터로'});return glChoice({place:'gt_sea',who:'hanmin',title:'🇸🇬 싱가포르 출장',
       intro:{who:'sangho',title:'🇸🇬 싱가포르 출장',text:'"싱가포르 쇼피 물류센터 미팅이에요. 이번엔 한민 과장이 같이 가요.\n적도라 덥습니다. 크림도, 사람도요."'},
       text:'창이 공항을 나서자 숨이 턱 막힌다. 한민 과장이 손목시계를 본다.\n"미팅까지 반나절 남았습니다. 어디부터 볼까요?"',nt:'바이어는 "가격만 맞추면 돼요"라고 했다.\n<span class="t">(…우리 이야기는 못 꺼냈다.)</span>',
       ch:[{l:'🏭 현지 창고 견학',s:'실행력 판정',ok:()=>S.stat.exec>=50,fx:{gl:3,aff_hanmin:5},t:'에어컨 없는 창고 온도 34도. 한민 과장이 메모했다. "포장부터 바꿔야겠습니다."'},
         {l:'🗣️ 영어로 배송 조건 협상',s:`${lvS('en')} 판정`,ok:()=>lvOK('en'),fx:{deal:1,gl:4,rep:3,data:2},t:'"Can you ship DDP within five days?" 조건이 한 번에 정리됐다.\n한민 과장: "…험쮜 님 영어 언제 늘었어요?"',nfx:{gl:1,st:8},nt:'싱글리시 억양에 "Pardon?"만 다섯 번 했다.\n<span class="t">(…영어 회화, 더 해 둘걸.)</span>'},
-        {l:'📱 틱톡샵 크리에이터 만나기',s:'트렌드 판정',ok:()=>S.stat.trend>=50,fx:{gl:2,buzz:5},t:'현지 크리에이터가 즉석에서 언박싱 영상을 찍었다. 조회수 30만.'}]}),
+        {l:'📱 틱톡샵 크리에이터 만나기',s:'트렌드 판정',ok:()=>S.stat.trend>=50,fx:{gl:2,buzz:5},t:'현지 크리에이터가 즉석에서 언박싱 영상을 찍었다. 조회수 30만.'}]})},
     crisis:()=>glChoice({place:'sc_factory',who:'hanmin',title:'🚨 배송 중 크림이 녹았다',
       text:'"35도에서 일주일 배송했더니 「크림이 분리됐다」는 리뷰가 달렸습니다.\n제형이랑 포장, 둘 다 봐야 합니다."',nt:'급한 불은 껐지만 별점이 0.5 내려갔다.',
       ch:[{l:'🧪 지영 대리와 내열 처방 보완',s:'뷰티지식 판정',ok:()=>S.stat.know>=55,fx:{gl:4,bq:4,aff_jiyoung:4},t:'45도 오븐 테스트 통과. 지영 대리: "이제 사막에서도 안 녹아요."',nfx:{gl:2,st:6}},
@@ -3052,8 +3053,8 @@ function render(){
   $('#h-date').textContent=`${yearOf(S.m)}년차 ${monthOf(S.m)}월`;
   $('#h-rank').innerHTML=`${RANKS[S.rank]} 험쮜${isGold()?'<span class="gold">✨황금막내</span>':''}`;
   const A=actOf(S.m),last=(S.salesLog||[]).slice(-1)[0];
-  $('#h-bp').style.width=(A===1?bp:A===2?Math.min(100,salesNow()/1.5):(S.gl||0)/GL_TOT*100)+'%';
-  $('#h-sub').textContent=A===1?`${ACT_NAME[1]} · 론칭 체크 ${bp}%${dl>0?` · D-${dl}개월`:' · 이번 달 론칭!'}`:A===2?`${ACT_NAME[2]} · 이번 달 예상 ${fmtW(salesNow())}${last!=null?` · 지난달 ${fmtW(last)}`:''}`:`${ACT_NAME[3]} · 해외 ${glOpen()}/3곳 · 진척 ${S.gl||0}/${GL_TOT}`;
+  $('#h-bp').style.width=(A===1?bp:A===2?Math.min(100,salesNow()/1.5):(glCur()?glSeg(glCur())[0]/glSeg(glCur())[1]*100:100))+'%';
+  $('#h-sub').textContent=A===1?`${ACT_NAME[1]} · 론칭 체크 ${bp}%${dl>0?` · D-${dl}개월`:' · 이번 달 론칭!'}`:A===2?`${ACT_NAME[2]} · 이번 달 예상 ${fmtW(salesNow())}${last!=null?` · 지난달 ${fmtW(last)}`:''}`:`${ACT_NAME[3]} · 해외 ${glOpen()}/3곳${glCur()?` · ${glFlag(glCur())} ${glSeg(glCur()).join('/')}${glDealt(glCur())?' 🤝':''}`:''}`;
   {const mb=$('#mission'),G=todayGoal();mb.hidden=!S.day;mb.classList.remove('ok');mb.innerHTML=`<span>🎯 ${esc(G.t)}</span>`}
   {const hr=$('#hud-res');hr.classList.remove('compact');
   hr.innerHTML=[['💰','',`${S.money}만`,S.money<0],['⭐','평판',S.rep],S.launched?['📈','매출',fmtW(salesNow())]:['🧴','제품',S.bq],['📣','화제',S.buzz],['🌴','연차',S.leave]].map(([i,l,b,w])=>`<span class="res"><i>${i}</i><b class="${w?'warn':''}">${l?`<em>${l}</em>`:''}${b}</b></span>`).join('');
@@ -3910,7 +3911,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-79f1db';
+const BUILD='2026.10.10-5511c1';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
