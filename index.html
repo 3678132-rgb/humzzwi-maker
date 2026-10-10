@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=2d798f"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2d798f"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2d798f">
+<link rel="manifest" href="manifest.json?v=8d8c72"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8d8c72"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8d8c72">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -147,6 +147,8 @@ body.running .dialog{bottom:calc(18px + var(--sb));max-height:46%}
 .mini-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9fc4,#ffb21f);transition:width .2s linear}
 .mini-day{display:flex;justify-content:space-between;font-size:12px;color:#7a4a00;padding:0 6px}
 .mini-win.done{animation:none}
+/* 결과·능력치 화면에서도 그림 2장이 계속 번갈아(움짤) */
+.mini-win.done .mini-stage.clip:not(.nob) img.a{opacity:1}.mini-win.done .mini-stage.clip:not(.nob) img.b{animation:dflip .9s step-end infinite}
 /* 그림 칸 크기와 아래 칸 높이를 진행·결과에서 똑같이 둬서 카드가 커졌다 작아졌다 하지 않게 */
 .mini-pop.sched{background:none;}
 .mini-pop.sched{display:flex;flex-direction:column;padding-bottom:calc(10px + var(--sb))}.mini-pop.sched>.mini-win{margin:auto}.mini-win.sched{max-width:340px}.mini-win.sched .mini-stage{aspect-ratio:16/11}
@@ -2628,12 +2630,11 @@ const CLIPS=new Set(['snack','content','keymsg','review','md','cs','global','res
 const DATE_C={
   popup:{n:'성수동 팝업 투어',lines:['다람: "이 브랜드 팝업, 우리 STAGE:ZERO 팝업이랑 비교해 보러 온 거예요. …라고 하면 데이트 아닌 척 되나?"\n<span class="t">(아아 두 잔에 쇼핑백 하나. 완벽한 토요일.)</span>','험쮜: "여기 향 좋다!"\n다람: "험쮜 씨한테 어울리는 건 이거요." 테스터를 손등에 톡.\n<span class="t">(…주말까지 시장조사 하는 커플.)</span>']},
   park:{n:'놀이공원',lines:['솜사탕을 반씩 나눠 먹고 회전목마를 두 번 탔다.\n다람: "관람차 꼭대기에서 회사 얘기 금지예요."\n<span class="t">(…3초 만에 매출 얘기를 했다.)</span>','다람: "자이로드롭 무서우면 손 잡아도 돼요."\n<span class="t">(정작 비명은 다람 쪽이 더 컸다.)</span>']},
-  movie:{n:'영화관',lines:['팝콘은 반반. 영화 중간에 손이 같은 데로 들어갔다.\n<span class="t">(…영화 내용은 하나도 기억 안 난다.)</span>','다람: "로맨스 영화 골랐는데… 회사 사람 나올 줄은 몰랐네요."\n<span class="t">(스크린 속 커플이 사내연애 중이었다.)</span>']},
 };
 const clipOf=id=>id==='date'?dimg(S.dateC||'popup'):ACTS[id]&&ACTS[id].clip?ACTS[id].clip:CLIPS.has(id)?'c_'+id:null;
 // 스케줄 카드: 진행이 끝나면 같은 카드 아래쪽이 결과(글·능력치 변화·다음)로 바뀐다 — 그림은 한 번만
 function miniResult(o,name){const w=$('#mini'),win=w.querySelector('.mini-win');
-  return new Promise(res=>{win.classList.add('done');const low=win.querySelector('.mini-low');low.innerHTML='';
+  return new Promise(res=>{win.classList.add('done');const stg=win.querySelector('.mini-stage');if(stg)stg.classList.remove('alt');const low=win.querySelector('.mini-low');low.innerHTML='';
     const who=o.who&&o.who!=='me'?`<span class="mr-who"><i style="${faceStyle(o.who)}"></i>${esc(tagName(o.who))}</span>`:'';
     const h=o.title&&o.title!==name?`<b class="mr-h">${esc(o.title)}</b>`:'';
     low.insertAdjacentHTML('beforeend',`<div class="mini-res">${who}${h}<div class="mr-t">${o.text||''}</div>${chipsHTML(o.chips,1)}<div class="next"><button class="next-btn" type="button">다음 ▶</button></div></div>`);
@@ -3779,7 +3780,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-2d798f';
+const BUILD='2026.10.10-8d8c72';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
