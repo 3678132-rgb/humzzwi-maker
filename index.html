@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=ce7649"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=ce7649"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=ce7649">
+<link rel="manifest" href="manifest.json?v=9dc7f4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=9dc7f4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=9dc7f4">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2575,7 +2575,7 @@ function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidd
   const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,y+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
 $('#actor-img').addEventListener('load',placeActor);
 // 대화창에 스케줄 그림이 있으면 장면 배경을 그 그림의 흐린 버전으로 바꾼다
-function syncClip(){const d=$('#dialog'),m=$('#mini'),st=!m.hidden&&m.querySelector('#mini-stage.clip'),im=st||(!d.hidden&&d.classList.contains('haspic')&&d.querySelector('.dpic img'));
+function syncClip(){const d=$('#dialog'),m=$('#mini'),st=!m.hidden&&m.querySelector('#mini-stage.clip'),im=st||(!d.hidden&&d.classList.contains('haspic')&&!d.classList.contains('keepbg')&&d.querySelector('.dpic img'));
   if(st)document.body.dataset.cat=(st.className.match(/k-(\w+)/)||[])[1]||'work';else if(im)document.body.dataset.cat='love';
   if(!document.body.dataset.mbg)document.body.dataset.mbg='A';document.body.classList.toggle('clip-on',!!im);
   const mid=!d.hidden&&d.classList.contains('haspic')&&!d.classList.contains('picmode');d.classList.toggle('mid',mid);d.style.top=mid?hudBottom()+'px':'';}
@@ -2589,11 +2589,11 @@ function chipsHTML(chips,all){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-ch
 document.addEventListener('click',e=>{const b=e.target.closest('[data-more]');if(!b)return;e.stopPropagation();const r=b.nextElementSibling;r.hidden=false;b.remove()},true);
 function dialogHTML(o,inner){
   const sp=o.speaker||(o.who&&o.who!=='me'?tagName(o.who):'험쮜'),pic=o.pic||PIC;
-  return `${pic?`<div class="dpic"><img src="${IMG(pic)}" alt=""><img class="b" src="${IMG(pic+'_b')}" alt=""></div>`:''}<div class="face" style="${faceStyle(o.who)}"></div><div><div class="speaker">${esc(sp)}${relChip(o.who)}</div>${o.title?`<div class="head">${esc(o.title)}</div>`:''}<div class="text">${o.text||''}</div>${chipsHTML(o.chips)}${inner||''}</div>`;
+  return `${pic?`<div class="dpic"><img src="${IMG(pic)}" alt=""><img class="b" src="${IMG(pic+'_b')}" alt="" onerror="this.remove()"></div>`:''}<div class="face" style="${faceStyle(o.who)}"></div><div><div class="speaker">${esc(sp)}${relChip(o.who)}</div>${o.title?`<div class="head">${esc(o.title)}</div>`:''}<div class="text">${o.text||''}</div>${chipsHTML(o.chips)}${inner||''}</div>`;
 }
 function note(text,title,w){const d=$('#dialog');d.classList.remove('haspic','picmode','tall');document.body.classList.remove('picmode-on');w=w||'seohwi';if(w!=='seohwi')showActor(w);d.innerHTML=dialogHTML({who:w,speaker:w==='seohwi'?'PR · 박서휘 대리 (사수)':tagName(w),title,text});d.hidden=false;layoutScene()}
 function say(o){
-  return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall','picmode');document.body.classList.remove('picmode-on');d.classList.toggle('haspic',!!(o.pic||PIC));
+  return new Promise(res=>{const d=$('#dialog');d.classList.remove('tall','picmode');d.classList.toggle('keepbg',!!o.bg);document.body.classList.remove('picmode-on');d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.group){hideActor();}else if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
     d.innerHTML=dialogHTML(o,`<div class="next"><button class="next-btn">다음 ▶</button></div>`);d.hidden=false;d.scrollTop=0;
     if(o.group)showGroup(o.group);placeActor();d.querySelector('.next-btn').onclick=e=>{e.stopPropagation();res()};});
@@ -2602,7 +2602,7 @@ function say(o){
 function picChoices(o){const n=o.choices.filter(c=>c.img).length,col=n>4?3:2;
   return `<div class="choices pics c${col} ${o.cls||''}">${o.choices.map((c,i)=>c.img?`<button class="choice pic" data-i="${i}"><span class="ci ${c.face?'fc':''}" style="background-image:url(${IMG(c.img)})">${c.tag?`<em>${esc(c.tag)}</em>`:''}</span><b>${esc(c.l)}</b>${c.s?`<small>${esc(c.s)}</small>`:''}</button>`:`<button class="choice back" data-i="${i}">${esc(c.l)}</button>`).join('')}</div>`}
 function ask(o){
-  return new Promise(res=>{const d=$('#dialog'),pics=o.choices.some(c=>c.img);d.classList.toggle('tall',o.choices.length>4||pics);d.classList.toggle('picmode',pics);document.body.classList.toggle('picmode-on',pics);d.classList.toggle('haspic',!!(o.pic||PIC));
+  return new Promise(res=>{const d=$('#dialog'),pics=o.choices.some(c=>c.img);d.classList.toggle('keepbg',!!o.bg);d.classList.toggle('tall',o.choices.length>4||pics);d.classList.toggle('picmode',pics);document.body.classList.toggle('picmode-on',pics);d.classList.toggle('haspic',!!(o.pic||PIC));
     if(o.who&&o.who!=='me'&&!DUO&&!o.pic)showActor(o.who);else hideActor();
     d.innerHTML=dialogHTML(o,pics?picChoices(o):`<div class="choices ${o.cls||''}">${o.choices.map((c,i)=>`<button class="choice" data-i="${i}">${esc(c.l)}${c.s?`<small>${esc(c.s)}</small>`:''}</button>`).join('')}</div>`);d.hidden=false;d.scrollTop=0;
     placeActor();d.querySelectorAll('.choice').forEach(b=>b.onclick=e=>{e.stopPropagation();res(+b.dataset.i)});});
@@ -3690,8 +3690,12 @@ async function officeTour(){
   const met=new Set(['seohwi']);
   for(let n=0;n<TOUR.length;n++){const [q,line]=TOUR[n],P=PLACES[q];setPlace(P.scene);sfx('whoosh');
     const here=TEAM.filter(k=>(HOME[k]||[]).includes(q)),acts=(P.acts||[]).map(id=>ACTS[id].name);
-    const pr=ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f} ${P.n}`,title:`${P.ic} ${P.n}`,
-      text:`"${line}"${acts.length?`\n<span class="t">💼 여기서 하는 일: ${acts.join(' · ')}</span>`:''}${here.length?`\n<span class="t">👥 ${here.map(k=>tagName(k)).join(', ')}</span>`:''}`,
+    // ① 장소만: 배경(빈 장소) 위에 그 장소를 가까이서 본 일러스트
+    hideActor();const c0=await ask({who:'seohwi',bg:1,pic:'tp_'+q,speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f}`,title:`${P.ic} ${P.n}`,text:`"${line}"`,choices:[{l:'둘러보기 ▶',s:here.length?'여기 사람들 만나기':''},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
+    if(c0===1)break;
+    if(!here.length){continue}
+    const pr=ask({who:'seohwi',speaker:`회사 투어 ${n+1}/${TOUR.length} · ${P.f} ${P.n}`,title:`👥 ${P.n} 사람들`,
+      text:`${here.map(k=>tagName(k)).join(', ')}${acts.length?`\n<span class="t">💼 여기서 하는 일: ${acts.join(' · ')}</span>`:''}`,
       choices:[{l:n<TOUR.length-1?'다음 ▶':'투어 끝!',s:''},{l:'⏭ 남은 투어 건너뛰기',s:''}]});
     if(here.length){$('#actor').hidden=true;showGroup(here)}
     const ch=await pr;hideGroup();if(ch===1)break;
@@ -3763,7 +3767,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-ce7649';
+const BUILD='2026.10.10-9dc7f4';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
