@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=d823a8"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=d823a8"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=d823a8">
+<link rel="manifest" href="manifest.json?v=2153bc"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2153bc"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2153bc">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1482,14 +1482,14 @@ function bump(chips,k,d){
   else if(k==='hp'){S.hp=clamp(S.hp+d);chips.push({l:'체력',d})}
   else if(k==='st'){S.st=clamp(S.st+d);chips.push({l:'스트레스',d,inv:true})}
   else if(k==='money'){S.money+=d;chips.push({l:'통장',d,won:true})}
-  else if(k==='rep'){S.rep=clamp(S.rep+d,0,100);chips.push({l:'평판',d})}
+  else if(k==='rep'){if(d>0)d=Math.floor(d*(1-S.rep/130)+R());if(!d)return;const r0=S.rep;S.rep=clamp(S.rep+d,0,100);if(S.rep!==r0)chips.push({l:'평판',d:S.rep-r0})} // 높을수록 덜 오른다
   else if(k==='bq'){S.bq=clamp(S.bq+d);chips.push({l:'제품력',d})}
   else if(k==='buzz'){S.buzz=clamp(S.buzz+d);chips.push({l:'화제성',d})}
   else if(k==='love'){S.love=clamp(S.love+d);chips.push({l:'💘 설렘',d})}
   else if(k==='leave'){S.leave+=d;chips.push({l:'연차',d})}
   else if(k==='deal'){if(glDeal())chips.push({l:'🤝 바이어 계약',d:1})}
   else if(k==='gl')addGl(d,chips);
-  else if(k.startsWith('aff_')){const m=k.slice(4);S.aff[m]=clamp((S.aff[m]||0)+d);chips.push({l:'♥ '+who(m).name.split(' ')[0],d})}
+  else if(k.startsWith('aff_')){const m=k.slice(4),v=S.aff[m]||0;if(d>0&&v>=40)d=Math.floor(d*Math.max(.15,1-(v-40)/70)+R());if(!d)return;S.aff[m]=clamp(v+d);if(S.aff[m]!==v)chips.push({l:'♥ '+who(m).name.split(' ')[0],d:S.aff[m]-v})} // ♥40부터 점점 덜 오른다
   else if(k.startsWith('ms_')){const m=k.slice(3);addMs(m,d,chips)}
 }
 const applyFx=(fx,chips=[])=>{Object.entries(fx).forEach(([k,v])=>bump(chips,k,v));return chips};
@@ -1921,6 +1921,15 @@ function pendingStory(){S.story=S.story||{};
   for(const k of Object.keys(MATES)){const done=S.story[k]||0;if(done<3&&S.aff[k]>=STORY_AT[done])return k}return null}
 async function playStory(k){S.story[k]=(S.story[k]||0)+1;await STORIES[k][S.story[k]-1]()}
 const RANDOM_EV=[
+  // 3막: 평판이 높을수록 시험대에 오른다
+  {id:'gl_review',w:()=>S.m>=GLOBAL_M&&S.rep>=55,run:async()=>{setPlace('sc_office');
+    const c=await ask({who:'jiyoung',title:'🌐 해외 리뷰 번역 오해',text:'"아마존에 「It burns my skin」 리뷰가 퍼지고 있어요…\n알고 보니 「따뜻한 사용감」이 잘못 번역된 거예요. 어떻게 하죠?"',choices:[{l:'🎥 직접 해명 영상 올리기',s:'소통력 판정'},{l:'🧪 성분·테스트 자료 공개',s:'뷰티지식 판정'},{l:'🙈 그냥 두면 묻힐 거예요',s:'아무것도 안 한다'}]});
+    const ok=c===0?S.stat.comm>=55:c===1?S.stat.know>=55:false;
+    await result(c===2?{rep:-7,st:4}:ok?{rep:2,buzz:3,['aff_jiyoung']:3}:{rep:-4,st:5},c===2?'리뷰가 묻히긴커녕 캡처가 돌았다. 별점이 4.1로 떨어졌다.':ok?'"Oh, it\'s warm, not burning!" 해명 댓글에 좋아요가 쌓였다. 오히려 팬이 늘었다.':'해명이 어설퍼서 「변명한다」는 말을 들었다.',c===2?'평판 하락':ok?'오해 해결':'해명 실패','jiyoung')}},
+  {id:'ad_scandal',w:()=>S.m>=GLOBAL_M&&S.rep>=60,run:async()=>{setPlace('sc_studio');
+    const c=await ask({who:'eunbin',title:'📸 뒷광고 의혹',text:'"협찬 영상에 「광고」 표기가 빠져 있었대요… 댓글창이 난리예요."',choices:[{l:'🙇 사과문 + 표기 바로 수정',s:'평판 조금↓ · 정직하게'},{l:'📣 은빈과 「광고 표기 캠페인」',s:'트렌드 판정'},{l:'🤷 인플루언서 쪽 실수라고 해요',s:'남 탓'}]});
+    const ok=c===1&&S.stat.trend>=55;
+    await result(c===0?{rep:-2,st:3,aff_eunbin:2}:c===2?{rep:-8,aff_eunbin:-4}:ok?{rep:2,buzz:5,aff_eunbin:4}:{rep:-5,st:5},c===0?'"빠르게 사과해서 오히려 믿음 간다"는 댓글이 달렸다.':c===2?'인플루언서가 DM 캡처를 올렸다. 일이 더 커졌다.':ok?'#광고는광고라고 캠페인이 업계에 퍼졌다. 은빈: "위기가 기회였네요!"':'캠페인이 「물타기」라는 말을 들었다.',c===0?'정직한 사과':c===2?'역풍':ok?'위기를 기회로':'역효과','eunbin')}},
   {w:()=>true,run:async()=>{setPlace('sc_meeting');await result({st:6,plan:1},'하루에 회의 5개. 아침엔 목표, 점심엔 공유, 오후엔 또 목표.\n<span class="t">(회의를 줄이는 회의가 필요하다.)</span>','회의 지옥')}},
   {w:()=>Object.keys(MATES).some(k=>S.aff[k]>=40),run:async()=>{const k=pick(Object.keys(MATES).filter(k=>S.aff[k]>=40));const M=MATES[k];setPlace('sc_office');
     await result({[M.g[0]]:3,[M.g[1]]:2,['aff_'+k]:3},`${M.name.split(' ')[0]}: "험쮜 님, 이거 제 노하우인데요…"\n「${M.q}」\n<span class="t">(${M.role}의 비법을 전수받았다!)</span>`,'선배의 노하우',k)}},
@@ -2171,11 +2180,11 @@ async function missionResult(){const M=S.mission;if(!M||M.done||M.m!==S.m)return
 /* ================= 승진 평가 =================
    3개월마다 분기 평가(8번). 한 번에 한 단계씩, 인턴 → 사원 → 주임 → 대리 → 팀장 → 이사 → CEO */
 const EVAL_AT={2:'수습 평가',5:'1분기 평가',8:'2분기 평가',11:'연간 평가',14:'1분기 평가',17:'2분기 평가',20:'3분기 평가',23:'연간 평가',26:'1분기 평가',29:'2분기 평가',32:'3분기 평가',35:'최종 평가 · 대표 선임'};
-const REQ=[null,{rep:10,boss:12,peer:12},{rep:22,bp:30,boss:18,peer:20},{rep:35,launch:1,boss:26,peer:28},{rep:50,sales:110,boss:36,peer:36},{rep:70,sales:180,boss:50,peer:46},{rep:90,gl:2,brand:75,boss:65,peer:55}];
+const REQ=[null,{rep:10,boss:12,peer:12},{rep:22,bp:30,boss:18,peer:20},{rep:35,launch:1,boss:26,peer:28},{rep:50,sales:110,boss:36,peer:36},{rep:70,sales:180,boss:50,peer:46},{rep:80,gl:2,brand:75,boss:65,peer:55}];
 function reqWhy(r){
   if(S.rep<r.rep)return `평판이 ${r.rep} 이상 필요해요 (지금 ${S.rep}).`;
   if(r.sum&&sumStat()<r.sum)return `능력치 합계가 ${r.sum} 이상 필요해요 (지금 ${sumStat()}).`;
-  if(r.bp&&bpPct()<r.bp)return `론칭 체크 진척도가 ${r.bp}% 이상 필요해요 (지금 ${bpPct()}%).`;
+  if(r.bp&&!S.launched&&bpPct()<r.bp)return `론칭 체크 진척도가 ${r.bp}% 이상 필요해요 (지금 ${bpPct()}%).`;
   if(r.launch&&!S.launched)return 'STAGE:ZERO 론칭을 성공시켜야 해요.';
   if(r.sales&&(S.salesBest||0)<r.sales)return `월 매출 ${fmtW(r.sales)}을 한 번은 넘겨야 해요 (최고 ${fmtW(S.salesBest||0)}).`;
   if(r.gl&&glOpen()<r.gl)return `해외 시장 ${r.gl}곳 이상 진출이 필요해요 (지금 ${glOpen()}곳).`;
@@ -2188,7 +2197,7 @@ const nextEval=()=>{const m=Object.keys(EVAL_AT).map(Number).find(x=>x>=S.m);ret
 const PROMO_LINE=['','김현수 기획부장: "수습 끝! 정규직 전환 축하해요. 이제 진짜 우리 팀이에요."','박서휘 대리: "주임 승진 축하해요! 이제 후배가 생기겠네요."','이상호 사업부장: "대리 험쮜 님, 판을 같이 읽어봅시다. 전략 회의에도 들어와요."',
   '이상호 사업부장: "STAGE:ZERO 브랜드 팀장을 맡아 주세요. 이제 험쮜 님 팀이에요."','김현수 기획부장: "이사회에서 만장일치였어요. 험쮜 이사님, 잘 부탁해요."','이사회: "만장일치로 험쮜 님을 캔버스랩 대표로 선임합니다."'];
 // 평가표: 항목마다 지금 값 / 기준 / 통과 여부
-const reqRows=r=>[['⭐ 평판',S.rep,r.rep],['🧭 상사 평가',bossAff(),r.boss],['💞 동료 평가',peerAff(),r.peer],r.sum&&['📊 능력치 합계',sumStat(),r.sum],r.bp&&['🧾 론칭 체크',bpPct(),r.bp,'%'],r.launch&&['🚀 론칭',S.launched?1:0,1,'',S.launched?'완료':'아직'],r.sales&&['📈 월 최고 매출',S.salesBest||0,r.sales,'w'],r.gl&&['🌍 해외 진출',glOpen(),r.gl,'곳'],r.brand&&['🏷️ 브랜드 점수',brandScore(),r.brand]].filter(Boolean);
+const reqRows=r=>[['⭐ 평판',S.rep,r.rep],['🧭 상사 평가',bossAff(),r.boss],['💞 동료 평가',peerAff(),r.peer],r.sum&&['📊 능력치 합계',sumStat(),r.sum],r.bp&&!S.launched&&['🧾 론칭 체크',bpPct(),r.bp,'%'],r.launch&&['🚀 론칭',S.launched?1:0,1,'',S.launched?'완료':'아직'],r.sales&&['📈 월 최고 매출',S.salesBest||0,r.sales,'w'],r.gl&&['🌍 해외 진출',glOpen(),r.gl,'곳'],r.brand&&['🏷️ 브랜드 점수',brandScore(),r.brand]].filter(Boolean);
 const reqTable=r=>reqRows(r).map(([l,v,n,u,txt])=>{const f=x=>u==='w'?fmtW(x):x+(u||'');return `${v>=n?'✅':'❌'} ${l} ${txt||f(v)}${txt?'':` <span class="t">/ 기준 ${u==='w'||u==='%'||u==='곳'?f(n):n}</span>`}`}).join('\n');
 async function evaluate(name){
   setPlace('pl_boss');
@@ -3933,7 +3942,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-d823a8';
+const BUILD='2026.10.10-2153bc';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
