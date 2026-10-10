@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=a1d0d3"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=a1d0d3"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=a1d0d3">
+<link rel="manifest" href="manifest.json?v=98d1b8"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=98d1b8"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=98d1b8">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2061,6 +2061,11 @@ function computeEnding(){
   if(sc>=36)return 'ok';
   return 'delay';
 }
+// 3년 후 험쮜의 일: 가장 높은 능력치 두 개로 정해진다
+const CAREER={plan:['브랜드 기획','🧭'],trend:['트렌드 마케팅','✨'],comm:['PR·커뮤니케이션','💬'],know:['처방 연구·상품기획','🧪'],data:['데이터 분석','📊'],exec:['SCM·운영','⚙️']};
+const CAREER2={'plan+trend':'신제품 기획자','plan+comm':'브랜드 매니저','plan+know':'상품기획 MD','plan+data':'전략기획 담당','plan+exec':'사업 PM','trend+comm':'인플루언서 마케터','trend+know':'뷰티 크리에이터','trend+data':'퍼포먼스 마케터','trend+exec':'콘텐츠 프로듀서','comm+know':'뷰티 에디터','comm+data':'CRM 마케터','comm+exec':'영업·MD','know+data':'R&D 연구원','know+exec':'품질관리(QC) 매니저','data+exec':'이커머스 운영 매니저'};
+function careerOf(){const top=Object.entries(S.stat).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]);const key=Object.keys(STATS).filter(k=>top.includes(k)).join('+');
+  return {title:CAREER2[key]||CAREER[top[0]][0],top,line:top.map(k=>`${CAREER[k][1]} ${STATS[k]} ${S.stat[k]}`).join(' · ')}}
 function finish(){
   const id=computeEnding();S.ending=id;const E=ENDINGS.find(e=>e.id===id);playBgm(['bankrupt','burnout','delay'].includes(id)?'blue':['quit','cafe','love'].includes(id)?'rest':'finale');
   const both=id==='gold'?[S.flags.vday==='daram'||(S.flags.dating&&S.love>=80)?'love':null,S.flags.vday&&S.flags.vday!=='daram'?'vday':null].filter(Boolean):[];
@@ -2087,7 +2092,7 @@ function finish(){
   const el=$('#scr-end');
   el.innerHTML=`<div class="end-art" style="background-image:url(${IMG(id==='love'?dimg('picnic'):E.img)})"><div class="grade">${E.g}</div></div>
   <div class="end-body"><small>ENDING · ${ENDINGS.indexOf(E)+1}/${ENDINGS.length}</small><h2>${E.t}</h2><p>${epi}</p>${both.includes('love')?`<p class="both">💘 <b>+ 사내 커플 탄생</b><br>취임식 날, 맨 앞줄에서 제일 크게 박수 친 사람은 영업팀 한다람 주임이었다.\n"대표님, 오늘 저녁은 제가 살게요."</p>`:''}${both.includes('vday')?`<p class="both">🍫 <b>+ 2월 14일의 초콜릿</b><br>${VDAY[S.flags.vday][1]}</p>`:''}
-  <p class="sub" style="color:var(--mute);font-size:13px">가장 가까웠던 사람: <b style="color:var(--ink)">${B.name}</b> (♥ ${best[1]} · ${relLv(best[1])[1]}) — "${B.q}"</p>
+  ${(c=>`<p class="both">🧑‍💼 <b>3년 후 험쮜의 일 · ${c.title}</b><br>${RANKS[S.rank]} 험쮜는 ${c.title}로 일하고 있다.\n가장 많이 키운 능력: ${c.line}</p>`)(careerOf())}<p class="sub" style="color:var(--mute);font-size:13px">가장 가까웠던 사람: <b style="color:var(--ink)">${B.name}</b> (♥ ${best[1]} · ${relLv(best[1])[1]}) — "${B.q}"</p>
   <div class="report"><div><small>최종 직급</small><b>${RANKS[S.rank]}</b></div><div><small>론칭 완성도</small><b>${S.score??'-'} (${bpPct()}%)</b></div><div><small>브랜드 점수</small><b>${brandScore()}</b></div><div><small>월 최고 매출</small><b>${fmtW(S.salesBest||0)}</b></div><div><small>누적 매출</small><b>${fmtW(S.salesSum||0)}</b></div><div><small>해외 진출</small><b>${glOpen()}개국</b></div><div><small>누적 이익</small><b>${S.co?(S.co.profitSum<0?'−':'')+fmtW(Math.abs(S.co.profitSum)):'-'}</b></div><div><small>회사 자금</small><b>${S.co?(S.co.cash<0?'−':'')+fmtW(Math.abs(S.co.cash)):'-'}</b></div>
   <div><small>제품력</small><b>${S.bq}</b></div><div><small>화제성</small><b>${S.buzz}</b></div><div><small>평판</small><b>${S.rep}</b></div>
   <div><small>능력치 합계</small><b>${sumStat()}</b></div><div><small>부업 / 야근</small><b>${S.jobs} / ${S.ot}</b></div><div><small>AI 스킬</small><b>Lv.${S.ai}</b></div><div><small>상사 평가</small><b>${bossAff()}</b></div><div><small>동료 평가</small><b>${peerAff()}</b></div><div><small>면접 등급</small><b>${S.ivGrade||'-'}</b></div><div><small>미션 성공</small><b>${S.missionWins||0}/${S.missionTotal||0}</b></div></div>
@@ -3574,7 +3579,8 @@ $('#btn-start').onclick=async()=>{
     const gs=[...new Set(Object.values(ACTS).filter(a=>a.dept===k).flatMap(a=>Object.keys(a.g)))].slice(0,3);
     await say({who:D.lead,group:D.ppl,speaker:`오리엔테이션 · ${D.ic} ${D.n}`,title:D.ppl.map(p=>who(p).name).join(' · '),text:`"${D.intro}"\n<span class="t">📍 ${[...new Set(D.ppl.flatMap(p=>HOME[p]||[]))].map(q=>`${PLACES[q].f} ${PLACES[q].n}`).join(' · ')} · 하는 일: ${[...new Set(Object.values(ACTS).filter(a=>a.dept===k&&!a.hidden).map(a=>a.name))].slice(0,3).join('·')}</span>`})}
   setPlace('sc_office');hideActor();
-  await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO TF 막내예요."',text:'"론칭까지 8개월. 막내는 모든 부서를 다 도와야 해요.\n누구를 만나고 어디서 일할지는 험쮜 님이 정해요. 그게 쌓여서 제품이 되고, 험쮜 님 커리어가 돼요. 목표는… 3년 안에 CEO, 어때요?"'});
+  await say({who:'sangho',title:'"험쮜 님, STAGE:ZERO TF 막내예요."',text:'"막내는 모든 부서 일을 다 해 봐요. 마케팅, 영업, 기획, 연구실, 물류까지.\n어느 부서 일을 하느냐에 따라 험쮜 님의 능력치가 달라질 거예요."'});
+  await say({who:'sangho',title:'"3년 뒤의 험쮜 님은?"',text:'"그렇게 쌓인 능력치로 3년 뒤 험쮜 님이 어떤 일을 하게 될지 정해져요.\n마케터일지, 연구원일지, 영업왕일지… 어쩌면 대표일지도요. 기대할게요."'});
   await say({who:'seohwi',title:'🏢 평일엔 출근!',text:'빌딩에서 오늘 갈 곳 3곳을 골라요.'});
   await say({who:'seohwi',title:'💬 대화하거나 💼 일하거나',text:'가서 사람과 이야기하거나, 그곳 일을 도와요.'});
   await say({who:'seohwi',title:'♥ 친해지면 이야기가 열려요',text:'빌딩에서 ♥ 표시가 뜬 사람을 찾아가요.'});
@@ -3586,7 +3592,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-a1d0d3';
+const BUILD='2026.10.10-98d1b8';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
