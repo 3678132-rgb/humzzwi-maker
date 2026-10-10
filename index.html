@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=0eb1b1"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0eb1b1"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0eb1b1">
+<link rel="manifest" href="manifest.json?v=02b395"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=02b395"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=02b395">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1108,7 +1108,7 @@ const slotKey=n=>'humzzwi.maker.slot'+n; // 슬롯마다 {S, at}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // 험쮜가 여성이면 넥타이 대신 리본 블라우스 버전(_w) 그림을 쓴다
 const hzFem=()=>{try{return !!(S&&S.prof&&S.prof.gender==='여성')}catch(e){return false}};
-const FEM_IMG=new Set(['gt_air','gt_air_b','gt_us','gt_us_b','gt_jp','gt_jp_b','gt_sea','gt_sea_b','a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','v_short','v_short_b']);
+const FEM_IMG=new Set(['a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','gt_air','gt_air_b','gt_jp','gt_jp_b','gt_sea','gt_sea_b','gt_us','gt_us_b','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','sc_cafe','sc_factory','sc_gym','sc_home','sc_lab','sc_meeting','sc_office','sc_package','sc_park','sc_popup','sc_rain','sc_store','sc_studio','sc_study','v_short','v_short_b']);
 const IMG=k=>k==='hz'?`assets/hz${hzFem()?'_w':''}.png`:`assets/${k}${FEM_IMG.has(k)&&hzFem()?'_w':''}.webp`;
 const BRAND='STAGE:ZERO';
 
@@ -2320,7 +2320,7 @@ function finish(){
   <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btn-again">다시 하기</button><button class="btn ghost" id="btn-dex2">엔딩 도감</button><button class="btn ghost" id="btn-share-end">📤 공유</button></div></div>`;
   el.hidden=false;el.scrollTop=0;
   $('#btn-again').onclick=()=>{el.hidden=true;openSetup()};
-  $('#btn-dex2').onclick=()=>{el.hidden=true;showTitle();openSheet('dex')};
+  $('#btn-dex2').onclick=()=>{el.hidden=true;showTitle(true);openSheet('dex')};
   $('#btn-share-end').onclick=()=>openShare(id);
   busy=false;document.body.classList.remove('running');hideActor();
 }
@@ -3946,7 +3946,8 @@ document.addEventListener('click',e=>{
   renderProfile();
 });
 document.addEventListener('change',e=>{if(e.target.id==='pf-bm'){PF.bm=+e.target.value;renderProfile()}else if(e.target.id==='pf-bd'){PF.bd=+e.target.value;renderProfile()}});
-function showTitle(){if(window.__swUpdate){location.reload();return}playBgm('title');$('#scr-title').hidden=false;$('#btn-cont').hidden=!anySlot();$('#btn-load').hidden=slotCount()<2}
+// 새 버전이 준비됐으면 타이틀로 갈 때 적용한다. 단, 도감·공유처럼 곧바로 다른 창을 열 때는 미룬다(keep)
+function showTitle(keep){if(window.__swUpdate&&!keep){location.reload();return}playBgm('title');$('#scr-title').hidden=false;$('#btn-cont').hidden=!anySlot();$('#btn-load').hidden=slotCount()<2}
 function openSetup(){
   $('#scr-title').hidden=true;$('#scr-setup').hidden=false;renderProfile();
   $('#origins').innerHTML=ORIGINS.map(o=>`<button class="origin" data-o="${o.id}" aria-pressed="${o.id===originSel}"><b>${o.name}</b><span>${o.d}</span><em>${Object.entries(o.bonus).map(([k,v])=>`${STATS[k]}+${v}`).join(' · ')} · 통장 ${o.money}만원</em></button>`).join('');
@@ -4140,7 +4141,7 @@ applyMix();applyFs();
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-0eb1b1';
+const BUILD='2026.10.10-02b395';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
@@ -4195,7 +4196,10 @@ let shareBlob=null;
 async function openShare(hi){const dex=ls.get(DEXKEY)||{},got=ENDINGS.filter(e=>dex[e.id]).length;
   const url=SHARE_URL()+'#dex='+dexCode(dex),text=`험쮜 메이커 엔딩 도감 ${got}/${ENDINGS.length} 모았어요! 내 도감 보기 👉`;
   const s=$('#sheet-share');s.hidden=false;$('#share-img').removeAttribute('src');$('#share-img').alt='도감 카드 만드는 중…';
-  shareBlob=await dexCard(dex,hi);if(!shareBlob){toast('카드를 만들지 못했어요');return}
+  $('#share-link').onclick=()=>copyText(text+' '+url);
+  $('#share-go').onclick=async()=>{try{if(navigator.share){await navigator.share({title:'험쮜 메이커 엔딩 도감',text,url});return}}catch(e){if(e&&e.name==='AbortError')return}copyText(text+' '+url)};
+  try{shareBlob=await dexCard(dex,hi)}catch(e){shareBlob=null}
+  if(!shareBlob){$('#share-img').alt='카드 그림은 못 만들었지만 링크는 보낼 수 있어요';return}
   $('#share-img').src=URL.createObjectURL(shareBlob);$('#share-img').alt=`엔딩 도감 ${got}/${ENDINGS.length}`;
   $('#share-go').onclick=async()=>{const file=new File([shareBlob],'humzzwi-dex.png',{type:'image/png'});
     try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'험쮜 메이커 엔딩 도감',text:text+' '+url});return}
