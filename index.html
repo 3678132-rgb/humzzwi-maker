@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=7d035e"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7d035e"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7d035e">
+<link rel="manifest" href="manifest.json?v=41f0e4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=41f0e4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=41f0e4">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -39,7 +39,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 @media (min-width:600px) and (pointer:fine){body{background:var(--night) radial-gradient(80% 70% at 50% 30%,#5b3a55 0%,var(--night) 70%)}.phone{margin-block:12px;border-radius:28px;height:min(calc(100dvh - 24px),940px);box-shadow:0 20px 60px rgba(0,0,0,.45)}}
 .scene{position:absolute;inset:0;overflow:hidden;background:var(--night)}
 .scene::before{content:"";position:absolute;inset:-30px;background:var(--scene-bg) center/cover no-repeat;filter:blur(18px) brightness(.7) saturate(1.1)}
-.pimg{position:absolute;left:0;right:0;top:calc(96px + var(--st));width:100%;height:calc(100% - 96px - var(--st));object-fit:cover;object-position:50% 48%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22px);mask-image:linear-gradient(180deg,transparent 0,#000 22px);animation:fadein .45s ease both}
+/* 장소 배경은 화면 위·아래 끝까지 꽉 채운다(상태창·대화창이 그 위에 뜬다) */
+.pimg{position:absolute;left:0;right:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 48%;animation:fadein .45s ease both}
 @keyframes fadein{from{opacity:.3}to{opacity:1}}
 .scene-tag{position:absolute;top:calc(146px + var(--st));left:50%;transform:translateX(-50%);background:rgba(61,42,34,.72);color:#fff;font-size:12px;padding:3px 12px;border-radius:99px;z-index:2;white-space:nowrap}
 .shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(42,31,51,.55) 0%,rgba(42,31,51,0) 18%,rgba(42,31,51,0) 60%,rgba(42,31,51,.5) 100%)}
@@ -438,7 +439,7 @@ body.clip-on:not([data-mbg=C]) #pimg{opacity:0}
 .more{width:100%;font:inherit;font-size:13px;color:var(--mute);background:transparent;border:2px dashed var(--line);border-radius:14px;padding:9px;cursor:pointer}
 
 /* 입사 전 프롤로그: 아직 직원이 아니니 상태창·스케줄은 숨긴다 */
-.pro .pimg{top:var(--st);object-position:50% 40%}
+.pro .pimg{object-position:50% 40%}
 .pro .hud-top,.pro .hud-res,.pro .side-l,.pro .side-r,.pro .mission,.pro .bottom-area,.pro .tabbar,.pro .btn-office{visibility:hidden}
 /* 사진관 찾아가기: 동네 지도 */
 .town{position:absolute;inset:0;z-index:13;background:#fbefe2;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding-top:var(--st);animation:fadein .3s both}
@@ -3700,7 +3701,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-7d035e';
+const BUILD='2026.10.10-41f0e4';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
