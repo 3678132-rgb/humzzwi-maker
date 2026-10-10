@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=7b0e1d"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7b0e1d"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7b0e1d">
+<link rel="manifest" href="manifest.json?v=cc21ae"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=cc21ae"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=cc21ae">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2472,10 +2472,17 @@ function layoutScene(){
 }
 window.addEventListener('resize',layoutScene);
 // 동료는 대화창 뒤에 선다(발끝은 대화창에 가려도 됨). ♥가 높을수록 점점 가까이 다가온다
-const nearOf=k=>{if(!S||!isRel(k))return 1;return 1+.8*Math.min(80,Math.max(0,S.aff[k]||0))/80};
-function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidden)return;const d=$('#dialog'),ph=$('#phone').clientHeight;const top=d.hidden?ph-210:d.offsetTop;
-  const head=112,room=top-head;el.style.visibility=room<110?'hidden':'visible';
-  const z=nearOf(el.dataset.k),h=Math.max(260,room*1.12)*z;el.style.height=h+'px';el.style.bottom=(ph-head-h)+'px';const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,head+h-db)}px -40px)`;el.dataset.near=z>=1.6?'3':z>=1.35?'2':z>=1.15?'1':'0'}
+// 동료는 대화창 뒤에 선다. ♥가 높을수록 가까이 — 대화창 위로 보이는 범위가 무릎까지(어색) → 허리까지(단짝).
+// 아무리 가까워도 머리부터 허리까지 상반신과 양팔은 화면 안에 다 보이게 한다
+const nearOf=k=>{if(!S||!isRel(k))return .25;return Math.min(80,Math.max(0,S.aff[k]||0))/80};
+function placeActor(){layoutScene();placeGroup();const el=$('#actor');if(el.hidden)return;const d=$('#dialog'),P=$('#phone'),ph=P.clientHeight,pw=P.clientWidth;const top=d.hidden?ph-210:d.offsetTop;
+  const head=108,room=top-head;el.style.visibility=room<110?'hidden':'visible';
+  const im=$('#actor-img'),asp=im.naturalWidth&&im.naturalHeight?im.naturalWidth/im.naturalHeight:.42,t=nearOf(el.dataset.k);
+  const f=.9-.36*t;                                   // 대화창 위로 보이는 몸의 비율 (0.9 무릎 아래 → 0.54 허리)
+  let h=room/f;h=Math.min(h,pw*1.04/asp);h=Math.max(h,240);
+  im.style.height='100%';el.style.height=h+'px';el.style.bottom=(ph-head-h)+'px';
+  const db=d.hidden?ph:d.offsetTop+d.offsetHeight-14;el.style.clipPath=`inset(-40px -40px ${Math.max(0,head+h-db)}px -40px)`;el.dataset.near=t>=.75?'3':t>=.45?'2':t>=.2?'1':'0'}
+$('#actor-img').addEventListener('load',placeActor);
 window.addEventListener('resize',placeActor);
 const chipRank=c=>/^[🎯🧪🫙🚚🗂️🛒💬📣🌎🧾📈🌍]/u.test(c.l)?0:['평판','제품력','화제성','이번 달 통장','통장'].includes(c.l)?1:Object.values(STATS).includes(c.l)||c.l.startsWith('♥')?2:['체력','스트레스'].includes(c.l)?3:4;
 function chipsHTML(chips){chips=mergeChips(chips).sort((a,b)=>chipRank(a)-chipRank(b));if(!chips.length)return '';
@@ -3592,7 +3599,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-7b0e1d';
+const BUILD='2026.10.10-cc21ae';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
