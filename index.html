@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=2c79a2"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2c79a2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2c79a2">
+<link rel="manifest" href="manifest.json?v=e6c7b8"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=e6c7b8"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=e6c7b8">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -2453,6 +2453,7 @@ const LIKE={
   sumin:{love:[['exhibit','조용한 전시장. 수민 님은 작품 옆 숫자 설명을 유독 오래 읽었다.'],['cafe','각자 책을 읽다가 가끔 눈이 마주쳤다. 말없이도 편한 시간.']],hate:'board',snack:'시럽 반 라떼'},
   jiyoung:{love:[['exhibit','"이 파란색, 우리 다음 용기 색 같지 않아요?" 둘이 한참 그림 앞에 서 있었다.'],['park','노을 사진을 백 장 찍었다. "오늘 색은 꼭 기억해 둬요."']],hate:'market',snack:'딸기 케이크'},
   jaemin:{love:[['market','"가격표만 봐도 물가 흐름이 보여요." 재민 님의 가계부 비법을 전수받았다.'],['board','재민 님은 모든 게임의 규칙서를 먼저 정독했다. 그리고 다 이겼다.']],hate:'popup',snack:'편의점 1+1 커피'},
+  daram:{love:[['market','"이 집 떡볶이, 매장 돌다 찾은 제 비밀 맛집이에요." 다람 주임이 순대까지 하나 더 시켰다.'],['bike','"영업은 다리 힘이에요!" 다람 주임이 한강을 따라 앞장서 달렸다. 바람이 시원했다.']],hate:'exhibit',snack:'편의점 신상 디저트'},
   hanmin:{love:[['bike','"페이스 유지가 제일 중요합니다." 과장님 뒤를 따라 20km를 달렸다.'],['hike','정상에서 과장님이 컵라면 두 개를 꺼냈다. "준비는 끝까지 하는 겁니다."']],hate:'cafe',snack:'자판기 캔커피'},
 };
 const loveOf=k=>LIKE[k]?LIKE[k].love.map(x=>x[0]):[];
@@ -2476,7 +2477,7 @@ async function buyIntel(){const ks=TEAM.filter(k=>LIKE[k]&&!knows(k));
   if(S.money<3){toast('통장에 3만원도 없어요…');await result({st:-3},'은빈: "커피는 다음에 사요! 대신 수다나 떨어요."','📰 사내 소식','eunbin');return}
   const c=await ask({who:'eunbin',title:'📰 은빈의 사내 소식통',text:'"커피 한 잔이면 누구든 알려 드리죠~ 누가 궁금해요?"',choices:ks.map(k=>({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${S.aff[k]||0}`,img:faceOf(k),face:1}))});
   const k=ks[c],L=LIKE[k];(S.intel=S.intel||{})[k]=1;
-  const d=(S.story&&S.story[k])||0,nx=d<STORY_AT.length?`♥${STORY_AT[d]}이 되면 이야기가 열려요`:'이야기는 다 들었어요';
+  const d=(S.story&&S.story[k])||0,nx=!STORIES[k]?'영업팀 에이스. 매장 MD님들이 제일 먼저 찾는 사람이래요':d<STORY_AT.length?`♥${STORY_AT[d]}이 되면 이야기가 열려요`:'이야기는 다 들었어요';
   await say({who:'eunbin',title:`📰 ${tagName(k)} 프로필`,text:`💗 좋아하는 곳: ${L.love.map(x=>SPOTS[x[0]].n).join(' · ')}\n💦 별로인 곳: ${SPOTS[L.hate].n}\n🍬 좋아하는 간식: ${L.snack}\n📍 평소 자리: ${HOME[k].map(q=>`${PLACES[q].f} ${PLACES[q].n}`).join(' · ')}\n💞 ${nx}\n<span class="t">(「관계도」에서도 다시 볼 수 있어요.)</span>`,chips:applyFx({money:-3,aff_eunbin:2})})}
 
 /* ----- 책상에 쪽지 (초연의 신발장 편지처럼): 자리에 없어도 남길 수 있다 ----- */
@@ -2496,13 +2497,13 @@ async function leaveNote(p){const ks=TEAM.filter(k=>LIKE[k]&&HOME[k].includes(p)
 /* ----- 발렌타인데이 (2월 14일) ----- */
 async function valentine(){setPlace('sc_office');
   if(S.m>=TOTAL-1)return finalValentine();
-  const ks=[...TEAM.filter(k=>LIKE[k])];if(S.flags.crush||S.flags.dating)ks.push('daram');
-  const ch=ks.map(k=>({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${S.aff[k]||0}${k==='daram'?' · 💘':knows(k)?` · 🍬 ${LIKE[k].snack}`:''}`,img:faceOf(k),face:1}));
+  const ks=TEAM.filter(k=>LIKE[k]&&k!=='daram');if(S.flags.crush||S.flags.dating||(S.aff.daram||0)>=20)ks.push('daram');
+  const ch=ks.map(k=>({l:`${JOB_TAG[k]} ${given(k)}`,s:`♥${S.aff[k]||0}${k==='daram'&&(S.flags.crush||S.flags.dating)?' · 💘':knows(k)?` · 🍬 ${LIKE[k].snack}`:''}`,img:faceOf(k),face:1}));
   ch.push({l:'팀 전체에 의리 초콜릿',s:'8만원 · 모두 ♥+2',img:'c_snack'});
   const c=await ask({who:'me',title:'🍫 2월 14일 · 발렌타인데이',text:'편의점 초콜릿 코너 앞에서 10분째. 이번엔 누구에게 줄까?',choices:ch});
   if(c===ks.length){await result({...Object.fromEntries(TEAM.map(k=>['aff_'+k,2])),money:-8},'탕비실에 초콜릿 바구니를 놓았다. "험쮜 님 센스 뭐야~" 사무실이 달달해졌다.','🍫 의리 초콜릿');return}
   const k=ks[c];
-  if(k==='daram'){await result({love:8,aff_daram:4,money:-3},'영업팀 책상에 초콜릿을 몰래 두고 왔다.\n오후에 메신저가 왔다. 다람: "…이거 험쮜 씨죠? 🍫"','🍫 몰래 둔 초콜릿','daram');return}
+  if(k==='daram'&&(S.flags.crush||S.flags.dating)){await result({love:8,aff_daram:4,money:-3},'영업팀 책상에 초콜릿을 몰래 두고 왔다.\n오후에 메신저가 왔다. 다람: "…이거 험쮜 씨죠? 🍫"','🍫 몰래 둔 초콜릿','daram');return}
   const kn=knows(k);
   await result({['aff_'+k]:kn?10:6,money:-3},kn?`${LIKE[k].snack}! ${given(k)} 님 눈이 동그래졌다. "제 취향을 어떻게…!"`:`${given(k)}: "어머, 저 주는 거예요? 고마워요!"`,'🍫 발렌타인데이',k)}
 async function finalValentine(){
@@ -2684,7 +2685,7 @@ async function weekend(){busy=true;document.body.classList.add('running');playBg
     const c=await ask({who:'me',speaker:`${yearOf(S.m)}년차 ${monthOf(S.m)}월 · 휴일`,title:'이번 휴일엔 뭘 할까?',text:`체력 ${S.hp} · 스트레스 ${S.st} · 통장 ${S.money}만원 · 연차 ${S.leave}일`,choices:ks.map(k=>({l:WKND[k].n,s:WKND[k].d,img:WKND[k].img}))});
     const K=WKND[ks[c]],ids=K.ids.filter(id=>!(id==='date'&&!S.flags.dating));
     const ch=ids.map(id=>({l:ACTS[id].name,s:actSub(id),img:clipOf(id)||ACTS[id].scene,tag:actSub(id).startsWith('🔒')?'🔒':''})),ops=ids.map(id=>['act',id]);
-    if(ks[c]==='mate')TEAM.filter(k=>k!=='daram'&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${knows(k)?'💗 '+LIKE[k].love.map(x=>SPOTS[x[0]].n).join('·'):'어디를 좋아할까?'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💞 ♥'+(S.aff[k]||0)});ops.push(['meet',k])});
+    if(ks[c]==='mate')TEAM.filter(k=>LIKE[k]&&(S.aff[k]||0)>=20).sort((a,b)=>S.aff[b]-S.aff[a]).forEach(k=>{ch.push({l:`${given(k)}${wa(given(k))} 주말 약속`,s:`${knows(k)?'💗 '+LIKE[k].love.map(x=>SPOTS[x[0]].n).join('·'):'어디를 좋아할까?'}`,img:imgOf(k).replace('a_','f_'),face:1,tag:'💞 ♥'+(S.aff[k]||0)});ops.push(['meet',k])});
     if(ks[c]==='mate'&&!ops.length){toast('아직 ♥20 넘은 동료가 없어요. 평일에 자주 만나 봐요!');continue}
     ch.push({l:'← 다른 걸 할래',s:''});ops.push(['back']);
     const j=await ask({who:'me',speaker:`${monthOf(S.m)}월 · 휴일`,title:K.n,text:K.d,choices:ch,cls:'wk'});
@@ -2701,19 +2702,45 @@ async function meetup(k){const ids=Object.keys(SPOTS),kn=knows(k),L=LIKE[k];
   const q=ids[c],P=SPOTS[q];if(S.money<P.cost){toast('통장 잔고가 부족해요');return false}
   setPlace(P.img);
   const lv=L.love.find(x=>x[0]===q),hate=L.hate===q;
-  const fx={['aff_'+k]:lv?10:hate?1:5,st:lv?-16:hate?-4:-12,money:-P.cost,...(lv&&MATES[k]?{[MATES[k].g[0]]:1}:{})};
+  const fx={['aff_'+k]:lv?10:hate?1:5,st:lv?-16:hate?-4:-12,money:-P.cost,...(lv&&MATES[k]?{[MATES[k].g[0]]:1}:{}),...(k==='daram'&&(S.flags.crush||S.flags.dating)?{love:lv?6:3}:{})};
   const text=lv?lv[1]+'\n<span class="t">(…여기 정말 좋아하는구나!)</span>':hate?pick([`${given(k)} 님이 내내 시계를 봤다.\n<span class="t">(…여긴 취향이 아닌가 보다.)</span>`,`"…저 사실 이런 데 잘 안 와요." 어색한 웃음.`]):pick([`이야기가 끊이지 않았다. "오늘 즐거웠어요!"`,`"다음에 또 와요." ${given(k)} 님이 손을 흔들었다.`,'회사 밖에서 보니 또 다른 얼굴이었다.']);
   await result(fx,`${P.n}. ${text}`,`${given(k)}${wa(given(k))} 주말 약속`,k);return true}
 
 async function nego(){setPlace('pl_boss');
-  const T=negoT(S.m),sum=sumStat(),r=sum/T,tier=r>=1.2?3:r>=1?2:r>=.85?1:0;
-  await say({who:'jaemin',title:'💰 연봉협상 시즌',text:`"험쮜 님, 연봉협상 면담이 있어요. 부장실로 가 보세요."\n<span class="t">능력치 합계 ${sum} / 이번 기준 ${T}</span>`});
-  const c=await ask({who:'sangho',title:'💰 연봉협상',text:'"요즘 험쮜 님 일하는 거 잘 보고 있어요. 원하는 걸 말해 봐요."',
-    choices:[{l:'"제가 키운 실력을 근거로 말씀드릴게요"',s:`능력치 판정 · 합계 ${sum}/${T}`},{l:'"그동안 쌓은 평판을 봐 주세요"',s:`평판 판정 · 지금 ${S.rep}`},{l:'"회사 사정도 아니까 조금만요"',s:'작게 · 확실하게'}]});
-  const t=c===0?tier:c===1?(S.rep>=70?2:S.rep>=45?1:0):1,up=c===2?6:[0,8,16,26][t];
-  S.raise=(S.raise||0)+up;sfx(up>=16?'great':up?'ok':'fail');
-  const line=c===0?['"기준에 조금 못 미치네요. 다음엔 실력으로 보여 줘요."','"성장한 게 보여요. 조금 올려 드릴게요."','"기대 이상이에요. 확실하게 올려 드리죠."','"이 정도면 붙잡아야죠. 최고 인상률이에요!"'][t]:c===1?['"평판만으로는 아직 어렵네요."','"주변 평이 좋더라고요. 반영할게요."','"다들 험쮜 님 칭찬이에요. 크게 올려 드리죠."'][t]:'"마음 써 줘서 고마워요. 조금이지만 올려 드릴게요."';
-  await say({who:'sangho',title:up?`💰 월급 +${up}만원!`:'💰 이번엔 동결…',text:`${line}\n이제 월급 <b>${payOf()}만원</b>${S.raise?` (인상분 누적 +${S.raise}만원)`:''}\n<span class="t">${(n=>n!=null?`다음 연봉협상: ${yearOf(n)}년차 ${monthOf(n)}월 · 기준 ${negoT(n)} — 자기계발로 능력치를 올려 두세요.`:'마지막 연봉협상이었어요.')(NEGO_AT.find(x=>x>S.m))}</span>`,chips:applyFx(up?{st:-8,['aff_sangho']:2}:{st:8})})}
+  const T=negoT(S.m),sum=sumStat(),r=sum/T,tier=r>=1.2?3:r>=1?2:r>=.85?1:0,round=NEGO_AT.indexOf(S.m)+1,last=round===NEGO_AT.length,bA=S.aff.sangho||0;
+  const call=pick(round===1?['"험쮜 님, 첫 연봉협상이에요! 떨지 말고 부장실로 가 보세요."','"험쮜 님 이름이 연봉협상 명단에 올라왔어요. 첫 면담이죠? 화이팅!"']
+    :last?['"마지막 연봉협상이에요. 3년 동안 쌓은 거, 다 보여 주고 와요."','"이번이 마지막 면담이래요. 후회 없이 말하고 와요!"']
+    :['"연봉협상 시즌이에요. 부장님이 기다리세요."','"험쮜 님 차례예요. 이번엔 얼마 부를 거예요? 몰래 알려 줘요."','"면담 순서표 보니까 험쮜 님 다음이 저예요. 떨리네요ㅠ"']);
+  await say({who:'jaemin',title:`💰 연봉협상 시즌 · ${round}번째`,text:`${call}\n<span class="t">능력치 합계 ${sum} / 이번 기준 ${T} · 평판 ${S.rep} · 사업부장 ♥${bA}</span>`});
+  const open=tier>=3?pick(['"솔직히 말할게요. 요즘 험쮜 님 없으면 팀이 안 돌아가요. 원하는 걸 말해 봐요."','"이번 분기 성과표 맨 위에 험쮜 님 이름이 있더라고요. 얼마를 원해요?"'])
+    :tier>=2?pick(['"요즘 험쮜 님 일하는 거 잘 보고 있어요. 원하는 걸 말해 봐요."','"성장한 게 눈에 보여요. 오늘은 험쮜 님 얘기부터 들어 볼게요."'])
+    :tier>=1?pick(['"열심히 하는 건 알아요. 다만 숫자로 보면 아직 애매해요. 어떻게 생각해요?"','"기준에 거의 다 왔네요. 조금만 더 설득해 봐요."'])
+    :pick(['"음… 이번엔 회사도 사정이 빠듯해요. 험쮜 님 생각은 어때요?"','"솔직히 이번 평가는 좀 아쉬웠어요. 그래도 할 말 있으면 해 봐요."']);
+  const POOL=[
+    {k:'stat',l:'"제가 키운 실력을 근거로 말씀드릴게요"',s:`능력치 판정 · 합계 ${sum}/${T}`},
+    {k:'rep',l:'"그동안 쌓은 평판을 봐 주세요"',s:`평판 판정 · 지금 ${S.rep}`},
+    {k:'safe',l:'"회사 사정도 아니까 조금만요"',s:'작게 · 확실하게'},
+    {k:'offer',l:'"사실… 다른 회사에서 제안을 받았어요"',s:'⚠️ 모 아니면 도 · 깎일 수도'},
+    {k:'all',l:'"올해 성과는 다 제 덕이잖아요. 30% 올려 주세요"',s:'⚠️ 크게 부르기 · 실력이 안 되면 역효과'},
+    {k:'team',l:'"팀 동료들 평가를 봐 주세요"',s:`동료 ♥ 평균 ${peerAff()}`},
+    {k:'leave',l:'"월급 대신 연차를 더 주세요"',s:'월급 동결 · 연차 +2일'},
+    {k:'cut',l:'"이번엔 제가 부족했어요. 깎으셔도 할 말 없어요"',s:'⚠️ 월급 -4만원 · 부장님 ♥↑ 스트레스↓'}];
+  const rest=POOL.slice(1).filter(o=>o.k!=='cut'||tier===0).sort(()=>Math.random()-.5).slice(0,2),opts=[POOL[0],...rest];
+  const c=await ask({who:'sangho',title:'💰 연봉협상',text:open,choices:opts.map(o=>({l:o.l,s:o.s}))});
+  const o=opts[c].k;let up=0,line='',fx={};
+  if(o==='stat'){up=r<.7?-5:[0,8,16,26][tier];line=r<.7?'"기준에 한참 못 미쳐요. 솔직히 이번엔 조정이 필요해요."':['"기준에 조금 못 미치네요. 다음엔 실력으로 보여 줘요."','"성장한 게 보여요. 조금 올려 드릴게요."','"기대 이상이에요. 확실하게 올려 드리죠."','"이 정도면 붙잡아야죠. 최고 인상률이에요!"'][tier]}
+  else if(o==='rep'){const t=S.rep>=70?2:S.rep>=45?1:S.rep>=25?0:-1;up=[-4,0,10,18][t+1];line=['"평판이요…? 요즘 들리는 얘기는 별로였어요. 이번엔 조금 깎을게요."','"평판만으로는 아직 어렵네요."','"주변 평이 좋더라고요. 반영할게요."','"다들 험쮜 님 칭찬이에요. 크게 올려 드리죠."'][t+1]}
+  else if(o==='safe'){up=6;line=pick(['"마음 써 줘서 고마워요. 조금이지만 올려 드릴게요."','"그 말 들으니 오히려 더 챙겨 주고 싶네요. 약속한 만큼은 확실히."'])}
+  else if(o==='offer'){const win=S.rep>=55&&tier>=2&&bA>=45;up=win?30:-10;fx=win?{['aff_sangho']:2}:{['aff_sangho']:-6};
+    line=win?'"…험쮜 님을 뺏길 순 없죠. 회사에 말해서 최대로 맞춰 볼게요."':'"그럼 그 회사로 가도 돼요. …농담이고, 이런 식의 협상은 곤란해요. 이번엔 깎을 수밖에 없네요."'}
+  else if(o==='all'){const win=tier>=3;up=win?34:tier>=2?4:-8;fx=win?{}:{['aff_sangho']:-4};
+    line=win?'"…맞는 말이라 반박을 못 하겠네요. 최고 인상률로 갑시다."':tier>=2?'"성과는 인정하지만, 혼자 다 한 건 아니죠. 조금만 올릴게요."':'"험쮜 님, 지금 숫자로 그 말은 좀… 이번엔 오히려 조정이 필요하겠어요."'}
+  else if(o==='team'){const pa=peerAff();up=pa>=50?16:pa>=35?10:pa>=18?4:-3;line=pa>=50?'"동료들이 다 험쮜 님 편이더라고요. 팀이 인정하면 저도 인정이죠."':pa>=35?'"팀원들 평이 좋네요. 반영할게요."':pa>=18?'"팀 평가는 무난해요. 조금만 올릴게요."':'"…팀 평가를 보니 다들 험쮜 님이랑 일하기 힘들대요. 이번엔 깎을게요."'}
+  else if(o==='leave'){up=0;S.leave+=2;line='"연차요? 좋아요. 쉬는 것도 일이에요. 대신 다녀와서 더 잘해 줘요."';fx={st:-6}}
+  else if(o==='cut'){up=-4;fx={['aff_sangho']:5,st:-10};line='"…그렇게 말해 주니 오히려 고맙네요. 조금만 조정하고, 다음엔 제가 먼저 올려 줄게요."'}
+  S.raise=(S.raise||0)+up;sfx(up>=16?'great':up>0?'ok':'fail');
+  const title=up>0?`💰 월급 +${up}만원!`:up<0?`💸 월급 ${up}만원…`:o==='leave'?'🌴 연차 +2일':'💰 이번엔 동결…';
+  await say({who:'sangho',title,text:`${line}\n이제 월급 <b>${payOf()}만원</b>${S.raise?` (연봉협상 누적 ${S.raise>0?'+':''}${S.raise}만원)`:''}\n<span class="t">${(n=>n!=null?`다음 연봉협상: ${yearOf(n)}년차 ${monthOf(n)}월 · 기준 ${negoT(n)} — 자기계발로 능력치를 올려 두세요.`:'마지막 연봉협상이었어요.')(NEGO_AT.find(x=>x>S.m))}</span>`,chips:applyFx({...(up>0?{st:-8,['aff_sangho']:2}:up<0?{st:12}:o==='leave'?{}:{st:8}),...fx})})}
 /* ----- 하루 끝 → 휴일 → 월말 ----- */
 const runMonth=()=>monthIntro(); // 예전 버튼 호환
 async function afterDay(){busy=true;await weekend();await monthEnd()}
@@ -3388,7 +3415,7 @@ function statusHTML(){
   <div class="group"><h4>직급 · 목표는 CEO ${isGold()?'<span class="gold">✨황금막내</span>':''}</h4><div class="ladder">${RANKS.map((n,i)=>`<span class="${i<S.rank?'done':i===S.rank?'now':''}">${n}</span>`).join('')}</div>
   <p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${nx?`다음 승진(${RANKS[S.rank+1]}): ${reqText(nx)}<br>${reqWhy(nx)?`<b style="color:var(--pink-d)">부족: ${reqWhy(nx)}</b>`:'<b style="color:var(--good)">조건 충족! 다음 분기 평가를 기다려요.</b>'}<br>분기 평가: 3개월마다 (다음 평가 ${nextEval()!=null?`${yearOf(nextEval())}년차 ${monthOf(nextEval())}월`:'없음'})`:'최고 직급! 캔버스랩 CEO'}<br>황금막내 조건: 평판 55 이상 + 동료 평균 ♥37 이상</p></div>
   <div class="group"><h4>관계</h4>${m('상사 평가 (두 부장 ♥ 평균)',bossAff(),100,'#ff5c8a')}${m('동료 평가 (동료 7명 ♥ 평균)',peerAff(),100,'#ff9cc0')}<p style="margin:4px 0 0;font-size:12px;color:var(--mute)">사람별 숫자는 「관계도」에서 볼 수 있어요.</p></div>
-  <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}${S.raise?` <span style="font-size:11px;color:var(--good)">연봉협상 +${S.raise}</span>`:''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div><div class="life">${LIFE.map(L=>`<div class="lf ${hasLife(L.k)?'done':S.m<L.from?'lock':''}"><i>${hasLife(L.k)?'✓':L.ic}</i><span><b>${L.n}</b><small>${hasLife(L.k)?'완료 · '+L.d:S.m<L.from?`${yearOf(L.from)}년차 ${monthOf(L.from)}월부터`:`${L.cost}만원 · ${L.d}`}</small></span><em>${hasLife(L.k)||S.m<L.from?'':Math.min(100,Math.round(S.money/L.cost*100))+'%'}</em></div>`).join('')}</div>
+  <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}${S.raise?` <span style="font-size:11px;color:var(--${S.raise>0?'good':'bad'})">연봉협상 ${S.raise>0?'+':''}${S.raise}</span>`:''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div><div class="life">${LIFE.map(L=>`<div class="lf ${hasLife(L.k)?'done':S.m<L.from?'lock':''}"><i>${hasLife(L.k)?'✓':L.ic}</i><span><b>${L.n}</b><small>${hasLife(L.k)?'완료 · '+L.d:S.m<L.from?`${yearOf(L.from)}년차 ${monthOf(L.from)}월부터`:`${L.cost}만원 · ${L.d}`}</small></span><em>${hasLife(L.k)||S.m<L.from?'':Math.min(100,Math.round(S.money/L.cost*100))+'%'}</em></div>`).join('')}</div>
   ${Object.keys(JOB_RANK).some(k=>jobN(k))?`<p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${Object.keys(JOB_RANK).filter(k=>jobN(k)).map(k=>`${ACTS[k].name}: ${JOB_RANK[k][jobLv(k)]} (${jobN(k)}회)`).join(' · ')}</p>`:''}</div>`;
 }
 function buildHTML(){
@@ -4157,7 +4184,7 @@ applyMix();applyFs();
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-2c79a2';
+const BUILD='2026.10.10-e6c7b8';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
