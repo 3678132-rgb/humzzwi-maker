@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=0bd910"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0bd910"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0bd910">
+<link rel="manifest" href="manifest.json?v=23dcaf"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=23dcaf"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=23dcaf">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -1348,6 +1348,8 @@ const anySlot=()=>{for(let n=1;n<=SLOTS;n++)if(slotData(n))return true;return fa
 {const old=ls.get(KEY);if(old&&!slotData(1)){old.slot=1;ls.set(slotKey(1),{S:old,at:Date.now()})}if(old)ls.set(KEY,null)}
 const sumStat=()=>Object.values(S.stat).reduce((a,b)=>a+b,0);
 const avgAff=()=>{const ks=Object.keys(MATES);return Math.round(ks.reduce((a,k)=>a+(S.aff[k]||0),0)/ks.length)};
+// 동료 평가: 두 부장님을 뺀 동료 7명의 ♥ 평균
+const peerAff=()=>{const ks=REL_KEYS.filter(k=>!BOSS.includes(k));return Math.round(ks.reduce((a,k)=>a+(S.aff[k]||0),0)/ks.length)};
 const bossAff=()=>Math.round(BOSS.reduce((a,k)=>a+(S.aff[k]||0),0)/BOSS.length);
 const payOf=()=>(S.rank===0?(S.probPay||PAY[0]):PAY[S.rank])+(S.raise||0);
 /* 연봉협상: 6개월마다(1년차 8월부터). 그 시기 기준보다 능력치 합계가 높을수록 월급이 크게 오른다. 오른 몫은 승진해도 유지 */
@@ -1983,7 +1985,7 @@ async function missionResult(){const M=S.mission;if(!M||M.done||M.m!==S.m)return
 /* ================= 승진 평가 =================
    3개월마다 분기 평가(8번). 한 번에 한 단계씩, 인턴 → 사원 → 주임 → 대리 → 팀장 → 이사 → CEO */
 const EVAL_AT={2:'수습 평가',5:'1분기 평가',8:'2분기 평가',11:'연간 평가',14:'1분기 평가',17:'2분기 평가',20:'3분기 평가',23:'연간 평가',26:'1분기 평가',29:'2분기 평가',32:'3분기 평가',35:'최종 평가 · 대표 선임'};
-const REQ=[null,{rep:10,boss:12},{rep:22,bp:30,boss:18},{rep:35,launch:1,boss:26},{rep:50,sales:150,boss:36},{rep:70,sales:230,boss:50},{rep:90,gl:2,brand:75,boss:65,aff:55}];
+const REQ=[null,{rep:10,boss:12,peer:12},{rep:22,bp:30,boss:18,peer:20},{rep:35,launch:1,boss:26,peer:28},{rep:50,sales:150,boss:36,peer:36},{rep:70,sales:230,boss:50,peer:46},{rep:90,gl:2,brand:75,boss:65,peer:55}];
 function reqWhy(r){
   if(S.rep<r.rep)return `평판이 ${r.rep} 이상 필요해요 (지금 ${S.rep}).`;
   if(r.sum&&sumStat()<r.sum)return `능력치 합계가 ${r.sum} 이상 필요해요 (지금 ${sumStat()}).`;
@@ -1993,15 +1995,19 @@ function reqWhy(r){
   if(r.gl&&glOpen()<r.gl)return `해외 시장 ${r.gl}곳 이상 진출이 필요해요 (지금 ${glOpen()}곳).`;
   if(r.brand&&brandScore()<r.brand)return `브랜드 점수가 ${r.brand}점 이상 필요해요 (지금 ${brandScore()}점).`;
   if(bossAff()<r.boss)return `상사 평가(두 부장님 ♥ 평균)가 ${r.boss} 이상 필요해요 (지금 ${bossAff()}).`;
-  if(r.aff&&avgAff()<r.aff)return `동료 평균 ♥가 ${r.aff} 이상 필요해요 (지금 ${avgAff()}).`;
+  if(r.peer&&peerAff()<r.peer)return `동료 평가(동료 7명 ♥ 평균)가 ${r.peer} 이상 필요해요 (지금 ${peerAff()}).`;
   return null}
-const reqText=r=>[`평판 ${r.rep}`,r.sum&&`능력치 합계 ${r.sum}`,r.bp&&`론칭 체크 ${r.bp}%`,r.launch&&'론칭',r.sales&&`월 매출 ${fmtW(r.sales)}`,r.gl&&`해외 ${r.gl}곳`,r.brand&&`브랜드 점수 ${r.brand}`,`상사 평가 ${r.boss}`,r.aff&&`동료 평균 ♥${r.aff}`].filter(Boolean).join(' · ');
+const reqText=r=>[`평판 ${r.rep}`,r.sum&&`능력치 합계 ${r.sum}`,r.bp&&`론칭 체크 ${r.bp}%`,r.launch&&'론칭',r.sales&&`월 매출 ${fmtW(r.sales)}`,r.gl&&`해외 ${r.gl}곳`,r.brand&&`브랜드 점수 ${r.brand}`,`상사 평가 ${r.boss}`,r.peer&&`동료 평가 ${r.peer}`].filter(Boolean).join(' · ');
 const nextEval=()=>{const m=Object.keys(EVAL_AT).map(Number).find(x=>x>=S.m);return m==null?null:m};
 const PROMO_LINE=['','김현수 기획부장: "수습 끝! 정규직 전환 축하해요. 이제 진짜 우리 팀이에요."','박서휘 대리: "주임 승진 축하해요! 이제 후배가 생기겠네요."','이상호 사업부장: "대리 험쮜 님, 판을 같이 읽어봅시다. 전략 회의에도 들어와요."',
   '이상호 사업부장: "STAGE:ZERO 브랜드 팀장을 맡아 주세요. 이제 험쮜 님 팀이에요."','김현수 기획부장: "이사회에서 만장일치였어요. 험쮜 이사님, 잘 부탁해요."','이사회: "만장일치로 험쮜 님을 캔버스랩 대표로 선임합니다."'];
+// 평가표: 항목마다 지금 값 / 기준 / 통과 여부
+const reqRows=r=>[['⭐ 평판',S.rep,r.rep],['🧭 상사 평가',bossAff(),r.boss],['💞 동료 평가',peerAff(),r.peer],r.sum&&['📊 능력치 합계',sumStat(),r.sum],r.bp&&['🧾 론칭 체크',bpPct(),r.bp,'%'],r.launch&&['🚀 론칭',S.launched?1:0,1,'',S.launched?'완료':'아직'],r.sales&&['📈 월 최고 매출',S.salesBest||0,r.sales,'w'],r.gl&&['🌍 해외 진출',glOpen(),r.gl,'곳'],r.brand&&['🏷️ 브랜드 점수',brandScore(),r.brand]].filter(Boolean);
+const reqTable=r=>reqRows(r).map(([l,v,n,u,txt])=>{const f=x=>u==='w'?fmtW(x):x+(u||'');return `${v>=n?'✅':'❌'} ${l} ${txt||f(v)}${txt?'':` <span class="t">/ 기준 ${u==='w'||u==='%'||u==='곳'?f(n):n}</span>`}`}).join('\n');
 async function evaluate(name){
-  setPlace('sc_meeting');
+  setPlace('pl_boss');
   const nx=S.rank+1,r=REQ[nx];
+  if(r)await say({who:'hyunsu',title:`📋 ${name} · ${RANKS[nx]} 승진 심사`,text:reqTable(r)+'\n<span class="t">평판만이 아니라 상사·동료의 평가도 함께 봐요.</span>'});
   if(r&&!reqWhy(r)){
     S.rank=nx;
     if(nx===6)await showClip({a:'c_ev_ceo',b:'c_ev_ceo_b',kick:'CEO',title:'인턴 험쮜, 캔버스랩 CEO 취임!',sub:`${PROMO_LINE[nx]}\n3년 전 면접장에서 떨던 실험쥐가 대표가 됐다.`});
@@ -2083,7 +2089,7 @@ function finish(){
   <p class="sub" style="color:var(--mute);font-size:13px">가장 가까웠던 사람: <b style="color:var(--ink)">${B.name}</b> (♥ ${best[1]} · ${relLv(best[1])[1]}) — "${B.q}"</p>
   <div class="report"><div><small>최종 직급</small><b>${RANKS[S.rank]}</b></div><div><small>론칭 완성도</small><b>${S.score??'-'} (${bpPct()}%)</b></div><div><small>브랜드 점수</small><b>${brandScore()}</b></div><div><small>월 최고 매출</small><b>${fmtW(S.salesBest||0)}</b></div><div><small>누적 매출</small><b>${fmtW(S.salesSum||0)}</b></div><div><small>해외 진출</small><b>${glOpen()}개국</b></div><div><small>누적 이익</small><b>${S.co?(S.co.profitSum<0?'−':'')+fmtW(Math.abs(S.co.profitSum)):'-'}</b></div><div><small>회사 자금</small><b>${S.co?(S.co.cash<0?'−':'')+fmtW(Math.abs(S.co.cash)):'-'}</b></div>
   <div><small>제품력</small><b>${S.bq}</b></div><div><small>화제성</small><b>${S.buzz}</b></div><div><small>평판</small><b>${S.rep}</b></div>
-  <div><small>능력치 합계</small><b>${sumStat()}</b></div><div><small>부업 / 야근</small><b>${S.jobs} / ${S.ot}</b></div><div><small>AI 스킬</small><b>Lv.${S.ai}</b></div><div><small>상사 평가</small><b>${bossAff()}</b></div><div><small>동료 평균 ♥</small><b>${avgAff()}</b></div><div><small>면접 등급</small><b>${S.ivGrade||'-'}</b></div><div><small>미션 성공</small><b>${S.missionWins||0}/${S.missionTotal||0}</b></div></div>
+  <div><small>능력치 합계</small><b>${sumStat()}</b></div><div><small>부업 / 야근</small><b>${S.jobs} / ${S.ot}</b></div><div><small>AI 스킬</small><b>Lv.${S.ai}</b></div><div><small>상사 평가</small><b>${bossAff()}</b></div><div><small>동료 평가</small><b>${peerAff()}</b></div><div><small>면접 등급</small><b>${S.ivGrade||'-'}</b></div><div><small>미션 성공</small><b>${S.missionWins||0}/${S.missionTotal||0}</b></div></div>
   <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btn-again">다시 하기</button><button class="btn ghost" id="btn-dex2">엔딩 도감</button><button class="btn ghost" id="btn-share-end">📤 공유</button></div></div>`;
   el.hidden=false;el.scrollTop=0;
   $('#btn-again').onclick=()=>{el.hidden=true;openSetup()};
@@ -2874,7 +2880,7 @@ function statusHTML(){
   <div class="group"><h4>능력치 <span style="font-family:var(--body);font-size:12px;color:var(--mute)">합계 ${sumStat()} · AI 스킬 Lv.${S.ai}</span></h4>${Object.entries(STATS).map(([k,l])=>m(STAT_IC[k]+' '+l,S.stat[k],100,'#5aa9f5')).join('')}</div>
   <div class="group"><h4>직급 · 목표는 CEO ${isGold()?'<span class="gold">✨황금막내</span>':''}</h4><div class="ladder">${RANKS.map((n,i)=>`<span class="${i<S.rank?'done':i===S.rank?'now':''}">${n}</span>`).join('')}</div>
   <p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${nx?`다음 승진(${RANKS[S.rank+1]}): ${reqText(nx)}<br>${reqWhy(nx)?`<b style="color:var(--pink-d)">부족: ${reqWhy(nx)}</b>`:'<b style="color:var(--good)">조건 충족! 다음 분기 평가를 기다려요.</b>'}<br>분기 평가: 3개월마다 (다음 평가 ${nextEval()!=null?`${yearOf(nextEval())}년차 ${monthOf(nextEval())}월`:'없음'})`:'최고 직급! 캔버스랩 CEO'}<br>황금막내 조건: 평판 55 이상 + 동료 평균 ♥37 이상</p></div>
-  <div class="group"><h4>관계</h4>${m('상사 평가 (두 부장 ♥ 평균)',bossAff(),100,'#ff5c8a')}${m('동료 평균 ♥',avgAff(),100,'#ff9cc0')}<p style="margin:4px 0 0;font-size:12px;color:var(--mute)">사람별 숫자는 「관계도」에서 볼 수 있어요.</p></div>
+  <div class="group"><h4>관계</h4>${m('상사 평가 (두 부장 ♥ 평균)',bossAff(),100,'#ff5c8a')}${m('동료 평가 (동료 7명 ♥ 평균)',peerAff(),100,'#ff9cc0')}<p style="margin:4px 0 0;font-size:12px;color:var(--mute)">사람별 숫자는 「관계도」에서 볼 수 있어요.</p></div>
   <div class="group"><h4>생활</h4><div class="kv"><div><small>통장</small><b>${S.money}만원</b></div><div><small>월급</small><b>${payOf()}만원${S.rank===0?' (수습)':''}${S.raise?` <span style="font-size:11px;color:var(--good)">연봉협상 +${S.raise}</span>`:''}</b></div><div><small>남은 연차</small><b>${S.leave}일</b></div><div><small>부업 / 야근</small><b>${S.jobs}회 / ${S.ot}회</b></div><div><small>부업으로 번 돈</small><b>${S.earned||0}만원</b></div></div>
   ${Object.keys(JOB_RANK).some(k=>jobN(k))?`<p style="margin:6px 0 0;font-size:12.5px;color:var(--mute)">${Object.keys(JOB_RANK).filter(k=>jobN(k)).map(k=>`${ACTS[k].name}: ${JOB_RANK[k][jobLv(k)]} (${jobN(k)}회)`).join(' · ')}</p>`:''}</div>`;
 }
@@ -2910,7 +2916,7 @@ function brandHTML(){
   <div class="group"><p style="margin:0;font-size:12.5px;color:var(--mute)">1막(1년차 3~10월) 론칭 준비 → 10월 말 론칭, 연기 없음. 2막(11월~2년차 2월) 매출 만들기. 3막(3년차) 해외 진출. 평일에 회사일을 도울수록 부품이 채워지고, 론칭 뒤엔 그달 매출이 돼요.</p></div>`;
 }
 function matesHTML(){
-  const head=S?`<div class="relsum"><div><small>상사 평가</small><b>${bossAff()}</b><span>사업부장·기획부장 ♥ 평균<br>승진 심사에 들어가요</span></div><div><small>동료 평균</small><b>♥${avgAff()}</b><span>8명 동료 평균<br>황금막내 조건 37↑</span></div></div>`:'';
+  const head=S?`<div class="relsum"><div><small>상사 평가</small><b>${bossAff()}</b><span>사업부장·기획부장 ♥ 평균<br>승진 심사에 들어가요</span></div><div><small>동료 평가</small><b>${peerAff()}</b><span>동료 7명 ♥ 평균<br>승진 심사에 들어가요</span></div></div>`:'';
   const seen=new Set();
   return head+Object.values(DEPTS).map(D=>{const ps=D.ppl.filter(p=>!seen.has(p)&&seen.add(p));return ps.length?`<div class="reldept">${D.ic} ${D.n} <span class="dtag">${D.t}</span></div>`+ps.map(relCard).join(''):''}).join('');
 }
@@ -3577,7 +3583,7 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-0bd910';
+const BUILD='2026.10.10-23dcaf';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
