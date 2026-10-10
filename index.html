@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=0e9b64"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=0e9b64"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=0e9b64">
+<link rel="manifest" href="manifest.json?v=2c79a2"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2c79a2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2c79a2">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -4157,7 +4157,7 @@ applyMix();applyFs();
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-0e9b64';
+const BUILD='2026.10.10-2c79a2';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
