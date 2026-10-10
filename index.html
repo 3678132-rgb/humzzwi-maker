@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=ea1973"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=ea1973"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=ea1973">
+<link rel="manifest" href="manifest.json?v=dc31e4"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=dc31e4"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=dc31e4">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -3087,7 +3087,7 @@ function toast(t){const e=document.createElement('div');e.className='toast';e.te
 function ring(v,col,label){const r=18,c=2*Math.PI*r;return `<svg viewBox="0 0 44 44" aria-label="${label} ${v}"><circle cx="22" cy="22" r="${r}" fill="none" stroke="#f1dccf" stroke-width="6"/><circle cx="22" cy="22" r="${r}" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c*v/100} ${c}" transform="rotate(-90 22 22)"/><text x="22" y="26.5" text-anchor="middle" font-size="12" font-weight="700" fill="#3d2a22">${v}</text></svg>`}
 function render(){
   if(!S)return;
-  document.body.classList.toggle('fem',hzFem());syncGlobalAct();
+  document.body.classList.toggle('fem',hzFem());syncGlobalAct();swGender();
   const f=focusMs(),dl=LAUNCH_M-S.m,bp=bpPct();
   $('#h-date').textContent=`${yearOf(S.m)}년차 ${monthOf(S.m)}월`;
   $('#h-rank').innerHTML=`${RANKS[S.rank]} 험쮜${isGold()?'<span class="gold">✨황금막내</span>':''}`;
@@ -3950,7 +3950,9 @@ $('#btn-start').onclick=async()=>{
 setSound(AU.on);
 /* ================= 빌드 코드 · 오프라인(홈 화면 앱) =================
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
-const BUILD='2026.10.10-ea1973';
+// 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
+function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
+const BUILD='2026.10.10-dc31e4';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
@@ -3959,9 +3961,11 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!hadCtl)return;
     // 새 버전: 타이틀 화면이면 바로, 게임 중이면 타이틀로 갈 때 적용 (진행은 매달 자동 저장)
     if(!$('#scr-title').hidden&&!busy)location.reload();else{window.__swUpdate=true;msg('새 버전이 준비됐어요 · 타이틀로 가면 적용돼요',6000)}});
+  // 처음 받거나 그림이 많이 바뀌었을 때만 진행을 보여 준다(업데이트 때 몇 장만 바뀌면 조용히)
   navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};
-    if(d.type==='progress'&&!hadCtl)msg(`비행기 모드용 파일 받는 중 ${d.done}/${d.total}`);
-    if(d.type==='ready'&&!hadCtl)msg('✓ 오프라인 준비 완료! 이제 비행기 모드에서도 돼요',4500)});
+    if(d.type==='progress'&&d.total>=30)msg(`비행기 모드용 그림 받는 중 ${d.done}/${d.total}`);
+    if(d.type==='ready'&&d.total>=30)msg('✓ 오프라인 준비 완료! 이제 비행기 모드에서도 돼요',4500)});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{window.__swG=null;swGender()});
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
 }
 showTitle();
