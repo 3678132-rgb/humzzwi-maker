@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="험쮜메이커">
 <meta name="theme-color" content="#2a1f33">
-<link rel="manifest" href="manifest.json?v=e6c7b8"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=e6c7b8"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=e6c7b8">
+<link rel="manifest" href="manifest.json?v=92dd30"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=92dd30"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=92dd30">
 <style>
 /* 글꼴은 파일로 같이 들고 다닌다 (비행기 모드에서도 같은 모양) */
 @font-face{font-family:"Jua";src:url(fonts/Jua-Regular.woff2) format("woff2");font-display:swap}
@@ -497,7 +497,22 @@ body.clip-on:not([data-mbg=C]) #pimg{opacity:0}
 .shoot .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 .shoot .flash.on{animation:flashk .45s ease-out}
 @keyframes flashk{0%{opacity:.95}100%{opacity:0}}
-.shoot .judge{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-family:var(--display);font-size:30px;color:#fff;text-shadow:0 2px 8px #000;white-space:nowrap;animation:pop .3s both}
+.shoot .judge{position:absolute;left:0;right:0;text-align:center;top:38%;font-family:var(--display);font-size:30px;color:#fff;text-shadow:0 2px 8px #000;white-space:nowrap;animation:pop .3s both}
+.shoot .pzw{position:absolute;inset:0;overflow:hidden;border-radius:15px;background:radial-gradient(120% 90% at 50% 25%,#dcecff,#9cc4ec 70%,#86b2de)}
+.shoot .pz{position:absolute;left:50%;bottom:-3%;width:100%;height:auto;transform:translateX(-50%) translate(var(--dx,0px),0) rotate(var(--rot,0deg));transform-origin:50% 95%;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(30,50,80,.25))}
+.shoot .vf::before,.shoot .vf::after{z-index:2}
+.shoot .rec,.shoot .shots,.shoot .say{z-index:3}
+.shoot .level{position:absolute;left:8%;right:8%;top:44%;height:0;border-top:2px dashed rgba(255,255,255,.75);z-index:2;display:none}
+.shoot.r2 .level{display:block}
+.shoot .fly{position:absolute;font-size:26px;z-index:2;left:-40px;top:30%;pointer-events:none;transition:none}
+.shoot .rnd{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);font-size:16px}
+.shoot .rnd small{font-family:inherit;font-size:12px;opacity:.8}
+.shoot .strip{display:flex;gap:8px;justify-content:center}
+.shoot .slot{position:relative;width:46px;height:60px;border-radius:6px;background:#fff;padding:3px 3px 9px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.shoot .slot i{display:block;width:100%;height:100%;border-radius:3px;background:radial-gradient(120% 90% at 50% 25%,#dcecff,#9cc4ec 70%);overflow:hidden;position:relative}
+.shoot .slot img{position:absolute;left:50%;bottom:-4%;height:96%;transform:translateX(-50%) rotate(var(--rot,0deg));transform-origin:50% 95%}
+.shoot .slot b{position:absolute;right:-6px;top:-8px;font-size:16px}
+.shoot .slot.new{animation:pop .35s both}
 
 /* 업무 자리 (끌어다 배치) */
 .of-st{background:#fff3e3;border-top:2px dashed #e5c9a8;padding:6px 8px 7px;display:grid;gap:4px}
@@ -1108,7 +1123,7 @@ const slotKey=n=>'humzzwi.maker.slot'+n; // 슬롯마다 {S, at}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // 험쮜가 여성이면 넥타이 대신 리본 블라우스 버전(_w) 그림을 쓴다
 const hzFem=()=>{try{return !!(S&&S.prof&&S.prof.gender==='여성')}catch(e){return false}};
-const FEM_IMG=new Set(['a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','gt_air','gt_air_b','gt_jp','gt_jp_b','gt_sea','gt_sea_b','gt_us','gt_us_b','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','sc_cafe','sc_factory','sc_gym','sc_home','sc_lab','sc_meeting','sc_office','sc_package','sc_park','sc_popup','sc_rain','sc_store','sc_studio','sc_study','v_short','v_short_b']);
+const FEM_IMG=new Set(['pz_stiff','pz_smile','pz_grin','pz_blink','a_hz_walk','a_hz_walk_b','c_ai','c_ai_b','c_blind','c_blind_b','c_blog','c_blog_b','c_cafe','c_cafe_b','c_coffee','c_coffee_b','c_content','c_content_b','c_cs','c_cs_b','c_date','c_date_b','c_daytrip','c_daytrip_b','c_english','c_english_b','c_erp','c_erp_b','c_ev_ceo','c_ev_ceo_b','c_ev_jobup','c_ev_jobup_b','c_ev_promo','c_ev_promo_b','c_excel','c_excel_b','c_filling','c_filling_b','c_formula','c_formula_b','c_friends','c_friends_b','c_global','c_global_b','c_gym','c_gym_b','c_half','c_half_b','c_ingredient','c_ingredient_b','c_jeju','c_jeju_b','c_keymsg','c_keymsg_b','c_leave','c_leave_b','c_lecture','c_lecture_b','c_license','c_license_b','c_logistics','c_logistics_b','c_mba','c_mba_b','c_md','c_md_b','c_minutes','c_minutes_b','c_orient','c_orient_b','c_overtime','c_overtime_b','c_package','c_package_b','c_pilates','c_pilates_b','c_pt','c_pt_b','c_research','c_research_b','c_review','c_review_b','c_run','c_run_b','c_schedule','c_schedule_b','c_selfdate','c_selfdate_b','c_settle','c_settle_b','c_shoot','c_shoot_b','c_shop_hb','c_shop_hb_b','c_shop_mall','c_shop_mall_b','c_shop_online','c_shop_online_b','c_snack','c_snack_b','c_store','c_store_b','c_tokyo','c_tokyo_b','c_trip','c_trip_b','c_walk','c_walk_b','d_aquarium_m','d_aquarium_m_b','d_bike_m','d_bike_m_b','d_coffeechat_m','d_coffeechat_m_b','d_coffeeget_m','d_coffeeget_m_b','d_coffeegive_m','d_coffeegive_m_b','d_coffeeshare_m','d_coffeeshare_m_b','d_confess_m','d_confess_m_b','d_exhibit_m','d_exhibit_m_b','d_hanok_m','d_hanok_m_b','d_movie_m','d_movie_m_b','d_park_m','d_park_m_b','d_picnic_m','d_picnic_m_b','d_popup_m','d_popup_m_b','d_ramen_m','d_ramen_m_b','d_vacation_m','d_vacation_m_b','ev_arrive','ev_arrive_b','ev_building','ev_dinner','ev_overload','ev_pass','ev_pass_b','ev_present','ev_reject','ev_reject_b','ev_studio','ev_studio_b','ev_subway','ev_subway_b','f_hz','gt_air','gt_air_b','gt_jp','gt_jp_b','gt_sea','gt_sea_b','gt_us','gt_us_b','id_bad','id_good','id_ok','lunch','m_box','m_box_b','m_fit','m_fit_b','m_lab','m_lab_b','m_phone','m_phone_b','m_study','m_study_b','s_ceo','s_coffee','s_coffee_b','s_dark','s_dark_b','s_desk','s_desk_b','s_eat','s_eat_b','s_jump','s_jump_b','s_sleep','s_sleep_b','s_walk','s_walk_b','sc_cafe','sc_factory','sc_gym','sc_home','sc_lab','sc_meeting','sc_office','sc_package','sc_park','sc_popup','sc_rain','sc_store','sc_studio','sc_study','v_short','v_short_b']);
 const IMG=k=>k==='hz'?`assets/hz${hzFem()?'_w':''}.png`:`assets/${k}${FEM_IMG.has(k)&&hzFem()?'_w':''}.webp`;
 const BRAND='STAGE:ZERO';
 
@@ -4007,22 +4022,57 @@ function loadGame(n){const d=slotData(n);if(!d)return;S=d.S;S.slot=n;if(AFTER()&
 const STUDIOS=[{n:'📷 30년 전통 「영 사진관」',cost:2,zone:.2,bonus:0,s:'2만원 · 사장님이 "턱 당기고~" 잡아 줌'},
   {n:'✨ 감성 셀프 사진관',cost:3,zone:.14,bonus:0,trend:2,s:'3만원 · 리모컨으로 직접 찰칵 · 판정 빡빡 · 트렌드↑'},
   {n:'💎 프리미엄 보정 스튜디오',cost:8,zone:.26,bonus:1,s:'8만원 · 판정 넉넉 · 보정으로 한 단계 업'}];
-// 찰칵! 미니게임: 표정 게이지가 오가는 동안 「미소 구간」에서 셔터. 3번 찍는다
+// 찰칵! 미니게임: 3컷마다 다른 도전. ① 표정 게이지로 미소 맞추기 ② 흔들리는 고개를 수평일 때 ③ 눈 깜빡임·날파리 피해서 미소
+// 험쮜 얼굴(pz_stiff·smile·grin·blink)이 게이지에 따라 실시간으로 바뀐다
 function shootGame(zw){return new Promise(res=>{
+  const F={stiff:IMG('pz_stiff'),smile:IMG('pz_smile'),grin:IMG('pz_grin'),blink:IMG('pz_blink')};
+  const RD=[{t:'1컷 · 🙂 표정',h:'게이지가 초록 구간일 때 찰칵!',say:'"자, 여기 보세요~ 웃으면 안 돼요, 살짝만!"',lb:['😐 굳음','🙂 살짝 미소','😆 활짝 → 😑 깜빡']},
+    {t:'2컷 · 📐 고개 수평',h:'험쮜가 똑바로 섰을 때 찰칵!',say:'"고개가 자꾸 기울어요~ 똑바로!"',lb:['↙ 왼쪽으로','📐 수평','오른쪽으로 ↘']},
+    {t:'3컷 · 😑 깜빡임 주의',h:'미소 구간 + 눈 뜬 순간에만!',say:'"마지막! 눈 깜빡이면 안 돼요~"',lb:['😐 굳음','🙂 미소 + 👀 눈 뜸','😆 활짝']}];
   const el=document.createElement('div');el.className='shoot';el.style.backgroundImage=`url(${IMG('ev_studio')})`;
-  el.innerHTML=`<div class="vf"><span class="rec">● 증명사진 3×4</span><span class="shots"></span><span class="say">"자, 여기 보세요~ 웃으면 안 돼요, 살짝만!"</span></div>
-    <div class="pad"><div class="lbl"><span>😐 굳음</span><span>🙂 살짝 미소</span><span>😆 활짝 → 😑 깜빡</span></div><div class="meter"><i class="zone"></i><i class="needle"></i></div><button class="snap" type="button">📸 찰칵!</button></div><i class="flash"></i>`;
+  el.innerHTML=`<div class="vf"><div class="pzw"><img class="pz" src="${F.smile}" alt=""></div><i class="level"></i><span class="fly" hidden>🪰</span><span class="rec">● 증명사진 3×4</span><span class="shots"></span><span class="say"></span></div>
+    <div class="pad"><div class="rnd"><span class="rt"></span><small class="rh"></small></div><div class="strip">${'<span class="slot"><i></i></span>'.repeat(3)}</div><div class="lbl"><span></span><span></span><span></span></div><div class="meter"><i class="zone"></i><i class="needle"></i></div><button class="snap" type="button">📸 찰칵!</button></div><i class="flash"></i>`;
   $('#phone').appendChild(el);
-  const nd=el.querySelector('.needle'),zn=el.querySelector('.zone'),shots=el.querySelector('.shots'),say=el.querySelector('.say');
-  let shot=0,hits=0,pos=0,dir=1,zs=0,run=true,lock=false,last=performance.now();
-  const setZone=()=>{zs=.25+R()*(.5-zw);zn.style.left=zs*100+'%';zn.style.width=zw*100+'%';shots.textContent='●'.repeat(shot)+'○'.repeat(3-shot)};setZone();
-  const tick=t=>{if(!run)return;const dt=Math.min(50,t-last);last=t;pos+=dir*dt*(.0009+shot*.00035);if(pos>1){pos=1;dir=-1}if(pos<0){pos=0;dir=1}nd.style.left=pos*100+'%';requestAnimationFrame(tick)};requestAnimationFrame(tick);
-  el.querySelector('.snap').onclick=()=>{if(lock)return;lock=true;sfx('rec');
-    const fl=el.querySelector('.flash');fl.classList.remove('on');void fl.offsetWidth;fl.classList.add('on');
-    const ok=pos>=zs&&pos<=zs+zw,near=!ok&&pos>=zs-.08&&pos<=zs+zw+.08;if(ok)hits++;shot++;
-    const j=document.createElement('div');j.className='judge';j.textContent=ok?'✨ 인생샷!':near?'😅 아깝다!':pos>zs?'😑 눈 감았어요':'😐 너무 굳었어요';el.appendChild(j);
-    say.textContent=ok?pick(['"오, 지금 좋아요!"','"이거다, 이거!"']):pick(['"다시 한 번 갈게요~"','"어깨 힘 빼고요~"']);sfx(ok?'great':'fail');
-    setTimeout(()=>{j.remove();if(shot>=3){run=false;el.remove();res(hits)}else{setZone();lock=false}},800)}})}
+  Object.values(F).forEach(u=>{const im=new Image();im.src=u});
+  const $$=q=>el.querySelector(q),nd=$$('.needle'),zn=$$('.zone'),shots=$$('.shots'),say=$$('.say'),pz=$$('.pz'),fly=$$('.fly'),vf=$$('.vf');
+  let shot=0,hits=0,pos=0,dir=1,zs=0,run=true,lock=false,last=performance.now(),t0=last,face='smile',rot=0,blinkT=0,nextBlink=0,flyX=-1,flyY=.3,flyV=0,nextFly=0;
+  const setFace=f=>{if(f!==face){face=f;pz.src=F[f]}};
+  const setRound=()=>{const r=RD[shot];el.classList.toggle('r2',shot===1);$$('.rt').textContent=r.t;$$('.rh').textContent=r.h;say.textContent=r.say;
+    el.querySelectorAll('.lbl span').forEach((x,i)=>x.textContent=r.lb[i]);
+    const w=shot===1?zw*.8:shot===2?zw*.9:zw;zs=shot===1?.5-w/2:.25+R()*(.5-w);zn.style.left=zs*100+'%';zn.style.width=w*100+'%';zn.dataset.w=w;
+    shots.textContent='●'.repeat(shot)+'○'.repeat(3-shot);pos=shot===1?.5:0;dir=1;t0=performance.now();nextBlink=t0+700+R()*900;nextFly=t0+900+R()*1500;flyX=-1;fly.hidden=true;rot=0;pz.style.setProperty('--rot','0deg')};
+  setRound();
+  const zw2=()=>+zn.dataset.w;
+  const tick=t=>{if(!run)return;const dt=Math.min(50,t-last);last=t;
+    if(!lock){
+      if(shot===1){// 고개가 불규칙하게 흔들린다: 바늘 = 기울기
+        const k=(t-t0)/1000;rot=14*Math.sin(k*2.3)*Math.cos(k*.9)+4*Math.sin(k*5.1);pos=Math.max(0,Math.min(1,.5+rot/36));pz.style.setProperty('--rot',rot.toFixed(1)+'deg');setFace(Math.abs(rot)<3?'smile':'stiff')}
+      else{pos+=dir*dt*(.0009+shot*.00033);if(pos>1){pos=1;dir=-1}if(pos<0){pos=0;dir=1}
+        const z=zw2();setFace(pos<zs?'stiff':pos<=zs+z?'smile':pos<.9?'grin':'blink')}
+      if(shot===2){// 눈 깜빡임 · 날파리
+        if(t>nextBlink){blinkT=t+230;nextBlink=t+650+R()*1100}
+        if(t<blinkT)setFace('blink');
+        if(flyX<0&&t>nextFly){flyX=0;flyY=.18+R()*.3;flyV=.00035+R()*.00025;fly.hidden=false}
+        if(flyX>=0){flyX+=dt*flyV;const W=vf.clientWidth,H=vf.clientHeight;fly.style.left=(flyX*(W+60)-40)+'px';fly.style.top=(flyY*H+Math.sin(t/90)*10)+'px';
+          if(flyX>1){flyX=-1;fly.hidden=true;nextFly=t+800+R()*1600}}}}
+    nd.style.left=pos*100+'%';requestAnimationFrame(tick)};requestAnimationFrame(tick);
+  const flyOnFace=()=>flyX>=.3&&flyX<=.7&&!fly.hidden;
+  $$('.snap').onclick=()=>{if(lock)return;lock=true;sfx('rec');
+    const fl=$$('.flash');fl.classList.remove('on');void fl.offsetWidth;fl.classList.add('on');
+    const z=zw2(),inZ=pos>=zs&&pos<=zs+z,mid=Math.abs(pos-(zs+z/2))<=z*.18,near=!inZ&&pos>=zs-.08&&pos<=zs+z+.08;
+    let ok=inZ,msg;
+    if(shot===2&&face==='blink'){ok=false;msg='😑 눈 감았어요!'}
+    else if(shot===2&&flyOnFace()){ok=false;msg='🪰 파리가 찍혔어요!'}
+    else if(ok)msg=mid?'💯 퍼펙트!':'✨ 인생샷!';
+    else if(shot===1)msg=near?'😅 살짝 기울었어요':'🙃 고개가 기울었어요';
+    else msg=near?'😅 아깝다!':pos>zs?(face==='blink'?'😑 눈 감았어요':'😆 너무 활짝!'):'😐 너무 굳었어요';
+    if(ok)hits++;
+    const sl=el.querySelectorAll('.slot')[shot];sl.querySelector('i').innerHTML=`<img src="${F[ok?'smile':face]}" style="--rot:${shot===1?rot.toFixed(1):0}deg" alt="">`;sl.insertAdjacentHTML('beforeend',`<b>${ok?(mid?'💯':'✨'):'✖'}</b>`);sl.classList.add('new');
+    if(ok)setFace('smile');
+    shot++;
+    const j=document.createElement('div');j.className='judge';j.textContent=msg;el.appendChild(j);
+    say.textContent=ok?pick(['"오, 지금 좋아요!"','"이거다, 이거!"','"사장님 인생 컷 나왔다!"']):pick(['"다시 한 번 갈게요~"','"어깨 힘 빼고요~"','"괜찮아요, 원래 다 그래요~"']);sfx(ok?'great':'fail');
+    setTimeout(()=>{j.remove();if(shot>=3){run=false;setTimeout(()=>{el.remove();res(hits)},500)}else{setRound();lock=false}},900)}})}
 
 // 사진관 찾아가기: 방향키로 동네를 걸어 사진관에 들어가면 그 사진관에서 찍는다. 가까울수록 싸고, 멀수록 비싸지만 좋다
 const TOWN=['.........','.C.#.#.#.','...c.....','.#.#.#.B.','..x......','.#.#.#.#.','.....k...','.A.#.#.#.','......x..','.#.#.#.#.','....H....'];
@@ -4124,7 +4174,7 @@ async function prologue(){
   await say({who:'me',title:'📍 사진관 찾아가기',text:`면접은 사흘 뒤. 통장 ${S.money}만원.\n동네 사진관은 세 곳. 가까운 데는 싸고, 먼 데는 비싸지만 잘 찍어 준대.\n<span class="t">방향키(▲◀▼▶)로 험쮜를 움직여 사진관에 들어가요. 걸음 수는 18걸음!</span>`});
   const {si,got}=await townWalk();
   const st=STUDIOS[si];applyFx({money:-st.cost+(got.c?1:0),...(got.k?{st:-3}:{}),...(st.trend?{trend:st.trend}:{})});
-  await showClip({a:'ev_studio',b:'ev_studio_b',kick:st.n.replace(/^\S+\s/,''),title:'증명사진 촬영',sub:'"자, 턱 살짝 당기고~ 어깨 펴고~"\n(게이지가 초록 「미소 구간」에 오면 찰칵! 3번 찍어요)'});
+  await showClip({a:'ev_studio',b:'ev_studio_b',kick:st.n.replace(/^\S+\s/,''),title:'증명사진 촬영',sub:'"자, 턱 살짝 당기고~ 어깨 펴고~"\n(3컷: 🙂 표정 맞추기 → 📐 고개 수평 → 😑 깜빡임·날파리 피하기)'});
   const hits=await shootGame(st.zone),score=Math.min(3,hits+st.bonus),tier=score>=2?'good':score>=1?'ok':'bad';
   S.idPhoto=tier;
   const T={good:['✨ 인생 증명사진','"이건 액자에 걸어야 해요." 사장님도 감탄했다.\n면접관 첫인상 +1점',{rep:2,st:-5}],
@@ -4184,7 +4234,7 @@ applyMix();applyFs();
    tools/build.py가 BUILD를 매긴다. 홈 화면에 추가하면 처음 한 번 그림을 전부 받아 두고, 그 뒤로는 비행기 모드에서도 실행된다 */
 // 오프라인 보관함에 험쮜 성별을 알려서 그 성별 그림만 받게 한다
 function swGender(){try{const c=navigator.serviceWorker&&navigator.serviceWorker.controller,g=S&&S.prof?(hzFem()?'w':'m'):null;if(c&&g&&window.__swG!==g){window.__swG=g;c.postMessage({type:'gender',g})}}catch(e){}}
-const BUILD='2026.10.10-e6c7b8';
+const BUILD='2026.10.11-92dd30';
 $('#build-title').textContent=$('#build-menu').textContent=`빌드 ${BUILD}`;
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   const bar=document.createElement('div');bar.className='sw-bar';bar.hidden=true;document.body.appendChild(bar);
